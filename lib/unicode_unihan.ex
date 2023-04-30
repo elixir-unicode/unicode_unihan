@@ -9,5 +9,4 @@ defmodule Unicode.Unihan do
     @data_dir
   end
 
-
 end
