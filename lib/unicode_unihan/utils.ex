@@ -5,6 +5,12 @@ defmodule Unicode.Unihan.Utils do
 
   """
 
+  @doc false
+  @data_dir Path.join(__DIR__, "../../data") |> Path.expand()
+  def data_dir do
+    @data_dir
+  end
+
   @doc """
   Parse all Unicode Unihan files and return
   a mapping from codepoint to a map of metadata
@@ -12,7 +18,7 @@ defmodule Unicode.Unihan.Utils do
 
   """
   def parse_files do
-    Unicode.Unihan.data_dir()
+    @data_dir
     |> File.ls!()
     |> Enum.reduce(%{}, &parse_file(&1, &2))
   end
@@ -24,9 +30,7 @@ defmodule Unicode.Unihan.Utils do
 
   """
   def parse_file(file, map \\ %{}) do
-    path =
-      Unicode.Unihan.data_dir()
-      |> Path.join(file)
+    path = Path.join(@data_dir, file)
 
     Enum.reduce File.stream!(path), map, fn line, map ->
       case line do

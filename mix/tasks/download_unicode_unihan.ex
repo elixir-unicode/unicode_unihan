@@ -29,7 +29,7 @@ defmodule Mix.Tasks.Unicode.Unihan.Download do
   def extract_unihan_database! do
     data_path("unihan.zip")
     |> String.to_charlist()
-    |> :zip.extract(cwd: String.to_charlist(Unicode.Unihan.data_dir()))
+    |> :zip.extract(cwd: String.to_charlist(Unicode.Unihan.Utils.data_dir()))
 
     File.rm! data_path("unihan.zip")
   end
@@ -155,7 +155,7 @@ defmodule Mix.Tasks.Unicode.Unihan.Download do
   end
 
   defp data_path(filename) do
-    Path.join(Unicode.Unihan.data_dir(), filename)
+    Path.join(Unicode.Unihan.Utils.data_dir(), filename)
   end
 end
 
