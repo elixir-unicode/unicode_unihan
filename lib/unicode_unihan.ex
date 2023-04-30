@@ -10,7 +10,18 @@ defmodule Unicode.Unihan do
 
   """
   @unihan_data Unicode.Unihan.Utils.parse_files()
-  def unihan_metadata do
+  def unihan do
     @unihan_data
   end
+
+  @doc """
+  Returns the field information for the data in the
+  Unihan database.
+
+  """
+  @unihan_fields Unicode.Unihan.Utils.unihan_fields()
+  def unihan_fields do
+    @unihan_fields
+  end
+
 end

@@ -1,0 +1,1304 @@
+{
+    "records": [
+      {
+        "id": "rec6a8GQOAyyVUDTp",
+        "createdTime": "2023-04-21T15:39:16.000Z",
+        "fields": {
+          "syntax": "[0-9]+",
+          "delimiter": "space",
+          "Status": "Informative",
+          "name": "kAccountingNumeric",
+          "category": "Numeric Values",
+          "introduced": "3.2",
+          "description": "The value of the character when used as an accounting numeral to prevent fraud. A numeral such as 十 (ten) is easily transformed into 千 (thousand) by adding a single stroke, so monetary documents often use an accounting form of the numeral, such as 拾 (ten), instead of the more common—and simpler—form. Characters with this property will have a single, well-defined value, which a native reader can reasonably be expected to understand.\n\nThe three numeric-value fields should have no overlap; that is, characters with a kAccountingNumeric value should not have a kOtherNumeric or kPrimaryNumeric value as well."
+        }
+      },
+      {
+        "id": "recqynhPiGPapMJcL",
+        "createdTime": "2023-04-21T15:39:16.000Z",
+        "fields": {
+          "syntax": "(\\d+:[BHJKMPSUV]+)|-",
+          "delimiter": "space",
+          "Status": "Provisional",
+          "name": "kAlternateTotalStrokes",
+          "category": "Dictionary-like Data",
+          "introduced": "15.0",
+          "description": "The total number of strokes in the character (including the radical). Each value consists either of a decimal value followed by an IRG source specifier as defined in Section 3.10, or of the special value “-”.\n\nThe IRG source specifier indicates the IRG sources for which a particular value is preferred. The source identifiers “G” and “T” are not used in this field, as these IRG sources are fully covered by the kTotalStrokes field.\n\nThe stroke count value is the one for the glyph as shown in the code charts.\n\nMultiple stroke counts are listed in increasing numeric order. Stroke counts may not be repeated.\n\nIf there is a single kTotalStrokes value for a character, the IRG sources sharing this stroke count should not be explicitly listed. If all IRG sources share this stroke count, then the value of “-” is used. The kAlternateTotalStrokes value for U+4E95 井 is therefore “-” instead of “4:HJKPV”.\n\nThe kAlternateTotalStrokes “-” value may not be used where there are two kTotalStrokes values for a character. Thus, the kAlternateTotalStrokes value for U+9AA8 骨 is “10:HJKPV”.\n\nFor IRG sources which do not include a source reference, the kAlternateTotalStrokes field should not have a corresponding value.\n\nUnlike the kTotalStrokes field, the data in this field is not to be taken as exhaustive. Where it is defined for a character, however, it includes explicit or implicit values for all IRG sources containing the character."
+        }
+      },
+      {
+        "id": "recyRQ3DnMLRoPH8x",
+        "createdTime": "2023-04-21T15:39:16.000Z",
+        "fields": {
+          "syntax": "[0-9A-F]{4}",
+          "delimiter": "N/A",
+          "Status": "Provisional",
+          "name": "kBigFive",
+          "category": "Other Mappings",
+          "introduced": "2.0",
+          "description": " The Big Five mapping for this character in hexadecimal; note that this does not cover any of the Big Five extensions in common use, including the ETEN extensions."
+        }
+      },
+      {
+        "id": "recL9kH6ylWQtdI3j",
+        "createdTime": "2023-04-21T15:44:38.000Z",
+        "fields": {
+          "syntax": "[A-Z]+",
+          "delimiter": "N/A",
+          "Status": "Provisional",
+          "name": "kCangjie",
+          "category": "Dictionary-like Data",
+          "introduced": "3.1.1",
+          "description": "The cangjie input code for the character. This incorporates data from the file cangjie-table.b5 by Christian Wittern."
+        }
+      },
+      {
+        "id": "recobkuNc9vQ0OSmt",
+        "createdTime": "2023-04-21T15:45:24.000Z",
+        "fields": {
+          "syntax": "[a-z]{1,6}[1-6]",
+          "delimiter": "space",
+          "Status": "Provisional",
+          "name": "kCantonese",
+          "category": "Readings",
+          "introduced": "2.0",
+          "description": "The most customary jyutping (Cantonese) reading for this character.\n\nThis field is targeted specifically for use by CLDR collation and transliteration. As such, it is subject to considerations that help keep jyutping-based Han collation (and its tailorings) and transliteration reasonably stable. The values may not in all cases track the preferred reading in some dictionaries.\n\nAmong the sources used for Cantonese data are the following:\n\nCasey, G. Hugh, S.J. Ten Thousand Characters: An Analytic Dictionary. Hong Kong: Kelley and Walsh, 1980. (kPhonetic)\n\nCheung Kwan-hin, and Robert S. Bauer, The Representation of Cantonese with Chinese Characters, Journal of Chinese Linguistics Monograph Series Number 18, 2002. ISSN 0091-3723 (kCheungBauer, kCheungBauerIndex)\n\nCowles, Roy T. A Pocket Dictionary of Cantonese. Hong Kong: University Press, 1999. ISBN 962-209-122-9 (kCowles)\n\nJiu Bingcoi 饒秉才, ed. Guangzhou Yin Zidian / Gwongzau Jam Zidin 廣州音字典 (Guangzhou Pronouncing Character Dictionary). Hong Kong: Joint Publishing (H.K.) Co., Ltd, 1989. ISBN 962-04-0389-4\n\nLangwen Chuji Zhongwen Cidian / Longman Cokap Zungman Cidin 朗文初級中文詞典 (Longman's Elementary Chinese Dictionary). Hong Kong: Longman, 2001. ISBN 962-00-5148-3\n\nLau, Sidney. A Practical Cantonese-English Dictionary. Hong Kong: Government Printer, 1977 (kLau).\n\nMeyer, Bernard F., and Theodore F. Wempe. Student’s Cantonese-English Dictionary. Maryknoll, New York: Catholic Foreign Mission Society of America, 1947 (kMeyerWempe).\n\nWong Gongsang 黃港生, ed. Xin Shangwu Cidian / San Soengmou Cidin 商務新詞典 (New Commercial Press Dictionary). Hong Kong: 商務印書館(香港)有限公司 (Commercial Press [Hong Kong], Ltd.), 1991. ISBN 962-07-0133-X\n\nWong Gongsang 黃港生, ed. Xin Shangwu Zidian / San Soengmou Zidin 新商務字典 (New Commercial Press Character Dictionary). Hong Kong: 商務印書館(香港)有限公司 (Commercial Press [Hong Kong], Ltd.), 2003. ISBN 962-07-0140-2 (sSoengmou2003)\n\nZhonghua Xin Zidian / Zungwaa San Zidin 中華新字典 (New Chung Hwa Character Dictionary). Hong Kong: 中華書局 (Chung Hwa Book Co.), 2003. ISBN 962-231-001-X"
+        }
+      },
+      {
+        "id": "recQZYxe7NAaJELxr",
+        "createdTime": "2023-04-21T15:46:13.000Z",
+        "fields": {
+          "syntax": "[0-9A-F]{6}",
+          "delimiter": "space",
+          "Status": "Provisional",
+          "name": "kCCCII",
+          "category": "Other Mappings",
+          "introduced": "2.0",
+          "description": "The mapping for this character in the Chinese Character Code for Information Interchange 中文資訊交換碼 (CCCII) in hexadecimal, published by the Chinese Character Analysis Group 國字整理小組 (CCAG) in 1987.\n\nEarlier versions of CCCII served as the basis for ANSI/NISO Z39.64-1989 (see kEACC), so many values are common to the two fields."
+        }
+      },
+      {
+        "id": "recRM1mVKt5jH7Opk",
+        "createdTime": "2023-04-21T15:46:57.000Z",
+        "fields": {
+          "syntax": "[0-9]{3}\\/[0-9]{2};[A-Z]*;[a-z1-6\\[\\]\\/,]+",
+          "delimiter": "space",
+          "Status": "Provisional",
+          "name": "kCheungBauer",
+          "category": "Dictionary-like Data",
+          "introduced": "5.0",
+          "description": "Data regarding the character in Cheung Kwan-hin and Robert S. Bauer, The Representation of Cantonese with Chinese Characters, Journal of Chinese Linguistics, Monograph Series Number 18, 2002. Each data value consists of three pieces, separated by semicolons: (1) the character’s radical-stroke index as a three-digit radical, slash, two-digit stroke count; (2) the character’s cangjie input code (if any); and (3) a comma-separated list of Cantonese readings using the jyutping romanization in alphabetical order."
+        }
+      },
+      {
+        "id": "recPRFmLeSUChZ4nV",
+        "createdTime": "2023-04-21T15:48:08.000Z",
+        "fields": {
+          "syntax": "[0-9]{3}\\.[01][0-9]",
+          "delimiter": "space",
+          "Status": "Provisional",
+          "name": "kCheungBauerIndex",
+          "category": "Dictionary Indices",
+          "introduced": "5.0",
+          "description": "The position of the character in Cheung Kwan-hin and Robert S. Bauer, The Representation of Cantonese with Chinese Characters, Journal of Chinese Linguistics, Monograph Series Number 18, 2002. The format is a three-digit page number followed by a two-digit position number, separated by a period."
+        }
+      },
+      {
+        "id": "recl2mfyDHncAkHW4",
+        "createdTime": "2023-04-21T15:49:46.000Z",
+        "fields": {
+          "syntax": "[1-9][0-9]{0,3}\\.[0-9]{3}",
+          "delimiter": "space",
+          "Status": "Provisional",
+          "name": "kCihaiT",
+          "category": "Dictionary Indices",
+          "introduced": "3.2",
+          "description": "The position of this character in the Cihai (辭海) dictionary, single volume edition, published in Hong Kong by the Zhonghua Bookstore, 1983 (reprint of the 1947 edition), ISBN 962-231-005-2.\n\nThe position is indicated by a decimal number. The digits to the left of the decimal are the page number. The first digit after the decimal is the row on the page, and the remaining two digits after the decimal are the position on the row."
+        }
+      },
+      {
+        "id": "reccO1AWGZp7gHb6D",
+        "createdTime": "2023-04-21T15:50:56.000Z",
+        "fields": {
+          "syntax": "[12E]-[0-9A-F]{4}",
+          "delimiter": "N/A",
+          "Status": "Provisional",
+          "name": "kCNS1986",
+          "category": "Other Mappings",
+          "introduced": "2.0",
+          "description": "The CNS 11643-1986 mapping for this character in hexadecimal."
+        }
+      },
+      {
+        "id": "recvULbRSSRXm6fwC",
+        "createdTime": "2023-04-22T02:15:56.000Z",
+        "fields": {
+          "syntax": "[1-9]-[0-9A-F]{4}",
+          "delimiter": "N/A",
+          "Status": "Provisional",
+          "name": "kCNS1992",
+          "category": "Other Mappings",
+          "introduced": "2.0",
+          "description": "The CNS 11643-1992 mapping for this character in hexadecimal."
+        }
+      },
+      {
+        "id": "recymLcvwyWDz0Q8C",
+        "createdTime": "2023-04-22T02:16:50.000Z",
+        "fields": {
+          "syntax": "U\\+[23]?[0-9A-F]{4}",
+          "delimiter": "N/A",
+          "Status": "Normative",
+          "name": "kCompatibilityVariant",
+          "category": "IRG Sources",
+          "introduced": "3.2",
+          "description": "The canonical Decomposition_Mapping value for the ideograph, derived from UnicodeData.txt. This field is derived by taking the non-null Decomposition_Mapping values from Field 5 of UnicodeData.txt, for characters contained within the CJK Compatibility Ideographs block and the CJK Compatibility Ideographs Supplement block."
+        }
+      },
+      {
+        "id": "rec1UNevkMUJlXrki",
+        "createdTime": "2023-04-22T02:17:57.000Z",
+        "fields": {
+          "syntax": "[0-9]{1,4}(\\.[0-9]{1,2})?",
+          "delimiter": "space",
+          "Status": "Provisional",
+          "name": "kCowles",
+          "category": "Dictionary Indices",
+          "introduced": "3.1.1",
+          "description": "The index or indices of this character in Roy T. Cowles, A Pocket Dictionary of Cantonese, Hong Kong: University Press, 1999.\n\nThe Cowles indices are numerical, usually integers but occasionally fractional where a character was added after the original indices were determined. Cowles is missing indices 1222 and 4949, and four characters in Cowles are part of Unicode’s “Hangzhou” numeral set: 2964 (U+3025), 3197 (U+3028), 3574 (U+3023), and 4720 (U+3027)."
+        }
+      },
+      {
+        "id": "reczfS2JHmfys7ptX",
+        "createdTime": "2023-04-22T02:18:45.000Z",
+        "fields": {
+          "syntax": "[0-9]{4}\\.[0-9]{2}[01]",
+          "delimiter": "N/A",
+          "Status": "Provisional",
+          "name": "kDaeJaweon",
+          "category": "Dictionary Indices",
+          "introduced": "2.0",
+          "description": "The position of this character in the Dae Jaweon (Korean) dictionary used in the four-dictionary sorting algorithm. The position is in the form “page.position” with the final digit in the position being “0” for characters actually in the dictionary and “1” for characters not found in the dictionary and assigned a “virtual” position in the dictionary.\n\nThus, “1187.060” indicates the sixth character on page 1187. A character not in this dictionary but assigned a position between the 6th and 7th characters on page 1187 for sorting purposes would have the code “1187.061”\n\nThe edition used is the first edition, published in Seoul by Samseong Publishing Co., Ltd., 1988."
+        }
+      },
+      {
+        "id": "rec0irYVkeDSEmlmp",
+        "createdTime": "2023-04-22T02:19:23.000Z",
+        "fields": {
+          "syntax": "[^\\t\"]+",
+          "delimiter": "N/A",
+          "Status": "Provisional",
+          "name": "kDefinition",
+          "category": "Readings",
+          "introduced": "2.0",
+          "description": "An English definition for this character. Definitions are for modern written Chinese and are usually (but not always) the same as the definition in other Chinese dialects or non-Chinese languages. In some cases, synonyms are indicated. Fuller variant information can be found using the various variant fields.\n\nDefinitions specific to non-Chinese languages or Chinese dialects other than modern Mandarin are marked, for example, (Cant.) or (J).\n\nMajor definitions are separated by semicolons, and minor definitions by commas. Any valid Unicode character (except for tab, double-quote, and any line break character) may be used within the definition field."
+        }
+      },
+      {
+        "id": "recOgIdxA7Zbi58Xx",
+        "createdTime": "2023-04-22T02:20:04.000Z",
+        "fields": {
+          "syntax": "[0-9A-F]{6}",
+          "delimiter": "N/A",
+          "Status": "Provisional",
+          "name": "kEACC",
+          "category": "Other Mappings",
+          "introduced": "2.0",
+          "description": "The hexadecimal code point of this character in the East Asian Character Code for Bibliographic Use (ANSI/NISO Z39.64-1989, withdrawn in 2012). EACC is used by the Library of Congress for the CJK portions of MARC-8; MARC-8 itself is one of the character sets used by the Library of Congress for encoding bibliographic information. EACC’s original repertoire was derived from pre-1987 versions of CCCII (see kCCCII) and is therefore identical with CCCII for many characters.\n\nThe kEACC field was originally derived from data supplied and proofed by the Research Libraries Group. It has since been extended and corrected with mapping data supplied by the Library of Congress."
+        }
+      },
+      {
+        "id": "rec14Qw8UmPsrea7e",
+        "createdTime": "2023-04-22T02:20:50.000Z",
+        "fields": {
+          "syntax": "[0-9]+a?[A-KP*]",
+          "delimiter": "space",
+          "Status": "Provisional",
+          "name": "kFenn",
+          "category": "Dictionary-like Data",
+          "introduced": "3.1.1",
+          "description": "Data on the character from The Five Thousand Dictionary by Courtenay H. Fenn, Cambridge, Mass.: Harvard University Press, 1979.\n\nThe data here consists of a decimal number followed by a letter A through K, the letter P, or an asterisk. The decimal number gives the Soothill number for the character’s phonetic, and the letter is a rough frequency indication, with A indicating the 500 most common ideographs, B the next five hundred, and so on.\n\nP is used by Fenn to indicate a rare character included in the dictionary only because it is the phonetic element in other characters.\n\nAn asterisk is used instead of a letter in the final position to indicate a character which belongs to one of Soothill’s phonetic groups but is not found in Fenn’s dictionary.\n\nCharacters which have a frequency letter but no Soothill phonetic group are assigned group 0."
+        }
+      },
+      {
+        "id": "reccwJ90VQ4eJjNaG",
+        "createdTime": "2023-04-22T02:21:28.000Z",
+        "fields": {
+          "syntax": "[0-9][0-9]{0,2}\\.[01][0-9]",
+          "delimiter": "space",
+          "Status": "Provisional",
+          "name": "kFennIndex",
+          "category": "Dictionary Indices",
+          "introduced": "4.1",
+          "description": "The position of this character in The Five Thousand Dictionary by Courtenay H. Fenn, Cambridge, Mass.: Harvard University Press, 1979. The position is indicated by a three-digit page number followed by a period and a two-digit position on the page."
+        }
+      },
+      {
+        "id": "recRGCKGhAvCIyBah",
+        "createdTime": "2023-04-22T02:22:07.000Z",
+        "fields": {
+          "syntax": "[0-9]{4}(\\.[0-9])?",
+          "delimiter": "space",
+          "Status": "Provisional",
+          "name": "kFourCornerCode",
+          "category": "Dictionary-like Data",
+          "introduced": "5.0",
+          "description": "The four-corner code(s) for the character. This data is derived from data provided in the public domain by Hartmut Bohn, Urs App, and Christian Wittern.\n\nThe four-corner system assigns each character a four-digit code from 0 through 9. The digit is derived from the “shape” of the four corners of the character (upper-left, upper-right, lower-left, lower-right). An optional fifth digit can be used to further distinguish characters; the fifth digit is derived from the shape in the character’s center or region immediately to the left of the fourth corner.\n\nThe four-corner system is now used only rarely. Full descriptions are available online, for example, at http://en.wikipedia.org/wiki/Four_corner_input.\n\nValues in this field consist of four decimal digits, optionally followed by a period and fifth digit for a five-digit form."
+        }
+      },
+      {
+        "id": "recmqAYhrX5Aa40j8",
+        "createdTime": "2023-04-22T02:22:47.000Z",
+        "fields": {
+          "syntax": "[1-5]",
+          "delimiter": "N/A",
+          "Status": "Provisional",
+          "name": "kFrequency",
+          "category": "Dictionary-like Data",
+          "introduced": "3.2",
+          "description": "A rough frequency measurement for the character based on analysis of traditional Chinese USENET postings; characters with a kFrequency of 1 are the most common, those with a kFrequency of 2 are less common, and so on, through a kFrequency of 5."
+        }
+      },
+      {
+        "id": "recKJmmlJFccs0gQI",
+        "createdTime": "2023-04-22T02:23:30.000Z",
+        "fields": {
+          "syntax": "[0-9]{4}",
+          "delimiter": "N/A",
+          "Status": "Provisional",
+          "name": "kGB0",
+          "category": "Other Mappings",
+          "introduced": "2.0",
+          "description": "The GB/T 2312-1980 mapping for this character in ku/ten form."
+        }
+      },
+      {
+        "id": "recfjpBGM5HyLe7I8",
+        "createdTime": "2023-04-22T02:24:12.000Z",
+        "fields": {
+          "syntax": "[0-9]{4}",
+          "delimiter": "N/A",
+          "Status": "Provisional",
+          "name": "kGB1",
+          "category": "Other Mappings",
+          "introduced": "2.0",
+          "description": "The GB/T 12345-1990 mapping for this character in ku/ten form."
+        }
+      },
+      {
+        "id": "recvty1y5cO5tiaLd",
+        "createdTime": "2023-04-22T03:21:47.000Z",
+        "fields": {
+          "syntax": "[0-9]{4}",
+          "delimiter": "N/A",
+          "Status": "Provisional",
+          "name": "kGB3",
+          "category": "Other Mappings",
+          "introduced": "2.0",
+          "description": "The GB/T 13131 (unpublished GB/T 7589-1987 unsimplified form) mapping for this character in ku/ten form."
+        }
+      },
+      {
+        "id": "recAuCmzeHrzwBGit",
+        "createdTime": "2023-04-22T03:22:15.000Z",
+        "fields": {
+          "syntax": "[0-9]{4}",
+          "delimiter": "N/A",
+          "Status": "Provisional",
+          "name": "kGB5",
+          "category": "Other Mappings",
+          "introduced": "2.0",
+          "description": "The GB/T 13132 (unpublished GB/T 7590-1987 unsimplified form) mapping for this character in ku/ten form."
+        }
+      },
+      {
+        "id": "recya0cagUnHiTs49",
+        "createdTime": "2023-04-22T03:22:42.000Z",
+        "fields": {
+          "syntax": "[0-9]{4}",
+          "delimiter": "N/A",
+          "Status": "Provisional",
+          "name": "kGB7",
+          "category": "Other Mappings",
+          "introduced": "2.0",
+          "description": "The \"General Purpose Hanzi List for Modern Chinese Language, and General List of Simplified Hanzi\" mapping for this character in ku/ten form."
+        }
+      },
+      {
+        "id": "recEEbNpMiWYIMy9o",
+        "createdTime": "2023-04-22T03:23:07.000Z",
+        "fields": {
+          "syntax": "[0-9]{4}",
+          "delimiter": "N/A",
+          "Status": "Provisional",
+          "name": "kGB8",
+          "category": "Other Mappings",
+          "introduced": "2.0",
+          "description": "The GB/T 8565.2-1988 mapping for this character in ku/ten form."
+        }
+      },
+      {
+        "id": "recLccVps3PgVm0Qk",
+        "createdTime": "2023-04-22T03:23:29.000Z",
+        "fields": {
+          "syntax": "[1-6]",
+          "delimiter": "N/A",
+          "Status": "Provisional",
+          "name": "kGradeLevel",
+          "category": "Dictionary-like Data",
+          "introduced": "3.2",
+          "description": "The primary grade in the Hong Kong school system by which a student is expected to know the character; this data is derived from 朗文初級中文詞典, Hong Kong: Longman, 2001."
+        }
+      },
+      {
+        "id": "reclMMeMmOUT5hVCc",
+        "createdTime": "2023-04-22T03:24:11.000Z",
+        "fields": {
+          "syntax": "[0-9]{4}[a-vx-z]\\'?",
+          "delimiter": "space",
+          "Status": "Provisional",
+          "name": "kGSR",
+          "category": "Dictionary Indices",
+          "introduced": "4.0.1",
+          "description": "The position of this character in Bernhard Karlgren’s Grammata Serica Recensa (1957).\n\nThis dataset contains a total of 7,405 records. References are given in the form DDDDa('), where “DDDD” is a set number in the range [0001..1260] zero-padded to 4-digits, “a” is a letter in the range [a..z] (excluding “w”), optionally followed by apostrophe ('). The data from which this mapping table is extracted contains a total of 10,023 references. References to inscriptional forms have been omitted.\n\n• Release notes:\n\nChanges since the initial release:\nAdded: [U+25053] : 0995m (2009-01-01);\nAdded: [U+65d6] : 0001l' (2008-11-17).\n\n22-Dec-2003: Initial release. The following 32 references are to unencoded forms: 0059k, 0069y, 0079d, 0275b, 0286a, 0289a, 0289f, 0293a, 0325a, 0389o, 0391h, 0392s, 0468h, 0480a, 0516a, 0526o, 0566g', 0642y, 0661a, 0739i, 0775b, 0837h, 0893r, 0969a, 0969e, 1019e, 1062b, 1112d, 1124l, 1129c', 1144a, 1144b. In some cases, a variant mapping has been substituted in the mapping table, in other cases the reference is omitted.\n\n• Bibliographic information:\n\nKarlgren, Klas Bernhard Johannes 高本漢 (1889–1978): 2000. Grammata Serica Recensa Electronica. Electronic version of GSR, including indices, syllable canon, and images of the original Karlgren (1957) text. Prepared for the STEDT Project http://stedt.berkeley.edu/ by Richard Cook; based in part on work by Tor Ulving and Ferenc Tafferner (see below), used by permission. Berkeley: University of California.\n\nKarlgren 1957. Grammata Serica Recensa. First published in the Bulletin of the Museum of Far Eastern Antiquities (BMFEA) No. 29, Stockholm, Sweden. Reprinted by Elanders Boktrycker Aktiebolag, Kungsbacka, [1972]. Reprinted also by SMC Publishing Inc., Taipei, Taiwan, ROC, [1996]. ISBN: 957-638-269-6.\n\nKarlgren 1940. Grammata Serica: Script and Phonetics in Chinese and Sino-Japanese 《中日漢字形聲論》Zhong-Ri Hanzi Xingsheng Lun [A study of Sino-Japanese semantic-phonetic compound characters:] BMFEA No. 12. Reprinted, Taipei: Ch’eng-Wen Publishing Company, [1966].\n\nUlving, Tor: 1997. Dictionary of Old and Middle Chinese: Bernhard Karlgren’s Grammata Serica Recensa Alphabetically Arranged. With Ferenc Tafferner. Göteborg, Sweden: Acta Universitatis Gothoburgensis. Orientalia Gothoburgensia, 11. ISBN: 91-7346-294-2."
+        }
+      },
+      {
+        "id": "rec3nI0x9P0JTHC0r",
+        "createdTime": "2023-04-22T03:24:54.000Z",
+        "fields": {
+          "syntax": "[\\x{1100}-\\x{1112}][\\x{1161}-\\x{1175}][\\x{11A8}-\\x{11C2}]?:[01ENX]{1,3}",
+          "delimiter": "space",
+          "Status": "Provisional",
+          "name": "kHangul",
+          "category": "Readings",
+          "introduced": "5.0",
+          "description": "The modern Korean pronunciation(s) for this character in Hangul, with its source(s) following a colon.\n\nA value of 0 corresponds to KS X 1001, a value of 1 corresponds to KS X 1002, a value of E corresponds to 한문 교육용 기초 한자 (漢文敎育用基礎漢字), and a value of N corresponds to 인명용 한자 (人名用漢字). A value of X indicates that a K-source was formerly at that code point but was later removed."
+        }
+      },
+      {
+        "id": "recuKuHMEVh9nk2Yf",
+        "createdTime": "2023-04-22T03:26:04.000Z",
+        "fields": {
+          "syntax": "[1-8][0-9]{4}\\.[0-3][0-9][0-3]",
+          "delimiter": "space",
+          "Status": "Provisional",
+          "name": "kHanYu",
+          "category": "Dictionary Indices",
+          "introduced": "2.0",
+          "description": "The position of this character in the Hànyǔ Dà Zìdiǎn (HDZ) Chinese character dictionary (bibliographic information below).\n\nThe character references are given in the form “ABCDE.XYZ”, in which: “A” is the volume number [1..8]; “BCDE” is the zero-padded page number [0001..4809]; “XY” is the zero-padded number of the character on the page [01..32]; “Z” is “0” for a character actually in the dictionary, and greater than 0 for a character assigned a “virtual” position in the dictionary. For example, 53024.060 indicates an actual HDZ character, the 6th character on Page 3,024 of Volume 5 (i.e. 籉 [U+7C49]). Note that the Volume 8 “BCDE” references are in the range [0008..0044] inclusive, referring to the pagination of the “Appendix of Addendum” at the end of that volume (beginning after p. 5746).\n\nThe first character assigned a given virtual position has an index ending in 1; the second assigned the same virtual position has an index ending in 2; and so on.\n\n-- Release information --\n\nThis data set contains a total of 56098 HDZ references, 54729 of which are actual HDZ character references (positions are given for all HDZ head entries, including source-internal unifications), and 1369 of which are virtual character positions (see note below).\n\nA total of 55818 distinct Unihan characters are assigned mappings in this data. Because of IRG source-internal unifications, a given character may have more than one HDZ reference. Source-internal unifications are of two types: (1) unifications of graphical variants; (2) unifications of duplicate head entries.\n\nThe proofing of all references was done primarily on the basis of cross-checks of three versions of the reference data: (1) the original print source; (2) the “kIRGHanyuDaZidian” field of the Unihan database (release 3.1.1d1); (3) “HDZ.txt”, originally produced and proofed for Academia Sinica’s Institute of Information Technology (Document Processing Laboratory). In addition, the data was checked against the “kHanYu” and “kAlternateHanYu” fields of the Unihan database (release 3.1.1d1), which the present data set supersedes.\n\nString value, string length, compound key, field count, and page total validations were all performed. Altogether, 578 omissions/ errors in source (2) were identified/corrected. Any remaining errors will likely relate to virtual positions, or to the ordering of actual characters within a given page. It is unlikely that errors across page breaks remain. Possible future deunifications of source-internal unifications will necessitate update of USV for some references. Under no circumstances should the source-internal unification (duplicate USV) mappings be removed from this data set.\n\nNote: Source (3) contributed only actual HDZ character references to the proofing process, while source (2) contributed all virtual positions. It seems that the compilers of source (2) usually assigned virtual positions based on stroke count, though occasionally the virtual position brings the virtual character together with the actual HDZ character of which it is a variant, without regard to actual stroke count.\n\n-- Bibliographic information for the print source --\n\n<Hanyu Da Zidian> [‘Great Chinese Character Dictionary’ (in 8 Volumes)]. XU Zhongshu (Editor in Chief). Wuhan, Hubei Province (PRC): Hubei and Sichuan Dictionary Publishing Collectives, 1986-1990. ISBN: 7-5403-0030-2/H.16.\n\n《漢語大字典》。許力以主任，徐中舒主編，（漢語大字典工作委員會）。武漢：四川辭書出版社，湖北辭書出版社,1986-1990. ISBN: 7-5403-0030-2/H.16.\n\nNote that the field name is kHanYu instead of kHanyu to maintain compatibility with earlier versions of this file, where it was inappropriately spelled with an uppercase Y."
+        }
+      },
+      {
+        "id": "recsWvvtBc0se4Kt9",
+        "createdTime": "2023-04-22T03:26:35.000Z",
+        "fields": {
+          "syntax": "[a-z\\x{300}-\\x{302}\\x{304}\\x{308}\\x{30C}]+\\([0-9]+\\)",
+          "delimiter": "space",
+          "Status": "Provisional",
+          "name": "kHanyuPinlu",
+          "category": "Readings",
+          "introduced": "4.0.1",
+          "description": "The Pronunciations and Frequencies of this character, based in part on those appearing in 《現代漢語頻率詞典》 <Xiandai Hanyu Pinlu Cidian> (XDHYPLCD) [Modern Standard Beijing Chinese Frequency Dictionary] (complete bibliographic information below).\n\nData Format\n\nThis dataset contains a total of 3799 records. (The original data provided to Unihan 2003/02/04 contained a total of 3800 records, including 〇 [U+3007] líng ‘IDEOGRAPHIC NUMBER ZERO’, not included in Unihan since it is not a CJK UNIFIED IDEOGRAPH.)\n\nEach entry is comprised of two pieces of data.\n\nThe Hanyu Pinyin (HYPY) pronunciation(s) of the character.\n\nImmediately following the pronunciation, a numeric string appears in parentheses: for example, in “ā(392)” the numeric string “392” indicates the sum total of the frequencies of the pronunciations of the character as given in HYPLCD.\n\nWhere more than one pronunciation exists, these are sorted by descending frequency, and the list elements are “space” delimited.\n\nRelease Information\n\nThe XDHYPLCD data here for Modern Standard Chinese (Putonghua) cuts across 4 genres (“News,” “Scientific,” “Colloquial,” and “Literature”), and was derived from a 1,807,389 character corpus. See that text for additional information.\n\nThe 8548 entries (8586 with variant writings) from p. 491-656 of XDHYPLCD were input by hand and proof-read from 1994/08/04 to 1995/03/22 by Richard Cook.\n\nCurrent Release Date above reflects date of last proofing.\n\nHYPY transcription for the data in this release was semiautomated and hand-corrected in 1995, based in part on data provided by Ross Paterson (Department of Computing, Imperial College, London).\n\nTom Bishop http://www.wenlin.com is also due thanks for early assistance in proof-reading this data.\n\nThe character set used for this digitization of HYPLCD (a “simplified” mainland PRC text) was (Mac OS 7-9) GB/T 2312-1980 (plus 嗐).\n\nThese data were converted to Big5 (plus 腈), and both GB and Big5 versions were separately converted to Unicode 4.0, and then merged, resulting in the 3800 records in the original release. Frequency data for simplified polysyllabic words has been employed to generate both simplified and traditional character frequencies.\n\nBibliographic information for the primary print source\n\n《現代漢語頻率詞典》，北京語言學院語言教學研究所編著。\n\n<Xiandai Hanyu Pinlu Cidian> = XDHYPLCD First edition 1986/6, 2nd printing 1990/4. ISBN 7-5619-0094-5/H.67."
+        }
+      },
+      {
+        "id": "recVUnhuweOBrs0mO",
+        "createdTime": "2023-04-22T03:27:25.000Z",
+        "fields": {
+          "syntax": "(\\d{5}\\.\\d{2}0,)*\\d{5}\\.\\d{2}0:([a-z\\x{300}-\\x{302}\\x{304}\\x{308}\\x{30C}]+,)*[a-z\\x{300}-\\x{302}\\x{304}\\x{308}\\x{30C}]+",
+          "delimiter": "space",
+          "Status": "Provisional",
+          "name": "kHanyuPinyin",
+          "category": "Readings",
+          "introduced": "5.2",
+          "description": "The 漢語拼音 Hànyǔ Pīnyīn reading(s) appearing in the edition of 《漢語大字典》 Hànyǔ Dà Zìdiǎn (HDZ) specified in the “kHanYu” property description (q.v.). Each location has the form “ABCDE.XYZ” (as in “kHanYu”); multiple locations for a given pīnyīn reading are separated by commas. The list of locations is followed by a colon, followed by a comma-separated list of one or more pīnyīn readings. Where multiple pīnyīn readings are associated with a given mapping, these are ordered as in HDZ (for the most part reflecting relative commonality). The following are representative records.\n\n| U+34CE | 㓎 | 10297.260: qīn,qìn,qǐn | | U+34D8 | 㓘 | 10278.080,10278.090: sù | | U+5364 | 卤 | 10093.130: xī,lǔ 74609.020: lǔ,xī | | U+5EFE | 廾 | 10513.110,10514.010,10514.020: gǒng |\nFor example, the “kHanyuPinyin” value for 卤 U+5364 is “10093.130: xī,lǔ 74609.020: lǔ,xī”. This means that 卤 U+5364 is found in “kHanYu” at entries 10093.130 and 74609.020. The former entry has the two pīnyīn readings xī and lǔ (in that order), whereas the latter entry has the readings lǔ and xī (reversing the order).\n\nThis data was originally input by 井作恆 Jǐng Zuòhéng, proofed by 聃媽歌 Dān Māgē (Magda Danish, using software donated by 文林 Wénlín Institute, Inc. and tables prepared by 曲理查 Qū Lǐchá), and proofed again and prepared for the Unicode Consortium by 曲理查 Qū Lǐchá (2008-01-14).\n\n-- Release Notes --\nThis data set includes readings for 34,130 distinct HDZ Hànzì, 34,302 HDZ references, and 1,457 distinct pīnyīn syllables."
+        }
+      },
+      {
+        "id": "recU28z94cXjmU881",
+        "createdTime": "2023-04-22T03:28:01.000Z",
+        "fields": {
+          "syntax": "[\\x{2F00}-\\x{2FD5}]\\[U\\+2F[0-9A-D][0-9A-F]\\]:[1-8][0-9]{4}\\.[0-3][0-9]0",
+          "delimiter": "N/A",
+          "Status": "Provisional",
+          "name": "kHDZRadBreak",
+          "category": "Dictionary-like Data",
+          "introduced": "4.1",
+          "description": "Indicates that 《漢語大字典》 Hanyu Da Zidian has a radical break beginning at this character’s position. The field consists of the radical (with its Unicode code point), a colon, and then the Hanyu Da Zidian position as in the kHanyu field."
+        }
+      },
+      {
+        "id": "recfA9B2Zg8OxMZha",
+        "createdTime": "2023-04-22T03:28:39.000Z",
+        "fields": {
+          "syntax": "[0-9]{4}",
+          "delimiter": "space",
+          "Status": "Provisional",
+          "name": "kHKGlyph",
+          "category": "Dictionary-like Data",
+          "introduced": "3.1.1",
+          "description": "The index of the character in 常用字字形表 (二零零零年修訂本),香港: 香港教育學院, 2000, ISBN 962-949-040-4. This publication gives the “proper” shapes for 4759 characters as used in the Hong Kong school system. The index is an integer, zero-padded to four digits."
+        }
+      },
+      {
+        "id": "reclMRQwIVBBE5QT5",
+        "createdTime": "2023-04-22T03:29:18.000Z",
+        "fields": {
+          "syntax": "[0-9A-F]{4}",
+          "delimiter": "N/A",
+          "Status": "Provisional",
+          "name": "kHKSCS",
+          "category": "Other Mappings",
+          "introduced": "3.1.1",
+          "description": "Mappings to the Big Five extended code points used for the Hong Kong Supplementary Character Set-2008 (HKSCS-2008)."
+        }
+      },
+      {
+        "id": "recwho4uVU4b1R0gO",
+        "createdTime": "2023-04-22T03:29:48.000Z",
+        "fields": {
+          "syntax": "F[ABC][0-9A-F]{2}",
+          "delimiter": "space",
+          "Status": "Provisional",
+          "name": "kIBMJapan",
+          "category": "Other Mappings",
+          "introduced": "2.0",
+          "description": "The IBM Japanese mapping for this character in hexadecimal."
+        }
+      },
+      {
+        "id": "reckgd71TqEFEynRl",
+        "createdTime": "2023-04-22T03:30:21.000Z",
+        "fields": {
+          "syntax": "[ABC][GHJKMPT]{1,7}",
+          "delimiter": "space",
+          "Status": "Normative",
+          "name": "kIICore",
+          "category": "IRG Sources",
+          "introduced": "4.1",
+          "description": "Used for characters which are in IICore, the IRG-produced minimal set of required ideographs for East Asian use. A character is in IICore if and only if it has a value for the kIICore field.\n\nEach value consists of a letter (A, B, or C), indicating priority value, followed by an IRG source specifier as defined in Section 3.10 above."
+        }
+      },
+      {
+        "id": "recx6CHTPvKXpiNlL",
+        "createdTime": "2023-04-22T03:30:58.000Z",
+        "fields": {
+          "syntax": "[0-9]{4}\\.[0-9]{2}[01]",
+          "delimiter": "space",
+          "Status": "Provisional",
+          "name": "kIRGDaeJaweon",
+          "category": "Dictionary Indices",
+          "introduced": "3.0",
+          "description": "The position of this character in the Dae Jaweon (Korean) dictionary used in the four-dictionary sorting algorithm. The position is in the form “page.position” with the final digit in the position being “0” for characters actually in the dictionary and “1” for characters not found in the dictionary and assigned a “virtual” position in the dictionary.\n\nThus, “1187.060” indicates the sixth character on page 1187. A character not in this dictionary but assigned a position between the 6th and 7th characters on page 1187 for sorting purposes would have the code “1187.061”\n\nThis field represents the official position of the character within the Dae Jaweon dictionary as used by the IRG in the four-dictionary sorting algorithm.\n\nThe edition used is the first edition, published in Seoul by Samseong Publishing Co., Ltd., 1988."
+        }
+      },
+      {
+        "id": "recxNNukjrDlUfIL2",
+        "createdTime": "2023-04-22T03:31:35.000Z",
+        "fields": {
+          "syntax": "[0-9]{5}\\'?",
+          "delimiter": "space",
+          "Status": "Provisional",
+          "name": "kIRGDaiKanwaZiten",
+          "category": "Dictionary Indices",
+          "introduced": "3.0",
+          "description": "The index of this character in the Dai Kanwa Ziten, aka Morohashi dictionary (Japanese) used in the four-dictionary sorting algorithm.\n\nThis field represents the official position of the character within the Dai Kanwa Ziten as used by the IRG in the four-dictionary sorting algorithm. The edition used is the revised edition, published in Tokyo by Taishuukan Shoten, 1986."
+        }
+      },
+      {
+        "id": "reck1Fde1uhf0lpo1",
+        "createdTime": "2023-04-22T03:32:10.000Z",
+        "fields": {
+          "syntax": "[1-8][0-9]{4}\\.[0-3][0-9][01]",
+          "delimiter": "space",
+          "Status": "Provisional",
+          "name": "kIRGHanyuDaZidian",
+          "category": "Dictionary Indices",
+          "introduced": "3.0",
+          "description": "The position of this character in the Hànyǔ Dà Zìdiǎn (PRC) dictionary used in the four-dictionary sorting algorithm. The position is in the form “volume page.position” with the final digit in the position being “0” for characters actually in the dictionary and “1” for characters not found in the dictionary and assigned a “virtual” position in the dictionary.\n\nThus, “32264.080” indicates the eighth character on page 2264 in volume 3. A character not in this dictionary but assigned a position between the 8th and 9th characters on this page for sorting purposes would have the code “32264.081”\n\nThis field represents the official position of the character within the Hànyǔ Dà Zìdiǎn dictionary as used by the IRG in the four-dictionary sorting algorithm.\n\nThe edition of the Hanyu Da Zidian used is the first edition, published in Chengdu by Sichuan Cishu Publishing, 1986."
+        }
+      },
+      {
+        "id": "rec74yHWBwa3MmPkj",
+        "createdTime": "2023-04-22T03:32:40.000Z",
+        "fields": {
+          "syntax": "[01][0-9]{3}\\.[0-7][0-9][01]",
+          "delimiter": "space",
+          "Status": "Provisional",
+          "name": "kIRGKangXi",
+          "category": "Dictionary Indices",
+          "introduced": "3.0",
+          "description": "The official IRG position of this character in the 《康熙字典》 Kangxi Dictionary used in the four-dictionary sorting algorithm. The position is in the form “page.position” with the final digit in the position being “0” for characters actually in the dictionary and “1” for characters not found in the dictionary but assigned a “virtual” position in the dictionary.\n\nThus, “1187.060” indicates the sixth character on page 1187. A character not in this dictionary but assigned a position between the 6th and 7th characters on page 1187 for sorting purposes would have the code “1187.061”.\n\nThe edition of the Kangxi Dictionary used is the 7th edition published by Zhonghua Bookstore in Beijing, 1989.\n\nThe values in the kIRGKangXi field are a strict subset of those in the kKangXi field."
+        }
+      },
+      {
+        "id": "recB0vKZHN60yMlEL",
+        "createdTime": "2023-04-22T03:33:20.000Z",
+        "fields": {
+          "syntax": "G[013578EKS]-[0-9A-F]{4}\n| G4K(-\\d{5})?\n| G(DZ|GH|RM|WZ|XC|XH|ZH)-\\d{4}\\.\\d{2}\n| G(BK|CH|CY|HC)(-\\d{4}\\.\\d{2})?\n| GKX-\\d{4}\\.\\d{2,3}\n| G(HZ|HZR)-\\d{5}\\.\\d{2}\n| G(CE|FC|IDC|OCD|XHZ)-\\d{3}\n| G(H|HF|LGYJ|PGLG|T)-\\d{4}\n| G(CYY|DM|JZ|KJ|XM|ZFY|ZJW|ZYS)-\\d{5}\n| GFZ-[0-9A-F]{4}\n| GGFZ-\\d{6}\n| G(LK|Z)-\\d{7}\n| GU-[023][0-9A-F]{4}\n| GZA-[123467]\\d{5}",
+          "delimiter": "N/A",
+          "Status": "Normative",
+          "name": "kIRG_GSource",
+          "category": "IRG Sources",
+          "introduced": "3.0",
+          "description": "The IRG “G” source mapping for this character in hexadecimal or decimal. The IRG G source consists of data from the following national standards, publications, and lists from the People’s Republic of China and Singapore. The versions of the standards used are those provided by the PRC to the IRG and may not always reflect published versions of the standards generally available.\n\nG0 GB/T 2312-1980 (formerly GB 2312-80)\nG1 GB/T 12345-1990 (formerly GB/T 12345-90)\nG3 GB/T 13131 (unpublished GB/T 7589-1987 unsimplified forms)\nG5 GB/T 13132 (unpublished GB/T 7590-1987 unsimplified forms)\nG7 General Purpose Hanzi List for Modern Chinese Language, and General List of Simplified Hanzi\nG8 GB/T 8565.2-1988 (formerly GB 8565.2-88)\nGE GB/T 16500-1998\nGK GB/T 12052-1989 (formerly GB 12052-89)\nGS Singapore Characters\nG4K Siku Quanshu (四庫全書)\nGDZ Geographic Publishing House Ideographs (地质出版社用字)\nGGH Gudai Hanyu Cidian (古代汉语词典)\nGRM People’s Daily Ideographs (人民日报用字)\nGWZ Hanyu Dacidian Publishing House Ideographs (漢語大詞典出版社用字)\nGXC Xiandai Hanyu Cidian (现代汉语词典)\nGXH Xinhua Zidian (新华字典)\nGZH ZhongHua ZiHai (中华字海)\nGBK Chinese Encyclopedia (中國大百科全書)\nGCH Ci Hai (辞海)\nGCY Ci Yuan (辭源)\nGHC Hanyu Dacidian (漢語大詞典)\nGKX Kangxi Dictionary ideographs (康熙字典) 9th edition (1958) including the addendum (康熙字典)補遺\nGHZ Hanyu Dazidian ideographs (漢語大字典)\nGHZR 汉语大字典编辑委员会:《汉语大字典（第二版）》, 武汉: 湖北长江出版集团崇文书局 & 成都 : 四川出版集团四川辞书出版社 , 2010, ISBN 978-7-5403-1744-7\nGCE Names of newly-discovered chemical elements as assigned by the China National Committee for Terms in Sciences and Technologies and the China National Language and Character Working Committee\" (全国科学技术名词审定委员会，国家语言文字工作委员会); the value is the atomic number of the element\nGFC Modern Chinese Standard Dictionary (现代汉语规范词典第二版。主编:李行健。北京:外语 教学与研究出版社) 2010, ISBN:978-7-5600-9518-9\nGIDC ID system of the Ministry of Public Security of China, 2009\nGOCD Oxford English-Chinese Chinese-English Dictionary (牛津英汉汉英词典。主编:Julie Kleeman, 于海江。牛津:牛津大学出版社。2010年。ISBN:978-0-19-920761-9)\nGXHZ Xinhua Da Zidian (新华大字典)\nGH GB/T 15564-1995\nGHF 鄭賢章:《漢文佛典疑難俗字彙釋與研究》(Hànwén Fódiǎn Yínánsúzì Huìshì Yǔ Yánjiū; Explanation and Research on Difficult Vulgar Characters in Chinese Buddhist Classics), 成都: 巴蜀書社, 2016, ISBN 978-7-5531-0700-4\nGLGYJ ZhuangLiaoSongsResearch,《壮族嘹歌研究》2008年广西民族出版社,ISBN78-7-5363-5069-4\nGPGLG Zhuang Folk Song Culture Series - Pingguo County Liao Songs (壮族民歌文化丛书•平果嘹歌) 2004-2006, ISBN 7-5363-[4820-7 | 5012-0 | 5013-9 |5014-7 | 5015-5]\nGT 标准电码本（修订本） (Standard Telegraph Codebook (revised)), 1983\nGCYY Chinese Academy of Surveying and Mapping Ideographs (中国测绘科学院用字)\nGJZ Commercial Press Ideographs (商务印书馆用字)\nGKJ Terms in Sciences and Technologies (科技用字) approved by the China National Committee for Terms in Sciences and Technologies (CNCTST)\nGZFY Hanyu Fangyan Dacidian (汉语方言大词典)\nGZJW Yinzhou Jinwen Jicheng Yinde (殷周金文集成引得)\nGZYS Chinese Ancient Ethnic Characters Research (中国民族古文字研究), 1984\nGFZ Founder Press System (方正排版系统)\nGGFZ Tongyong Guifan Hanzi Zidian (通用规范汉字字典)\nGLK 《龍龕手鑑》（續古逸叢書）\nGZ Ancient Zhuang Character Dictionary, (古壮字字典) 1989, ISBN 7-5363-0614-8\nGXM Characters for use in personal names in China. Source from Public Order Administration, The Ministry of Public Security of the People’s Republic of China.\nGZA-1 A Vibrant and Unbroken Transmission—Filial Piety and Zhuang Funeral Songs 生生不息的传承•孝与壮族行孝歌之研究, 2010年北京民族出版社, ISBN 978-7-1051-0648-6\nGZA-2 Annotated Long Zhuang Morality Songs 壮族伦理道德长诗传扬歌译注, 2005 年广西民族出版社, ISBN 7-5363-4922-X\nGZA-3 Compendium of Old Zhuang Folksong Texts—Wooing Songs vol. 1—Liao Songs 壮族民歌古籍集成•情歌（一）嘹歌, 1993广西民族出版社, ISBN 7-5363-2714-5\nGZA-4 Compendium of Old Zhuang Folksong Texts—Wooing Songs vol. 1—Fwen Nganx 壮族民歌古籍集成•情歌（二）欢𭪤, 1997年南宁广西民族出版社, ISBN 7-5363-3298-X\nGZA-6 Zhuang Proverbs from China 中国壮族谚语 2015 广州世界图书出版广东有限公司, ISBN 978-7-192-0492-1\nGZA-7 Ancient Remembrance—Zhuang Creation Myth Songs 远古的追忆•壮族创世神话古歌研究, 2012 年北京民族出版社, ISBN 978-7-1051-2242-4\nGDM Place name characters from the Public Order Administration, Ministry of Public Security, People's Republic of China\nGU The source reference for this character has been moved; the value is its code point."
+        }
+      },
+      {
+        "id": "recZICACoxMMIKNWk",
+        "createdTime": "2023-04-22T03:34:05.000Z",
+        "fields": {
+          "syntax": "H-[0-9A-F]{4}\n| H(B[012])-[0-9A-F]{4}\n| HD-[23]?[0-9A-F]{4}\n| HU-[023][0-9A-F]{4}",
+          "delimiter": "N/A",
+          "Status": "Normative",
+          "name": "kIRG_HSource",
+          "category": "IRG Sources",
+          "introduced": "3.1",
+          "description": "The IRG “H” source mapping for this character in hexadecimal. The IRG “H” source consists of data from the following sources:\n\nH Hong Kong Supplementary Character Set – 2008\nHB0 Big-5: Computer Chinese Glyph and Character Code Mapping Table, Technical Report C-26, 電腦用中文字型與字碼對照表, 技術通報C-26, 1984, Symbols\nHB1 Big-5, Level 1\nHB2 Big-5, Level 2\nHD Hong Kong Supplementary Character Set – 2016\nHU The source reference for this character has been moved; the value is its code point. "
+        }
+      },
+      {
+        "id": "rechpHVL9qyWCZUh8",
+        "createdTime": "2023-04-22T03:34:49.000Z",
+        "fields": {
+          "syntax": "J[014]-[0-9A-F]{4}\n| J3A?-[0-9A-F]{4}\n| J13A?-[0-9A-F]{4}\n| J14-[0-9A-F]{4}\n| JA[34]?-[0-9A-F]{4}\n| JARIB-[0-9A-F]{4}\n| JH-(JT[ABC][0-9A-F]{3}S?|IB\\d{4}|\\d{6})\n| JK-\\d{5}\n| JMJ-\\d{6}",
+          "delimiter": "N/A",
+          "Status": "Normative",
+          "name": "kIRG_JSource",
+          "category": "IRG Sources",
+          "introduced": "3.0",
+          "description": "The IRG “J” source mapping for this character in hexadecimal or decimal. The IRG “J” source consists of data from the following national standards and lists from Japan.\n\nJ0 JIS X 0208-1990\nJ1 JIS X 0212-1990\nJ4 JIS X 0213:2004 level-4\nJ3 JIS X 0213:2004 level-3\nJ3A JIS X 0213:2004 level-3 addendum from JIS X 0213:2000 level-3\nJ13 JIS X 0213:2004 level-3 characters replacing J1 characters\nJ13A JIS X 0213:2004 level-3 character addendum from JIS X 0213:2000 level-3 replacing J1 characters\nJ14 JIS X 0213:2004 level-4 characters replacing J1 characters\nJA Unified Japanese IT Vendors Contemporary Ideographs, 1993\nJA3 JIS X 0213:2004 level-3 characters replacing JA characters\nJA4 JIS X 0213:2004 level-4 characters replacing JA characters\nJARIB Association of Radio Industries and Businesses (ARIB) ARIB STD-B24 Version 5.1, March 14 2007\nJH Hanyo-Denshi Program (汎用電子情報交換環境整備プログラム), 2002-2009\nJK Japanese KOKUJI Collection\nJMJ Moji Joho Kiban Project (文字情報基盤整備事業)"
+        }
+      },
+      {
+        "id": "recerwXjwS2mYejPB",
+        "createdTime": "2023-04-22T03:35:27.000Z",
+        "fields": {
+          "syntax": "KP([01]-[0-9A-F]{4}|U-[023][0-9A-F]{4})",
+          "delimiter": "N/A",
+          "Status": "Normative",
+          "name": "kIRG_KPSource",
+          "category": "IRG Sources",
+          "introduced": "3.1.1",
+          "description": "The IRG “KP” source mapping for this character in hexadecimal. The IRG “KP” source consists of data from the following national standards and lists from the Democratic People’s Republic of Korea (North Korea).\n\nKP0 KPS 9566-97\nKP1 KPS 10721-2000\nKPU The source reference for this character has been moved; the value is its code point.\n\nIt is currently not possible to communicate with standards bodies within the DPRK. There may, therefore, be erroneous data in the values for this field."
+        }
+      },
+      {
+        "id": "rec8xyZVE6XpA7mhU",
+        "createdTime": "2023-04-22T03:36:29.000Z",
+        "fields": {
+          "syntax": "K[0-6]-[0-9A-F]{4}\n| KC-\\d{5}\n| KU-[023][0-9A-F]{4}",
+          "delimiter": "N/A",
+          "Status": "Normative",
+          "name": "kIRG_KSource",
+          "category": "IRG Sources",
+          "introduced": "3.0",
+          "description": "The IRG “K” source mapping for this character in hexadecimal or decimal. The IRG “K” source consists of data from the following national standards and lists from the Republic of Korea (South Korea).\n\nK0 KS X 1001:2004 (formerly KS C 5601-1987)\nK1 KS X 1002:2001 (formerly KS C 5657-1991)\nK2 KS X 1027-1:2011 (formerly PKS C 5700-1 1994)\nK3 KS X 1027-2:2011 (formerly PKS C 5700-2 1994)\nK4 KS X 1027-3:2011 (formerly PKS 5700-3:1998)\nK5 KS X 1027-4:2011 (formerly Korean IRG Hanja Character Set 5th Edition: 2001)\nK6 KS X 1027-5:2014\nKC Korean History On-Line (한국 역사 정보 통합 시스템)\nKU The source reference for this character has been moved; the value is its code point.\n\nNote that the K4 and K5 sources are expressed in hexadecimal, but unlike the K0 through K3 sources, they are not organized in row/column format. Also note that the KC source is expressed as a zero-padded five-digit decimal value."
+        }
+      },
+      {
+        "id": "rec9j1KlXunHvaAxa",
+        "createdTime": "2023-04-22T03:37:30.000Z",
+        "fields": {
+          "syntax": "MA-[0-9A-F]{4}\n| MB[12]-[0-9A-F]{4}\n| MC-\\d{5}\n| MDH?-[23]?[0-9A-F]{4} ",
+          "delimiter": "N/A",
+          "Status": "Normative",
+          "name": "kIRG_MSource",
+          "category": "IRG Sources",
+          "introduced": "5.2",
+          "description": "The IRG “M” source mapping for this character in decimal. The IRG “M” source corresponds to MSCS (Macao Supplementary Character Set).\n\nMA HKSCS-2008 code point in hexadecimal\nMB Big Five code point in hexadecimal\nMC MSCS reference\nMD MSCS horizontal extensions"
+        }
+      },
+      {
+        "id": "rec0uKIbGvQorRX1j",
+        "createdTime": "2023-04-22T03:38:10.000Z",
+        "fields": {
+          "syntax": "SAT-\\d{5}",
+          "delimiter": "N/A",
+          "Status": "Normative",
+          "name": "kIRG_SSource",
+          "category": "IRG Sources",
+          "introduced": "13.0",
+          "description": "The IRG “S” source mapping for this character that corresponds to Taishō Shinshū Daizōkyō (大正新脩大藏經), 1924–1934, which is accessible in the SAT Daizōkyō Text Database. The source references consist of “SAT” followed by a hyphen and five decimal digits, zero padded."
+        }
+      },
+      {
+        "id": "recbArLFbrIDSHVUY",
+        "createdTime": "2023-04-22T03:38:37.000Z",
+        "fields": {
+          "syntax": "T([1-7A-F]|1[1-3])-[0-9A-F]{4}\n| TU-[023][0-9A-F]{4}",
+          "delimiter": "N/A",
+          "Status": "Normative",
+          "name": "kIRG_TSource",
+          "category": "IRG Sources",
+          "introduced": "3.0",
+          "description": "The IRG “T” source mapping for this character in hexadecimal. The IRG “T” source consists of data from the following standards and lists. “TCA” stands for “Taipei Computer Association,” and “CNS” stands for “Chinese National Standard.”\n\nT1 TCA-CNS 11643-1992 1st plane\nT2 TCA-CNS 11643-1992 2nd plane\nT3 TCA-CNS 11643-1992 3rd plane with some additional characters\nT4 TCA-CNS 11643-1992 4th plane\nT5 TCA-CNS 11643-1992 5th plane\nT6 TCA-CNS 11643-1992 6th plane\nT7 TCA-CNS 11643-1992 7th plane\nTA TCA-CNS 11643-2007 10th plane\nTB TCA-CNS 11643-2007 11th plane\nTC TCA-CNS 11643-2007 12th plane\nTD TCA-CNS 11643-2007 13th plane\nTE TCA-CNS 11643-2007 14th plane\nTF TCA-CNS 11643-2007 15th plane\nT11 TCA-CNS 11643 17th plane (pending new version)\nT12 TCA-CNS 11643 18th plane (pending new version)\nT13 TCA-CNS 11643 19th plane (pending new version)\nTU The source reference for this character has been moved; the value is its code point.\n\nCNS 11643-1992 (p. 319) lists the following reference works:\n參考文件:\n(1) “教育部常用國字標準字體表”， 正中書局， 民國 71 年 9 月。[‘ROC Ministry of Education: Table Standardizing Common Characters’. Sept., 1982.]\n(2) “教育部次常用國字標準字體表”， 教育部， 民國 71 年 12 月。[‘ROC Ministry of Education: Table Standardizing Less-Common Characters’. Dec., 1982.]\n(3) “教育部罕用字體表”， 正中書局， 民國 72 年 10 月。[‘ROC Ministry of Education: Table Standardizing Rare Characters’. Oct., 1983.]\n(4) “教育部異體國字字表”， 教育部， 民國 73 年 3 月。[‘ROC Ministry of Education: Table of Character Variants’. Mar., 1984.]\n(5) “通用漢字標準交換碼 — 使用者加字區交換碼，行政院主計處理資料中心，民國 77 年 6 月。[ ‘Standard Interchange Encoding of Common Characters — Private-Use Area Codes (Executive Office, Central Accounting Data Processing Center, ROC)’. June, 1988.]\n(6) 《中文大辭典》，中國文化大學出版部，民國 71 年 8 月。[‘Zhōng Wén Dà Cídiǎn: Encyclopedic Dictionary of Written Chinese’. Aug., 1982. https://web.archive.org/web/20191202212625/http://ap6.pccu.edu.tw/Dictionary ]\n(7) 《康熙字典》，第六版，中華書局，民國 78 年 2 月。 [‘Kāng Xī Dictionary’. Feb., 1989]\n(8) 國字標準字體研習會資料，民國 80 年 7 月。[‘National Script Standardization Conference Data Resources’. July, 1991.]\n(9) 警政署常用字頻率分析。[‘High-frequency characters in police reports’.]\n(10) 國中教科書用字整理分析報告，資訊工業策進會。[‘Statistical analysis of common characters in junior highschool (grades 7-9) textbooks’.]\n(11) “Information Technology — Universal Multi-Octet Coded Character Set (UCS), Part 1: Architecture and Basic Multi-Lingual Plane”, Working Document, ISO/IEC DIS 10646 - 1.2, Dec. 26, 1991."
+        }
+      },
+      {
+        "id": "rec8b06vwvBsY8MWi",
+        "createdTime": "2023-04-22T03:39:25.000Z",
+        "fields": {
+          "syntax": "UK-\\d{5}",
+          "delimiter": "N/A",
+          "Status": "Normative",
+          "name": "kIRG_UKSource",
+          "category": "IRG Sources",
+          "introduced": "13.0",
+          "description": "The IRG “UK” source mapping for this character in decimal. The source references consist of “UK” followed by a hyphen and five decimal digits, zero padded. The IRG “UK” source currently consists of data from the documents IRG N2107R2 and IRG N2232R that are available in the UK-source Ideographs repository."
+        }
+      },
+      {
+        "id": "recnInrhfKzDl9Rtt",
+        "createdTime": "2023-04-22T03:40:02.000Z",
+        "fields": {
+          "syntax": "UTC-\\d{5}",
+          "delimiter": "N/A",
+          "Status": "Normative",
+          "name": "kIRG_USource",
+          "category": "IRG Sources",
+          "introduced": "4.0.1",
+          "description": "The IRG “U” source mapping for this character in decimal. U-source references are a reference into the U-source ideograph database; see [UAX45]. They consist of “UTC” followed by a hyphen and a five-digit, zero-padded index into the database."
+        }
+      },
+      {
+        "id": "rec4TN0B9B9SKMZ1a",
+        "createdTime": "2023-04-22T03:40:29.000Z",
+        "fields": {
+          "syntax": "V[0-4]-[0-9A-F]{4}\n| VN-[023F][0-9A-F]{4}",
+          "delimiter": "N/A",
+          "Status": "Normative",
+          "name": "kIRG_VSource",
+          "category": "IRG Sources",
+          "introduced": "3.0",
+          "description": "The IRG “V” source mapping for this character in hexadecimal. The IRG “V” source consists of data from the following national standards and lists from Vietnam.\n\nV0 TCVN 5773:1993\nV1 TCVN 6056:1995\nV2 VHN 01:1998\nV3 VHN 02: 1998\nV4 Kho Chữ Hán Nôm Mã Hoá (Hán Nôm Coded Character Repertoire), Hà Nội, 2007\nVN Vietnamese horizontal extensions; the value is its code point "
+        }
+      },
+      {
+        "id": "reccPNC1l3HfM5GzY",
+        "createdTime": "2023-04-22T03:41:42.000Z",
+        "fields": {
+          "syntax": "[0-9A-F]{4}S?",
+          "delimiter": "space",
+          "Status": "Provisional",
+          "name": "kJa",
+          "category": "Other Mappings",
+          "introduced": "8.0.0",
+          "description": "The source identifier for this character in 'Unified Japanese IT Vendors Contemporary Ideographs, 1993' (JA). This field is used for characters whose original kIRG_JSource was JA and later changed to a different source standard."
+        }
+      },
+      {
+        "id": "recdI9MHZXFbNA0UX",
+        "createdTime": "2023-04-22T03:42:20.000Z",
+        "fields": {
+          "syntax": "[A-Z]+",
+          "delimiter": "space",
+          "Status": "Provisional",
+          "name": "kJapaneseKun",
+          "category": "Readings",
+          "introduced": "2.0",
+          "description": "The Japanese pronunciation(s) of this character in the Hepburn romanization."
+        }
+      },
+      {
+        "id": "recX9yLjAu4FuT9gK",
+        "createdTime": "2023-04-22T03:43:31.000Z",
+        "fields": {
+          "syntax": "[A-Z]+",
+          "delimiter": "space",
+          "Status": "Provisional",
+          "name": "kJapaneseOn",
+          "category": "Readings",
+          "introduced": "2.0",
+          "description": "The Sino-Japanese pronunciation(s) of this character."
+        }
+      },
+      {
+        "id": "recWc0vTjrBStJDoG",
+        "createdTime": "2023-04-22T03:44:01.000Z",
+        "fields": {
+          "syntax": "(20[0-9]{2})(:U\\+[23]?[0-9A-F]{4})?",
+          "delimiter": "space",
+          "Status": "Provisional",
+          "name": "kJinmeiyoKanji",
+          "category": "Other Mappings",
+          "introduced": "11.0",
+          "description": "The year that corresponds to the Jinmei-yō Kanji (人名用漢字) list in which the ideograph appears, and followed by a colon and the code point of its standard form if it is considered a variant.\n\nPublished by Japan's Ministry of Justice (法務省) in 2010 and amended in 2015 and 2017 with one additional ideograph during each year, Jinmei-yō Kanji (人名用漢字) includes 863 ideographs for use in personal names in Japan.\n\nhttp://www.moj.go.jp/content/001131003.pdf\n\nThe version year is either 2010 (861 ideographs), 2015 (one ideograph), or 2017 (one ideograph), and 230 ideographs are variants for which the code point of the standard Japanese form is specified. "
+        }
+      },
+      {
+        "id": "recMCN6eckS5Dl4tT",
+        "createdTime": "2023-04-22T03:44:43.000Z",
+        "fields": {
+          "syntax": "[0-9]{4}",
+          "delimiter": "space",
+          "Status": "Provisional",
+          "name": "kJis0",
+          "category": "Other Mappings",
+          "introduced": "2.0",
+          "description": "The JIS X 0208-1990 mapping for this character in ku/ten form."
+        }
+      },
+      {
+        "id": "recIR43AXWrbPe67M",
+        "createdTime": "2023-04-22T03:45:08.000Z",
+        "fields": {
+          "syntax": "[12],[0-9]{2},[0-9]{1,2}",
+          "delimiter": "space",
+          "Status": "Provisional",
+          "name": "kJIS0213",
+          "category": "Other Mappings",
+          "introduced": "3.1.1",
+          "description": "The JIS X 0213:2004 mapping for this character in men,ku,ten form."
+        }
+      },
+      {
+        "id": "recf7dD2siZuojXuz",
+        "createdTime": "2023-04-22T03:45:43.000Z",
+        "fields": {
+          "syntax": "[0-9]{4}",
+          "delimiter": "space",
+          "Status": "Provisional",
+          "name": "kJis1",
+          "category": "Other Mappings",
+          "introduced": "2.0",
+          "description": "The JIS X 0212-1990 mapping for this character in ku/ten form."
+        }
+      },
+      {
+        "id": "recuE1YxGbonVFfjE",
+        "createdTime": "2023-04-22T03:46:54.000Z",
+        "fields": {
+          "syntax": "(20[0-9]{2})|(U\\+[23]?[0-9A-F]{4})",
+          "delimiter": "space",
+          "Status": "Provisional",
+          "name": "kJoyoKanji",
+          "category": "Other Mappings",
+          "introduced": "11.0",
+          "description": "The year that corresponds to the Jōyō Kanji (常用漢字) list in which the ideograph appears, or the code point of the JIS X 0208 variant for ideographs that are specific to the JIS X 0213 standard and allowed for compatibility with implementations that support only JIS X 0208.\n\nPublished by Japan's Agency for Cultural Affairs (文化庁) in 2010, Jōyō Kanji (常用漢字) includes 2,136 ideographs for common use in Japan.\n\nhttp://www.bunka.go.jp/kokugo_nihongo/sisaku/joho/joho/kijun/naikaku/pdf/joyokanjihyo_20101130.pdf\n\nThe current version year is 2010, and there are only four ideographs that are considered JIS X 0208 variants of JIS X 0213 ideographs."
+        }
+      },
+      {
+        "id": "recaYTJjkNXHpNdbR",
+        "createdTime": "2023-04-22T05:05:09.000Z",
+        "fields": {
+          "syntax": "[0-9]{4}\\.[0-9]{2}[01]",
+          "delimiter": "space",
+          "Status": "Provisional",
+          "name": "kKangXi",
+          "category": "Dictionary Indices",
+          "introduced": "2.0",
+          "description": "The position of this character in the《康熙字典》Kangxi Dictionary used in the four-dictionary sorting algorithm. The position is in the form “page.position” with the final digit in the position being “0” for characters actually in the dictionary and “1” for characters not found in the dictionary but assigned a “virtual” position in the dictionary.\n\nThus, “1187.060” indicates the sixth character on page 1187. A character not in this dictionary but assigned a position between the 6th and 7th characters on page 1187 for sorting purposes would have the code “1187.061”.\n\nThe edition of the Kangxi Dictionary used is the 7th edition published by Zhonghua Bookstore in Beijing, 1989.\n\nThe values in the kKangXi field are a strict superset of those in the kIRGKangXi field."
+        }
+      },
+      {
+        "id": "recC7znNONleVJ3Mf",
+        "createdTime": "2023-04-22T05:05:48.000Z",
+        "fields": {
+          "syntax": "[1-9][0-9]{0,3}[A*]?",
+          "delimiter": "space",
+          "Status": "Provisional",
+          "name": "kKarlgren",
+          "category": "Dictionary Indices",
+          "introduced": "3.1.1",
+          "description": "The index of this character in Analytic Dictionary of Chinese and Sino-Japanese by Bernhard Karlgren, New York: Dover Publications, Inc., 1974.\n\nIf the index is followed by an asterisk (*), then the index is an interpolated one, indicating where the character would be found if it were to have been included in the dictionary. Note that while the index itself is usually an integer, there are some cases where it is an integer followed by an “A”."
+        }
+      },
+      {
+        "id": "recyu0qAqohDY9uAc",
+        "createdTime": "2023-04-22T05:06:28.000Z",
+        "fields": {
+          "syntax": "[A-Z]+",
+          "delimiter": "space",
+          "Status": "Provisional",
+          "name": "kKorean",
+          "category": "Readings",
+          "introduced": "2.0",
+          "description": "The Korean pronunciation(s) of this character, using the Yale romanization system. (See http://en.wikipedia.org/wiki/Korean_romanization for a discussion of the various Korean romanization systems.)\n\nUse of the kKorean field is not recommended. The kHangul field, which is aligned to the KS X 1001 and KS X 1002 standards, 한문 교육용 기초 한자 (漢文敎育用基礎漢字), and 인명용 한자 (人名用漢字), is recommended to be used instead."
+        }
+      },
+      {
+        "id": "recargdLyMcHbQPyL",
+        "createdTime": "2023-04-22T05:07:03.000Z",
+        "fields": {
+          "syntax": "20[0-9]{2}",
+          "delimiter": "space",
+          "Status": "Provisional",
+          "name": "kKoreanEducationHanja",
+          "category": "Other Mappings",
+          "introduced": "11.0",
+          "description": "The year that corresponds to the 한문 교육용 기초 한자 (漢文敎育用基礎漢字) list of 1,800 ideographs for general use in which the ideograph appears.\n\nThe Supreme Court of Korea published a large list of ideographs for use in personal names, and this property corresponds to an 1,800-ideograph subset that is separate from those intended only for use in personal names and covered by the kKoreanName property.\n\nhttps://help.scourt.go.kr/nm/images/hanja/hanja_2015.pdf\n\nThe current version year is 2007. "
+        }
+      },
+      {
+        "id": "recDIAcbhEOdeRgjj",
+        "createdTime": "2023-04-22T05:07:43.000Z",
+        "fields": {
+          "syntax": "20[0-9]{2}",
+          "delimiter": "space",
+          "Status": "Provisional",
+          "name": "kKoreanName",
+          "category": "Other Mappings",
+          "introduced": "11.0",
+          "description": "The year that corresponds to the 인명용 한자 (人名用漢字) list in which the ideograph first appears, regardless of its readings.\n\nThe Supreme Court of Korea published this list of ideographs, and this property excludes 1,800 ideographs that represent a subset that the kKoreanEducationHanja property covers.\n\nhttps://help.scourt.go.kr/nm/images/hanja/hanja.pdf\n\nThe current version years are 2015 and 2018. "
+        }
+      },
+      {
+        "id": "reclI9c0EemCO0wVY",
+        "createdTime": "2023-04-22T05:08:17.000Z",
+        "fields": {
+          "syntax": "[0-9A-F]{4}",
+          "delimiter": "space",
+          "Status": "Provisional",
+          "name": "kKPS0",
+          "category": "Other Mappings",
+          "introduced": "3.1.1",
+          "description": "The KPS 9566-97 mapping for this character in hexadecimal form."
+        }
+      },
+      {
+        "id": "recVFsluJPiQQJb5w",
+        "createdTime": "2023-04-22T05:08:51.000Z",
+        "fields": {
+          "syntax": "[0-9A-F]{4}",
+          "delimiter": "space",
+          "Status": "Provisional",
+          "name": "kKPS1",
+          "category": "Other Mappings",
+          "introduced": "3.1.1",
+          "description": "The KPS 10721-2000 mapping for this character in hexadecimal form."
+        }
+      },
+      {
+        "id": "recHqq1tAxXApis0J",
+        "createdTime": "2023-04-22T05:09:11.000Z",
+        "fields": {
+          "syntax": "[0-9]{4}",
+          "delimiter": "space",
+          "Status": "Provisional",
+          "name": "kKSC0",
+          "category": "Other Mappings",
+          "introduced": "2.0",
+          "description": "The KS X 1001:1992 (KS C 5601-1989) mapping for this character in ku/ten form."
+        }
+      },
+      {
+        "id": "recVk8CJFE2ev6rWG",
+        "createdTime": "2023-04-22T05:09:56.000Z",
+        "fields": {
+          "syntax": "[0-9]{4}",
+          "delimiter": "space",
+          "Status": "Provisional",
+          "name": "kKSC1",
+          "category": "Other Mappings",
+          "introduced": "2.0",
+          "description": "The KS X 1002:1991 (KS C 5657-1991) mapping for this character in ku/ten form."
+        }
+      },
+      {
+        "id": "rec5bStw7eWb48mk4",
+        "createdTime": "2023-04-22T05:10:13.000Z",
+        "fields": {
+          "syntax": "[1-9][0-9]{0,3}",
+          "delimiter": "space",
+          "Status": "Provisional",
+          "name": "kLau",
+          "category": "Dictionary Indices",
+          "introduced": "3.1.1",
+          "description": "The index of this character in A Practical Cantonese-English Dictionary by Sidney Lau, Hong Kong: The Government Printer, 1977.\n\nThe index consists of an integer. Missing indices indicate characters to be found in [UAX45]. "
+        }
+      },
+      {
+        "id": "recZeuBZJht8092RZ",
+        "createdTime": "2023-04-22T05:10:58.000Z",
+        "fields": {
+          "syntax": "[0-9]{4}",
+          "delimiter": "space",
+          "Status": "Provisional",
+          "name": "kMainlandTelegraph",
+          "category": "Other Mappings",
+          "introduced": "2.0",
+          "description": "The PRC telegraph code for this character, derived from “Kanzi denpou koudo henkan-hyou” (“Chinese character telegraph code conversion table”), Lin Jinyi, KDD Engineering and Consulting, Tokyo, 1984."
+        }
+      },
+      {
+        "id": "recZuCUMzq3VuLzct",
+        "createdTime": "2023-04-22T05:11:36.000Z",
+        "fields": {
+          "syntax": "[a-z\\x{300}-\\x{302}\\x{304}\\x{308}\\x{30C}]+",
+          "delimiter": "space",
+          "Status": "Informative",
+          "name": "kMandarin",
+          "category": "IRG Sources",
+          "introduced": "2.0",
+          "description": "The most customary pīnyīn reading for this character. When there are two values, then the first is preferred for zh-Hans (CN) and the second is preferred for zh-Hant (TW). When there is only one value, it is appropriate for both.\n\nThis field is targeted specifically for use by CLDR collation and transliteration. As such, it is subject to considerations that help keep pīnyīn-based Han collation (and its tailorings) and transliteration reasonably stable. The values may not in all cases track the preferred use in some dictionaries."
+        }
+      },
+      {
+        "id": "recJSqMJ8dafC6szG",
+        "createdTime": "2023-04-22T05:12:22.000Z",
+        "fields": {
+          "syntax": "[1-9][0-9]{0,3}(a|\\.5)?",
+          "delimiter": "space",
+          "Status": "Provisional",
+          "name": "kMatthews",
+          "category": "Dictionary Indices",
+          "introduced": "2.0",
+          "description": "The index of this character in Chinese-English Dictionary by Robert H. Mathews, Cambridge: Harvard University Press, 1975.\n\nNote that the field name is kMatthews instead of kMathews to maintain compatibility with earlier versions of this file, where it was inadvertently misspelled."
+        }
+      },
+      {
+        "id": "recA1RyT1xdAlDXbl",
+        "createdTime": "2023-04-22T05:12:58.000Z",
+        "fields": {
+          "syntax": "[1-9][0-9]{0,3}[a-t*]?",
+          "delimiter": "space",
+          "Status": "Provisional",
+          "name": "kMeyerWempe",
+          "category": "Dictionary Indices",
+          "introduced": "3.1",
+          "description": "The index of this character in the Student’s Cantonese-English Dictionary by Bernard F. Meyer and Theodore F. Wempe (3rd edition, 1947). The index is an integer, optionally followed by a lowercase Latin letter if the listing is in a subsidiary entry and not a main one. In some cases, where the character is found in the radical-stroke index, but not in the main body of the dictionary, the integer is followed by an asterisk: for example, U+50E5 僥, which is listed as 736* as well as 1185a."
+        }
+      },
+      {
+        "id": "recAj8rDNMCRXme3y",
+        "createdTime": "2023-04-22T05:13:36.000Z",
+        "fields": {
+          "syntax": "[0-9]{5}\\'?",
+          "delimiter": "space",
+          "Status": "Provisional",
+          "name": "kMorohashi",
+          "category": "Dictionary Indices",
+          "introduced": "2.0",
+          "description": "The index of this character in the Dai Kanwa Ziten, aka Morohashi dictionary (Japanese) used in the four-dictionary sorting algorithm.\n\nThe edition used is the revised edition, published in Tokyo by Taishūkan Shoten, 1986."
+        }
+      },
+      {
+        "id": "recfqhQokGm04TIhM",
+        "createdTime": "2023-04-22T05:14:09.000Z",
+        "fields": {
+          "syntax": "[0-9]{4}",
+          "delimiter": "space",
+          "Status": "Provisional",
+          "name": "kNelson",
+          "category": "Dictionary Indices",
+          "introduced": "2.0",
+          "description": "The index of this character in The Modern Reader’s Japanese-English Character Dictionary by Andrew Nathaniel Nelson, Rutland, Vermont: Charles E. Tuttle Company, 1974."
+        }
+      },
+      {
+        "id": "recTh8rmrP56weX3N",
+        "createdTime": "2023-04-22T05:14:54.000Z",
+        "fields": {
+          "syntax": "[0-9]+",
+          "delimiter": "space",
+          "Status": "Informative",
+          "name": "kOtherNumeric",
+          "category": "Numeric Values",
+          "introduced": "3.2",
+          "description": "One or more values of the character when used as a numeral. Characters with this property are rarely used for writing numbers, or have non-standard or multiple values depending on the region. For example, 㠪 is a rare character whose meaning, “five,” would not be recognized by most native readers. An English-language equivalent is “gross,” whose numeric value, “one hundred forty-four,” is not universally understood by native readers.\n\nThe three numeric-value fields should have no overlap; that is, characters with a kOtherNumeric value should not have a kAccountingNumeric or kPrimaryNumeric value as well."
+        }
+      },
+      {
+        "id": "rec1rOMvLAVYYfOIc",
+        "createdTime": "2023-04-22T05:15:26.000Z",
+        "fields": {
+          "syntax": "[1-9][0-9]{0,3}[A-Dx]?[*+]?",
+          "delimiter": "space",
+          "Status": "Provisional",
+          "name": "kPhonetic",
+          "category": "Dictionary-like Data",
+          "introduced": "3.1",
+          "description": "The phonetic class for the character, as adopted from Ten Thousand Characters: An Analytic Dictionary, by G. Hugh Casey, S.J. Hong Kong: Kelly and Walsh, 1980.\n\nCharacters in the same phonetic class have a common phonetic element, such as 耕 (U+8015) and 阱 (U+9631), both assigned to the phonetic class 103. Most classes have a prototype character, which serves as the common phonetic element for the remaining members of the class. For example, 乍 (U+4E4D) is the prototype for characters of class 10.\n\nSome classes are associated with one to four subsidiary classes, indicated by the letters A through D.\n\nSome characters are assigned multiple classes. This can happen, for example, when a character belongs to one class but is also the prototype for a different class. For example, 國 (U+570B) is the prototype for class 748, but is also a member of class 1416, which has 或 (U+6216) as its prototype. Its kPhonetic value is therefore \"748 1416.\"\n\nMultiple values are always in ascending numerical order.\n\nAn asterisk is appended when a character has the given phonetic class but is not explicitly included in the character list for that class. For example, 蝓 (U+8753) belongs to the class 1611 but is not explicitly listed in that class. Its kPhonetic value is therefore \"1611*\".\n\nCasey includes a radical-stroke index mapping characters to their phonetic class. In some cases, this mapping is in error; when this happens, a lowercase \"x\" is appended to the index. For example, 萑 (U+8411) is assigned to the classes 216 and 285, but the assignment to class 216 is clearly in error. Its kPhonetic value is therefore \"216x 285\". "
+        }
+      },
+      {
+        "id": "recHgiWUEkk0SrVnL",
+        "createdTime": "2023-04-22T05:21:26.000Z",
+        "fields": {
+          "syntax": "[0-9]+",
+          "delimiter": "space",
+          "Status": "Informative",
+          "name": "kPrimaryNumeric",
+          "category": "Numeric Values",
+          "introduced": "3.2",
+          "description": "The value of the character when used as a numeral. Characters which have this property have numeric values that are common, and always convey the same numeric value. For example, 千 always means “thousand.” A native reader is expected to understand the numeric value for these characters.\n\nThe three numeric-value fields should have no overlap; that is, characters with a kPrimaryNumeric value should not have a kAccountingNumeric or kOtherNumeric value as well."
+        }
+      },
+      {
+        "id": "recVSBGDIAPXZPBQb",
+        "createdTime": "2023-04-22T05:23:48.000Z",
+        "fields": {
+          "syntax": "[0-9]{4}",
+          "delimiter": "N/A",
+          "Status": "Provisional",
+          "name": "kPseudoGB1",
+          "category": "Other Mappings",
+          "introduced": "2.0",
+          "description": "A “GB/T 12345-1990” code point assigned to this character for the purposes of including it within Unihan. Pseudo-GB1 codes were used to provide official code points for characters not already in national standards, such as characters used to write Cantonese, and so on."
+        }
+      },
+      {
+        "id": "recuV5XD07KSw8B3T",
+        "createdTime": "2023-04-22T05:24:30.000Z",
+        "fields": {
+          "syntax": "[CV]\\+[0-9]{1,5}\\+[1-9][0-9]{0,2}\\.[1-9][0-9]?\\.[0-9]{1,2}",
+          "delimiter": "space",
+          "Status": "Provisional",
+          "name": "kRSAdobe_Japan1_6",
+          "category": "Radical-Stroke Counts",
+          "introduced": "4.1",
+          "description": "Information on the glyphs in Adobe-Japan1-6 as contributed by Adobe. The value consists of a number of space-separated entries. Each entry consists of three pieces of information separated by a plus sign:\n\n1) C or V. “C” indicates that the Unicode code point maps directly to the Adobe-Japan1-6 CID that appears after it, and “V” indicates that it is considered a variant form, and thus not directly encoded.\n\n2) The Adobe-Japan1-6 CID.\n\n3) Radical-stroke data for the indicated Adobe-Japan1-6 CID. The radical-stroke data consists of three pieces separated by periods: the Kangxi radical (1-214), the number of strokes in the form the radical takes in the glyph, and the number of strokes in the residue. The standard Unicode radical-stroke form can be obtained by omitting the second value, and the total strokes in the glyph from adding the second and third values."
+        }
+      },
+      {
+        "id": "recQAumsqicfiWfjF",
+        "createdTime": "2023-04-22T05:25:20.000Z",
+        "fields": {
+          "syntax": "[1-9][0-9]{0,2}\\.-?[0-9]{1,2}",
+          "delimiter": "space",
+          "Status": "Provisional",
+          "name": "kRSKangXi",
+          "category": "Radical-Stroke Counts",
+          "introduced": "2.0",
+          "description": "The Kangxi radical-stroke count for this character consistent with the value of the kKangXi field in the form “radical.additional strokes”."
+        }
+      },
+      {
+        "id": "recHX0l9PgiLLFmVs",
+        "createdTime": "2023-04-22T05:30:00.000Z",
+        "fields": {
+          "syntax": "[1-9][0-9]{0,2}\\'?\\.-?[0-9]{1,2}",
+          "delimiter": "space",
+          "Status": "Informative",
+          "name": "kRSUnicode",
+          "category": "IRG Sources",
+          "introduced": "2.0",
+          "description": "The standard radical-stroke count for this character in the form “radical.additional strokes”. The radical is indicated by a number in the range (1..214) inclusive. An apostrophe (') after the radical indicates a simplified version of the given radical. The “additional strokes” value is the residual stroke-count, the count of all strokes remaining after eliminating all strokes associated with the radical.\n\nThis field is also used for additional radical-stroke indices where either a character may be reasonably classified under more than one radical, or alternate stroke count algorithms may provide different stroke counts.\n\nThe residual stroke count may be negative. This is because some characters (for example, U+225A9, U+29C0A) are constructed by removing strokes from a standard radical."
+        }
+      },
+      {
+        "id": "recdD5SWfPJcbbOsr",
+        "createdTime": "2023-04-22T05:41:46.000Z",
+        "fields": {
+          "syntax": "[0-9]{3}\\.[0-7][0-9]",
+          "delimiter": "space",
+          "Status": "Provisional",
+          "name": "kSBGY",
+          "category": "Dictionary Indices",
+          "introduced": "3.2",
+          "description": "The position of this character in the Song Ben Guang Yun (SBGY) Medieval Chinese character dictionary (bibliographic and general information below).\n\nThe 25334 character references are given in the form “ABC.XY”, in which: “ABC” is the zero-padded page number [004..546]; “XY” is the zero-padded number of the character on the page [01..73]. For example, 364.38 indicates the 38th character on Page 364 (i.e. 澍). Where a given Unicode Scalar Value (USV) has more than one reference, these are space-delimited.\n\n-- Release information (20080814) --\n\nThis release corrects several mappings. This data set now contains a total of 25334 references, for 19583 different hanzi.\n\n-- Release information (20031005) --\n\nThis release corrects several mappings.\n\n-- Release information (20020310) --\n\nThis data set contains a total of 25334 references, for 19572 different hanzi (up from 25330 and 19511 in the previous release).\n\nThis release of the kSBGY data fixes a number of mappings, based on extensive work done since the initial release (compare the initial release counts given below). See the end of this header for additional information.\n\n-- Initial release information (20020310) --\n\nThe original data was input under the direction of Prof. LUO Fengzhu at Taiwan Taoyuanxian Yuan Zhi University (see below) using an early version of the Big5-based CDP encoding scheme developed at Academia Sinica. During 2000-2002 this raw data was processed and revised by Richard Cook as follows: the data was converted to Unicode encoding using his revised kHanYu mapping tables (first provided to the Unicode Consortium for the Unihan database release 3.1.1d1) and also using several other mapping tables developed specifically for this project; the kSBGY indices were generated based on hand-counts of all page totals; numerous indexing errors were corrected; and the data underwent final proofing.\n\n-- About the print sources --\n\nThe SBGY text, which dates to the beginning of the Song Dynasty (c. 1008, edited by 陳彭年 CHEN Pengnian et al.) is an enlargement of an earlier text known as 《切韻》 Qie Yun (dated to c. 601, edited by 陸法言 LU Fayan). With 25,330 head entries, this large early lexicon is important in part for the information which it provides for historical Chinese phonology. The GY dictionary employs a Chinese transcription method (known as 反切) to give pronunciations for each of its head entries. In addition, each syllable is also given a brief gloss.\n\nIt must be emphasized that the mapping of a particular SBGY glyph to a single USV may in some cases be merely an approximation or may have required the choice of a “best possible glyph” (out of those available in the Unicode repertoire). This indexing data in conjunction with the print sources will be useful for evaluating the degree of distinctive variation in the character forms appearing in this text, and future proofing of this data may reveal additional Chinese glyphs for IRG encoding.\n\n-- Bibliographic information on the print sources --\n\n《宋本廣韻》 <<Song Ben Guang Yun>> [‘Song Dynasty edition of the Guang Yun Rhyming Dictionary’], edited by 陳彭年 CHEN Pengnian et al. (c. 1008).\n\nTwo modern editions of this work were consulted in building the kSBGY indices:\n\n《新校正切宋本廣韻》。台灣黎明文化事業公司 出版，林尹校訂1976 年出版。[This was the edition used by Prof. LUO (台灣桃園縣元智大學中語系羅鳳珠), and in the subsequent revision, conversion, indexing and proofing.]\n\n《新校互註‧宋本廣韻》。香港中文大學,余迺永 1993, 2000 年出版。ISBN: 962-201-413-5; 7-5326-0685-6. [Textual problems were resolved on the basis of this extensively annotated modern edition of the text.]\n\n-- Additional Information --\n\nFor further information on this index data and the databases from which it is excerpted, see:\n\nCook, Richard S. 2003. 《說文解字‧電子版》 Shuo Wen Jie Zi - Dianzi Ban: Digital Recension of the Eastern Han Chinese Grammaticon. PhD Dissertation. Department of Linguistics. Berkeley: University of California."
+        }
+      },
+      {
+        "id": "recrmBIQk5vQy2rgL",
+        "createdTime": "2023-04-22T05:43:10.000Z",
+        "fields": {
+          "syntax": "U\\+[23]?[0-9A-F]{4}(<[ks][A-Za-z0-9_]+(:[TBZFJ]+)?(,[ks][A-Za-z0-9_]+(:[TBZFJ]+)?)*)?",
+          "delimiter": "space",
+          "Status": "Provisional",
+          "name": "kSemanticVariant",
+          "category": "Variants",
+          "introduced": "2.0",
+          "description": "The Unicode value for a semantic variant for this character. A semantic variant is an x- or y-variant with similar or identical meaning which can generally be used in place of the indicated character.\n\nThe basic syntax is a Unicode scalar value. It may optionally be followed by additional data. The additional data is separated from the Unicode scalar value by a less-than sign (<), and may be subdivided itself into substrings by commas, each of which may be divided into two pieces by a colon. The additional data consists of a series of field tags for another field in the Unihan database indicating the source of the information. If these field tags are themselves subdivided by a colon, the final piece is a string consisting of the letters T (for tòng, U+540C 同) B (for bù, U+4E0D 不), Z (for zhèng, U+6B63 正), F (for fán, U+7E41 繁), or J (for jiǎn U+7C21 簡/U+7B80 简).\n\nT is used if the indicated source explicitly indicates the two are the same (for example, by saying that the one character is “the same as” the other).\n\nB is used if the source explicitly indicates that the two are used improperly one for the other.\n\nZ is used if the source explicitly indicates that the given character is the preferred form. Thus, kHanYu indicates that U+5231 刱 and U+5275 創 are semantic variants and that U+5275 創 is the preferred form.\n\nF is used if the source explicitly indicates that the given character is the traditional form.\n\nJ is used if the source explicitly indicates that the given character is the simplified form.\n\nData on simplified and traditional variations can be included in this field to document cases where different sources disagree on the nature of the relationship between two characters. The kSemanticVariant and kSpecializedSemanticVariant fields need not be consulted when interconverting between traditional and simplified Chinese.\n\nAs an example, U+3A17 has the kSemanticVariant value \"U+6377<kHanYu:TZ\". This means that, according to the Hanyu Da Zidian, U+3A17 and U+6377 have identical meaning and that U+6377 is the preferred form."
+        }
+      },
+      {
+        "id": "recoD6NBphmjQNrQq",
+        "createdTime": "2023-04-22T05:43:53.000Z",
+        "fields": {
+          "syntax": "U\\+[23]?[0-9A-F]{4}",
+          "delimiter": "space",
+          "Status": "Provisional",
+          "name": "kSimplifiedVariant",
+          "category": "Variants",
+          "introduced": "2.0",
+          "description": "The Unicode value(s) for the simplified Chinese variant(s) for this character. A full discussion of the kSimplifiedVariant and kTraditionalVariant fields is found in Section 3.7.1 above.\n\nMuch of the data on simplified and traditional variants was graciously supplied by Wenlin Institute, Inc. http://www.wenlin.com."
+        }
+      },
+      {
+        "id": "recZQuJBLkfT8t6SB",
+        "createdTime": "2023-04-22T05:44:34.000Z",
+        "fields": {
+          "syntax": "U\\+[23]?[0-9A-F]{4}(<[ks][A-Za-z0-9_]+(:[TBZFJ]+)?(,[ks][A-Za-z0-9_]+(:[TBZFJ]+)?)*)?",
+          "delimiter": "space",
+          "Status": "Provisional",
+          "name": "kSpecializedSemanticVariant",
+          "category": "Variants",
+          "introduced": "2.0",
+          "description": "The Unicode value for a specialized semantic variant for this character. The syntax is the same as for the kSemanticVariant field.\n\nA specialized semantic variant is an x- or y-variant with similar or identical meaning only in certain contexts."
+        }
+      },
+      {
+        "id": "recEpxfjJzB3DJDVs",
+        "createdTime": "2023-04-22T05:45:15.000Z",
+        "fields": {
+          "syntax": "U\\+[23]?[0-9A-F]{4}",
+          "delimiter": "space",
+          "Status": "Provisional",
+          "name": "kSpoofingVariant",
+          "category": "Variants",
+          "introduced": "13.0",
+          "description": "The spoofing variants for the character, if any. Spoofing variants include character pairs which look similar, particularly at small point sizes, which are not already z-variants or compatibility variants. See Section 3.7.3 for a full description of spoofing variants. The syntax consists of the character's code point."
+        }
+      },
+      {
+        "id": "recNcVrukhrgEUzZb",
+        "createdTime": "2023-04-22T05:48:00.000Z",
+        "fields": {
+          "syntax": "[ACU]\n| B:U\\+31[0-2AB][0-9A-F]\n| [FMOR](:U\\+[23]?[0-9A-F]{4})?\n| H:U\\+31[3-8][0-9A-F]\n| I(:U\\+[23]?[0-9A-F]{4})*\n| K(:U\\+30[A-F][0-9A-F])+\n| S:[4-9][0-9]",
+          "delimiter": "space",
+          "Status": "Provisional",
+          "name": "kStrange",
+          "category": "Dictionary-like Data",
+          "introduced": "14.0",
+          "description": "This property identifies CJK Unified Ideographs that are considered \"strange\" in one or more ways per the following 12 categories:\n\nCategory A = [A]symmetric (exhibits a structure that is asymmetric)\nCategory B = [B]opomofo (visually resembles a bopomofo character)\nCategory C = [C]ursive (is cursive or includes one or more cursive components that do not adhere to Han ideograph stroke conventions)\nCategory F = [F]ully-reflective (is fully-reflective or includes components that are fully-reflective, meaning that the mirrored and unmirrored components are arranged side-by-side or stacked top-and-bottom)\nCategory H = [H]angul Component (includes a hangul component)\nCategory I = [I]ncomplete (appears to be an incomplete version of an existing or possible ideograph, meaning that one or more components appear to be incomplete, without regard to semantics)\nCategory K = [K]atakana Component (includes one or more components that visually resemble a katakana syllable)\nCategory M = [M]irrored (is either mirrored or includes one or more components that are mirrored)\nCategory O = [O]dd Component (includes one or more components that are symbol-like or are otherwise considered odd)\nCategory R = [R]otated (is either rotated or includes one or more components that are rotated)\nCategory S = [S]troke-heavy (has 40 or more strokes)\nCategory U = [U]nusual Arrangment/Structure (has an unusual structure or component arrangement)\n\nThis property is fully documented in [UTN43], Unihan Database Property “kStrange”."
+        }
+      },
+      {
+        "id": "reccdVJ1bfupW22iE",
+        "createdTime": "2023-04-22T05:48:43.000Z",
+        "fields": {
+          "syntax": "[0-9]{4}",
+          "delimiter": "space",
+          "Status": "Provisional",
+          "name": "kTaiwanTelegraph",
+          "category": "Other Mappings",
+          "introduced": "2.0",
+          "description": "The Taiwanese telegraph code for this character, derived from “Kanzi denpou koudo henkan-hyou” (“Chinese character telegraph code conversion table”), Lin Jinyi, KDD Engineering and Consulting, Tokyo, 1984."
+        }
+      },
+      {
+        "id": "recHqLuWdpoNWe0R7",
+        "createdTime": "2023-04-22T05:49:12.000Z",
+        "fields": {
+          "syntax": "\\*?[A-Za-z()\\x{E6}\\x{251}\\x{259}\\x{25B}\\x{300}\\x{30C}]+",
+          "delimiter": "space",
+          "Status": "Provisional",
+          "name": "kTang",
+          "category": "Readings",
+          "introduced": "2.0",
+          "description": "The Tang dynasty pronunciation(s) of this character, derived from or consistent with T’ang Poetic Vocabulary by Hugh M. Stimson, Far Eastern Publications, Yale University 1976. An asterisk indicates that the word or morpheme represented in toto or in part by the given character with the given reading occurs more than four times in the seven hundred poems covered."
+        }
+      },
+      {
+        "id": "recxFIe3rtcNtyqaq",
+        "createdTime": "2023-04-22T05:49:50.000Z",
+        "fields": {
+          "syntax": "20[0-9]{2}:[1-9][0-9]{0,3}",
+          "delimiter": "space",
+          "Status": "Provisional",
+          "name": "kTGH",
+          "category": "Other Mappings",
+          "introduced": "11.0",
+          "description": "The year that corresponds to the \"Tōngyòng Guīfàn Hànzìbiǎo\" (通用规范汉字表) list in which the ideograph appears, followed by a colon and its one- to four-digit index number in that list.\n\nPublished by the Chinese government in 2013, this list includes 8,105 ideographs in three levels containing 3,500 (index numbers 1 through 3500), 3,000 (3501 through 6500), and 1,605 (6501 through 8105) ideographs, respectively. Ideographs for more general use are in the first two levels, with those in the first level being more frequently used. The ideographs in the third level are used for personal names, place names, and for science and technology.\n\nhttp://www.gov.cn/gzdt/att/att/site1/20130819/tygfhzb.pdf\n\nThe current version year is 2013, and the index numbers range from 1 to 8105."
+        }
+      },
+      {
+        "id": "reccsjrvYjjLIytIX",
+        "createdTime": "2023-04-22T05:50:24.000Z",
+        "fields": {
+          "syntax": "[0-9]{3}\\.[0-9]{3}(,[0-9]{3}\\.[0-9]{3})*:[a-z\\x{300}-\\x{302}\\x{304}\\x{308}\\x{30C}]+",
+          "delimiter": "space",
+          "Status": "Provisional",
+          "name": "kTGHZ2013",
+          "category": "Readings",
+          "introduced": "13.0",
+          "description": "One or more Hànyǔ Pīnyīn readings as given in Tōngyòng Guīfàn Hànzì Zìdiǎn (full bibliographic information below).\n\nEach pīnyīn reading is preceded by the character’s location(s) in the dictionary, separated from the reading by a colon. Multiple locations for a given reading are separated by commas. Multiple “location: reading” values are separated by a space. Each location reference is of the form /[0-9]{3}\\.[0-9]{3}/. The number preceding the period is the page number, zero-padded to three digits. The first two digits of the number following the period are the entry’s position on the page, zero-padded. The third digit is 0 for a main entry and greater than 0 for a parenthesized or bracketed variant of the main entry.\n\n– Bibliographical information –\n\n《通用规范汉字字典》(Tōngyòng Guīfàn Hànzì Zìdiǎn = TGHZ; ‘General Purpose Normalized Hanzi Dictionary’). 商务印书馆辞书研究中心编 (Dictionary Research Center of the Commercial Press, eds.). 北京: 商务印书馆, 2013 [2013年7月第1版; 2013年9月北京第3次印刷; 印张 22⅞; ISBN 978-7-100-05961-9]. http://www.cp.com.cn/book/366cddb0-1.html\n\n– Release Notes –\n\nThis data was input and prepared by Jaemin Chung (initial release 2019-04-24).\n\nDistinct Unihan hànzì: 8,105\nDistinct pīnyīn syllables: 1,296"
+        }
+      },
+      {
+        "id": "recvvYl8UConPoWmv",
+        "createdTime": "2023-04-22T05:51:09.000Z",
+        "fields": {
+          "syntax": "[1-9][0-9]{0,2}",
+          "delimiter": "space",
+          "Status": "Informative",
+          "name": "kTotalStrokes",
+          "category": "IRG Sources",
+          "introduced": "3.1",
+          "description": "The total number of strokes in the character (including the radical). When there are two values, then the first is preferred for zh-Hans (CN) and the second is preferred for zh-Hant (TW). When there is only one value, it is appropriate for both.\n\nThe preferred value is the one most commonly associated with the character in modern text using customary fonts.\n\nThis field is targeted specifically for use by CLDR collation and transliteration. As such, it is subject to considerations that help keep pīnyīn-based Han collation (and its tailorings) and transliteration reasonably stable."
+        }
+      },
+      {
+        "id": "recACxZWiVTkkySBc",
+        "createdTime": "2023-04-22T05:51:50.000Z",
+        "fields": {
+          "syntax": "U\\+[23]?[0-9A-F]{4}",
+          "delimiter": "space",
+          "Status": "Provisional",
+          "name": "kTraditionalVariant",
+          "category": "Variants",
+          "introduced": "2.0",
+          "description": "The Unicode value(s) for the traditional Chinese variant(s) for this character. A full discussion of the kSimplifiedVariant and kTraditionalVariant fields is found in Section 3.7.1 above.\n\nMuch of the data on simplified and traditional variants was graciously supplied by Wenlin Institute, Inc. http://www.wenlin.com."
+        }
+      },
+      {
+        "id": "recZnPl5ZLpiiG03j",
+        "createdTime": "2023-04-22T05:52:22.000Z",
+        "fields": {
+          "syntax": "[GHJKMPT]{1,7}",
+          "delimiter": "N/A",
+          "Status": "Informative",
+          "name": "kUnihanCore2020",
+          "category": "Dictionary-like Data",
+          "introduced": "13.0",
+          "description": "Used for characters which are in the UnihanCore2020 set, the minimal set of required ideographs for East Asia. A character is in the UnihanCore2020 set if and only if it has a value for the kUnihanCore2020 property.\n\nThe property value consists of an IRG source specifier as defined in Section 3.10 above."
+        }
+      },
+      {
+        "id": "recAvBu4CegDUuYbT",
+        "createdTime": "2023-04-22T05:52:56.000Z",
+        "fields": {
+          "syntax": "[A-Za-z\\x{110}\\x{111}\\x{300}-\\x{303}\\x{306}\\x{309}\\x{31B}\\x{323}]+",
+          "delimiter": "space",
+          "Status": "Provisional",
+          "name": "kVietnamese",
+          "category": "Readings",
+          "introduced": "3.1.1",
+          "description": "The character’s pronunciation(s) in Quốc ngữ."
+        }
+      },
+      {
+        "id": "recJ0NkDLJE2d9xSs",
+        "createdTime": "2023-04-22T05:53:33.000Z",
+        "fields": {
+          "syntax": "[0-9]{3}:[0-9]{3}",
+          "delimiter": "space",
+          "Status": "Provisional",
+          "name": "kXerox",
+          "category": "Other Mappings",
+          "introduced": "2.0",
+          "description": "The Xerox code for this character."
+        }
+      },
+      {
+        "id": "recluBh9x1Phlirxv",
+        "createdTime": "2023-04-22T05:54:03.000Z",
+        "fields": {
+          "syntax": "[0-9]{4}\\.[0-9]{3}\\*?(,[0-9]{4}\\.[0-9]{3}\\*?)*:[a-z\\x{300}\\x{301}\\x{304}\\x{308}\\x{30C}]+",
+          "delimiter": "space",
+          "Status": "Provisional",
+          "name": "kXHC1983",
+          "category": "Readings",
+          "introduced": "5.1",
+          "description": "One or more Hànyǔ Pīnyīn readings as given in the Xiàndài Hànyǔ Cídiǎn (full bibliographic information below).\n\nEach pīnyīn reading is preceded by the character’s location(s) in the dictionary, separated from the reading by a colon; multiple locations for a given reading are separated by commas; multiple “location: reading” values are separated by a space. Each location reference is of the form /[0-9]{4}\\.[0-9]{3}\\*?/ . The number preceding the period is the page number, zero-padded to four digits. The first two digits of the number following the period are the entry’s position on the page, zero-padded. The third digit is 0 for a main entry and greater than 0 for a parenthesized variant of the main entry. A trailing “*” (asterisk) on the location indicates an encoded variant substituted for an unencoded character (see below).\n\n-- Bibliographical information --\n\n《现代汉语词典》 [Xiàndài Hànyǔ Cídiǎn = XHC; ‘Modern Chinese Dictionary’]. 中国社会科学院语言研究所词典编辑室编 [Chinese Academy of Social Sciences, Linguisitics Research Institute, Dictionary Editorial Office, eds.]. 北京: 商务印书馆, 1983 [1978 年 12 月第 1 版; 1983 年 1 月第 2 版; 1984 年 1 月北京第 49 次印刷印张 54; 统一书号: 17017.91].\n\nNote that there are subsequent editions of this important PRC dictionary, reflecting later developments and refinements in language and orthographic standardization, and other editions should not be used in future revision of this field.\n\n-- Release Notes --\n\nThe Unihan version of this data was originally prepared by Richard Cook (initial release 2007-12-12), proofing and revising a subset of data contributed by Dr. George Bell (who input it with the help of Joy Zhao Rouzer, Steve Mann, et al., as one part of their “Quick and Easy Index of Chinese Characters with Attributes”; Bell 1995-2005).\n\nDistinct Unihan hànzì: 10,992;\nDistinct hànzì: 11,190;\nDistinct pīnyīn syllable types: 1,337;\n\nAs of the present writing (Unicode 5.1), the XHC source data contains 204 unencoded characters (198 of which were represented by PUA or CJK Compatibility [or in one case, by non-CJK, see below] characters), for the most part simplified variants. Each of these 198 characters in the source is replaced by one or more encoded variants (references in all 204 cases are marked with a trailing “*”; see above). Many of these unencoded forms are already in the pipeline for future encoding, and future revisions of this data will eliminate trailing asterisks from mappings.\n\nThe print source and data also include a lexical entry\n\n〇 U+3007 : “0719.100: líng” (IDEOGRAPHIC NUMBER ZERO)\n\nwhich is currently excluded from Unihan data (as not being a CJK Unified Ideograph); see 零 U+96F6."
+        }
+      },
+      {
+        "id": "recLyfJYUOrV5lW6l",
+        "createdTime": "2023-04-22T05:54:44.000Z",
+        "fields": {
+          "syntax": "U\\+[23]?[0-9A-F]{4}(<[ks][A-Za-z0-9_]+(:[TBZ]+)?(,[ks][A-Za-z0-9_]+(:[TBZ]+)?)*)?",
+          "delimiter": "space",
+          "Status": "Provisional",
+          "name": "kZVariant",
+          "category": "Variants",
+          "introduced": "2.0",
+          "description": "The z-variants for the character, if any. Z-variants are instances where the same abstract shape has been encoded multiple times, either in error or because of source separation. Z-variant pairs also have identical semantics.\nThe basic syntax is a Unicode scalar value. It may optionally be followed by additional data. The additional data is separated from the Unicode scalar value by a less-than sign (<), and may be subdivided itself into substrings by commas. The additional data consists of a series of field tags for another field in the Unihan database indicating the source of the information."
+        }
+      }
+    ]
+  }

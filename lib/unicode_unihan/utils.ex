@@ -19,6 +19,7 @@ defmodule Unicode.Unihan.Utils do
   """
   def parse_files do
     @data_dir
+    |> Path.join("unihan")
     |> File.ls!()
     |> Enum.reduce(%{}, &parse_file(&1, &2))
   end
@@ -30,7 +31,7 @@ defmodule Unicode.Unihan.Utils do
 
   """
   def parse_file(file, map \\ %{}) do
-    path = Path.join(@data_dir, file)
+    path = Path.join(@data_dir, ["unihan/", file])
 
     Enum.reduce File.stream!(path), map, fn line, map ->
       case line do
@@ -69,17 +70,41 @@ defmodule Unicode.Unihan.Utils do
     String.to_integer(codepoint, 16)
   end
 
+  def unihan_fields do
+    @data_dir
+    |> Path.join("unihan_fields.json")
+    |> File.read!()
+    |> Jason.decode!()
+    |> Map.get("records")
+    |> Enum.map(fn map ->
+      fields = Map.get(map, "fields")
+      {name, fields} = Map.pop(fields, "name")
+
+      fields =
+        Enum.map(fields, fn
+          {"Status", status} ->
+            {:status, String.downcase(status) |> String.to_atom()}
+          {"delimiter", "space"} ->
+            {:delimiter, "\s"}
+          {"delimiter", "N/A"} ->
+            {:delimiter, nil}
+          {"category", category} ->
+            {:category, String.downcase(category) |> String.replace(" ", "_") |> String.to_atom()}
+          {"syntax", syntax} when is_binary(syntax) ->
+            {:syntax, Regex.compile!(syntax, [:unicode])}
+          {field, value} ->
+            {String.to_atom(field), value}
+        end)
+        |> Map.new()
+
+      {String.to_atom(name), fields}
+    end)
+    |> Map.new()
+  end
+
   @doc """
   Decode the value of a given metadata key.
   """
-  def decode_metadata("kCantonese" = key, value) do
-    {key, value}
-  end
-
-  def decode_metadata("kCangjie" = key, value) do
-    {key, value}
-  end
-
   def decode_metadata(key, value) do
     {key, value}
   end
