@@ -56,7 +56,6 @@ defmodule Unicode.Unihan.MixProject do
 
   defp deps do
     [
-      {:unicode, "~> 1.16"},
       {:benchee, "~> 1.0", only: :dev, optional: true},
       {:ex_doc, "~> 0.24", only: [:dev, :release], runtime: false, optional: true},
       {:dialyxir, "~> 1.1", only: [:dev], runtime: false, optional: true}
