@@ -6,6 +6,13 @@ defmodule Unicode.Unihan do
 
   import Kernel, except: [to_string: 1]
 
+  @doc false
+  defguard is_hex(c1, c2, c3, c4)
+    when (c1 in ?0..?9 or c1 in ?A..?Z) or
+      (c2 in ?0..?9 or c2 in ?A..?Z) or
+      (c3 in ?0..?9 or c3 in ?A..?Z) or
+      (c3 in ?0..?9 or c4 in ?A..?Z)
+
   @doc """
   Returns the Unihan database as a mapping
   of a codepoint to its metadata.
@@ -74,6 +81,25 @@ defmodule Unicode.Unihan do
 
   def unihan(<<codepoint::utf8>>) do
     Map.get(unihan(), codepoint)
+  end
+
+  # U\\+[23]?[0-9A-F]{4}
+  def unihan("U+" <> <<c1::utf8, c2::utf8, c3::utf8, c4::utf8>>)
+      when is_hex(c1, c2, c3, c4) do
+    hex = <<c1::utf8, c2::utf8, c3::utf8, c4::utf8>>
+
+    hex
+    |> String.to_integer(16)
+    |> unihan()
+  end
+
+  def unihan("U+" <> <<c1::utf8, c2::utf8, c3::utf8, c4::utf8, c5::utf8, c6::utf8>>)
+      when c1 in [?2, ?3] and c2 in [?2, ?3] and is_hex(c3, c4, c5, c6) do
+    hex = <<c1::utf8, c2::utf8, c3::utf8, c4::utf8, c5::utf8, c6::utf8>>
+
+    hex
+    |> String.to_integer(16)
+    |> unihan()
   end
 
   @doc """
