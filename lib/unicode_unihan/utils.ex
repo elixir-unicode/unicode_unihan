@@ -86,7 +86,7 @@ defmodule Unicode.Unihan.Utils do
       fields =
         Enum.map(fields, fn
           {"Status", status} ->
-            {:status, String.downcase(status) |> String.to_atom()}
+            {:status, normalize_atom(status)}
 
           {"delimiter", "space"} ->
             {:delimiter, "\s"}
@@ -95,7 +95,7 @@ defmodule Unicode.Unihan.Utils do
             {:delimiter, nil}
 
           {"category", category} ->
-            {:category, String.downcase(category) |> String.replace(" ", "_") |> String.to_atom()}
+            {:category, normalize_atom(category)}
 
           {"syntax", syntax} when is_binary(syntax) ->
             {:syntax, Regex.compile!(syntax, [:unicode])}
@@ -130,13 +130,9 @@ defmodule Unicode.Unihan.Utils do
     end
   end
 
-  defp decode_value(value, :kTraditionalVariant, _fields) do
-    Enum.map(value, &decode_codepoint/1)
-  end
-
-  defp decode_value(value, :kSimplifiedVariant, _fields) do
-    Enum.map(value, &decode_codepoint/1)
-  end
+  # Values where decoding depends on the number of items
+  # in the value list go here - before the clause
+  # that maps over a list of values individually.
 
   defp decode_value(value, :kTotalStrokes, _fields) do
     case Enum.map(value, &String.to_integer/1) do
@@ -145,15 +141,45 @@ defmodule Unicode.Unihan.Utils do
     end
   end
 
+  # When its a list, map each value to decode it.
+  # Most decode_value clauses should go below this one.
+
   defp decode_value(value, key, fields) when is_list(value) do
     Enum.map(value, &decode_value(&1, key, fields))
   end
+
+  defp decode_value(value, :kTraditionalVariant, _fields) do
+    decode_codepoint(value)
+  end
+
+  defp decode_value(value, :kSimplifiedVariant, _fields) do
+    decode_codepoint(value)
+  end
+
+  defp decode_value(value, :kHangul, _fields) do
+    case String.split(value, ":", trim: true) do
+      [grapheme] -> %{grapheme: grapheme, source: nil}
+      [grapheme, source] -> %{grapheme: grapheme, source: source}
+    end
+  end
+
+  # The default decoding is to do nothing.
 
   defp decode_value(value, _key, _fields) do
     value
   end
 
+  # Decodes a standard `U+xxxx` codepoing into
+  # its integer form.
+
   defp decode_codepoint("U+" <> codepoint) do
     String.to_integer(codepoint, 16)
+  end
+
+  defp normalize_atom(category) do
+    category
+    |> String.downcase()
+    |> String.replace(" ", "_")
+    |> String.to_atom()
   end
 end
