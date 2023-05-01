@@ -4,6 +4,9 @@ defmodule Unicode.Unihan.Utils do
   files.
 
   """
+  for file <- Path.wildcard(Path.join(__DIR__, "../../data/**/**")) do
+    @external_resource file
+  end
 
   @doc false
   @data_dir Path.join(__DIR__, "../../data") |> Path.expand()

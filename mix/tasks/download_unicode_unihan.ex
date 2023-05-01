@@ -9,7 +9,10 @@ defmodule Mix.Tasks.Unicode.Unihan.Download do
 
   @shortdoc "Download Unicode Unihan database"
 
-  @root_url "https://www.unicode.org/Public/15.0.0/ucd/"
+  @root_url "https://www.unicode.org/Public/UCD/latest/ucd/"
+
+  @download_dir Path.join(Unicode.Unihan.Utils.data_dir(), "unihan/")
+  |> Path.expand()
 
   @doc false
   def run(_) do
@@ -29,7 +32,7 @@ defmodule Mix.Tasks.Unicode.Unihan.Download do
   def extract_unihan_database! do
     data_path("unihan.zip")
     |> String.to_charlist()
-    |> :zip.extract(cwd: String.to_charlist(Unicode.Unihan.Utils.data_dir()))
+    |> :zip.extract(cwd: String.to_charlist(@download_dir))
 
     File.rm!(data_path("unihan.zip"))
   end
@@ -157,6 +160,6 @@ defmodule Mix.Tasks.Unicode.Unihan.Download do
   end
 
   defp data_path(filename) do
-    Path.join(Unicode.Unihan.Utils.data_dir(), filename)
+    Path.join(@download_dir, filename)
   end
 end
