@@ -4,6 +4,8 @@ defmodule Unicode.Unihan do
 
   """
 
+  import Kernel, except: [to_string: 1]
+
   @doc """
   Returns the Unihan database as a mapping
   of a codepoint to its metadata.
@@ -15,13 +17,77 @@ defmodule Unicode.Unihan do
   end
 
   @doc """
-  Returns the field information for the data in the
-  Unihan database.
+  Returns the Unihan database metadata for
+  a given codepoint.
+
+  THe codepoint can be expressed as an integer
+  or a grapheme.
+
+  ### Examples
+
+      iex> Unicode.Unihan.unihan(171339)
+      %{
+        codepoint: 171339,
+        kCantonese: ["ju4"],
+        kDefinition: "(J) nonstandard variant of 魚 U+9B5A, fish",
+        kHanYu: ["74674.090"],
+        kIRGHanyuDaZidian: ["74674.090"],
+        kIRGKangXi: ["1465.011"],
+        kIRG_GSource: "GHZ-74674.09",
+        kIRG_TSource: "T4-3043",
+        kIRG_VSource: "VN-29D4B",
+        kJapaneseKun: ["UO", "SAKANA", "SUNADORU"],
+        kJapaneseOn: ["GYO"],
+        kKangXi: ["1465.011"],
+        kNelson: ["0692"],
+        kPhonetic: ["1605"],
+        kRSAdobe_Japan1_6: ["C+13717+195.10.0", "V+13718+195.10.0"],
+        kRSKangXi: ["195.0"],
+        kRSUnicode: ["195.0"],
+        kTotalStrokes: %{"zh-Hans": 11, "zh-Hant": 11}
+      }
+
+      iex> Unicode.Unihan.unihan("㝰")
+      %{
+        codepoint: 14192,
+        kCangjie: "JHUS",
+        kCantonese: ["min4"],
+        kDefinition: "unable to meet, empty room",
+        kHanYu: ["20957.030"],
+        kHanyuPinyin: ["20957.030:mián"],
+        kIRGHanyuDaZidian: ["20957.030"],
+        kIRGKangXi: ["0293.010"],
+        kIRG_GSource: "G5-3E3C",
+        kIRG_KSource: "K3-236A",
+        kIRG_TSource: "T4-5A7D",
+        kKangXi: ["0293.010"],
+        kMandarin: ["mián"],
+        kRSUnicode: ["40.15"],
+        kSBGY: ["135.35"],
+        kTotalStrokes: %{"zh-Hans": 18, "zh-Hant": 18}
+      }
 
   """
-  @unihan_fields Unicode.Unihan.Utils.unihan_fields()
-  def unihan_fields do
-    @unihan_fields
+  def unihan(codepoint) when is_integer(codepoint) do
+    Map.get(unihan(), codepoint)
+  end
+
+  def unihan(<<codepoint::utf8>>) do
+    Map.get(unihan(), codepoint)
+  end
+
+  @doc """
+  Takes a Unihan codepoint map or list of maps
+  and returns the grapheme (or list of graphemes)
+  of the codepoint.
+
+  """
+  def to_string(%{codepoint: codepoint}) when is_integer(codepoint) do
+    <<codepoint :: utf8>>
+  end
+
+  def to_string([%{codepoint: codepoint} | _rest] = unihan_list) when is_integer(codepoint) do
+    Enum.map(unihan_list, &to_string/1)
   end
 
   @doc """
@@ -89,5 +155,15 @@ defmodule Unicode.Unihan do
     Enum.reject(unihan(), fn {_codepoint, value} ->
       fun.(value)
     end)
+  end
+
+  @doc """
+  Returns the field information for the data in the
+  Unihan database.
+
+  """
+  @unihan_fields Unicode.Unihan.Utils.unihan_fields()
+  def unihan_fields do
+    @unihan_fields
   end
 end

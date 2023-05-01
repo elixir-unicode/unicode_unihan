@@ -57,7 +57,7 @@ defmodule Unicode.Unihan.Utils do
           Map.get_and_update(map, codepoint, fn
             nil ->
               {key, value} = decode_metadata(key, value, fields)
-              {nil, %{key => value}}
+              {nil, %{key => value, :codepoint => codepoint}}
 
             current_value when is_map(current_value) ->
               {key, value} = decode_metadata(key, value, fields)
