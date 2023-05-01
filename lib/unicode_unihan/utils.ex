@@ -17,9 +17,10 @@ defmodule Unicode.Unihan.Utils do
   for that codepoint.
 
   """
+  @subdir "unihan"
   def parse_files do
     @data_dir
-    |> Path.join("unihan")
+    |> Path.join(@subdir)
     |> File.ls!()
     |> Enum.reduce(%{}, &parse_file(&1, &2))
   end
@@ -31,10 +32,10 @@ defmodule Unicode.Unihan.Utils do
 
   """
   def parse_file(file, map \\ %{}) do
-    path = Path.join(@data_dir, ["unihan/", file])
+    path = Path.join(@data_dir, [@subdir, "/", file])
     fields = unihan_fields()
 
-    Enum.reduce File.stream!(path), map, fn line, map ->
+    Enum.reduce(File.stream!(path), map, fn line, map ->
       case line do
         <<"#", _rest::bitstring>> ->
           map
@@ -55,15 +56,20 @@ defmodule Unicode.Unihan.Utils do
               {key, value} = decode_metadata(key, value, fields)
               {nil, %{key => value}}
 
-            current_value when is_map(current_value)->
+            current_value when is_map(current_value) ->
               {key, value} = decode_metadata(key, value, fields)
               {current_value, Map.put(current_value, key, value)}
           end)
           |> elem(1)
       end
-    end
+    end)
   end
 
+  @doc """
+  Returns a map of the field definitions for a
+  Unihan codepoint.
+
+  """
   def unihan_fields do
     @data_dir
     |> Path.join("unihan_fields.json")
@@ -78,14 +84,19 @@ defmodule Unicode.Unihan.Utils do
         Enum.map(fields, fn
           {"Status", status} ->
             {:status, String.downcase(status) |> String.to_atom()}
+
           {"delimiter", "space"} ->
             {:delimiter, "\s"}
+
           {"delimiter", "N/A"} ->
             {:delimiter, nil}
+
           {"category", category} ->
             {:category, String.downcase(category) |> String.replace(" ", "_") |> String.to_atom()}
+
           {"syntax", syntax} when is_binary(syntax) ->
             {:syntax, Regex.compile!(syntax, [:unicode])}
+
           {field, value} ->
             {String.to_atom(field), value}
         end)
@@ -96,12 +107,8 @@ defmodule Unicode.Unihan.Utils do
     |> Map.new()
   end
 
-  @doc """
-  Decode the value of a given metadata key.
-  """
-  def decode_metadata(key, value, fields) do
-    key =
-      String.to_atom(key)
+  defp decode_metadata(key, value, fields) do
+    key = String.to_atom(key)
 
     value =
       key
@@ -111,7 +118,7 @@ defmodule Unicode.Unihan.Utils do
     {key, value}
   end
 
-  def maybe_split_value(key, value, fields) do
+  defp maybe_split_value(key, value, fields) do
     field = Map.fetch!(fields, key)
 
     case field.delimiter do
@@ -124,38 +131,34 @@ defmodule Unicode.Unihan.Utils do
     :description
   ]
 
-  def decode_value(value, field, _fields) when field in @dont_decode_fields do
+  defp decode_value(value, field, _fields) when field in @dont_decode_fields do
     value
   end
 
-  def decode_value(value, :kTraditionalVariant, _fields) do
+  defp decode_value(value, :kTraditionalVariant, _fields) do
     Enum.map(value, &decode_codepoint/1)
   end
 
-  def decode_value(value, :kSimplifiedVariant, _fields) do
+  defp decode_value(value, :kSimplifiedVariant, _fields) do
     Enum.map(value, &decode_codepoint/1)
   end
 
-  def decode_value(value, :kTotalStrokes, _fields) do
+  defp decode_value(value, :kTotalStrokes, _fields) do
     case Enum.map(value, &String.to_integer/1) do
       [zh] -> %{"zh-Hans": zh, "zh-Hant": zh}
       [hans, hant] -> %{"zh-Hans": hans, "zh-Hant": hant}
     end
   end
 
-  def decode_value(value, key, fields) when is_list(value) do
+  defp decode_value(value, key, fields) when is_list(value) do
     Enum.map(value, &decode_value(&1, key, fields))
   end
 
-  def decode_value(value, _key, _fields) do
+  defp decode_value(value, _key, _fields) do
     value
   end
 
-  @doc """
-  Convert a "U+xxxx" codepoint into an integer
-  """
-  def decode_codepoint("U+" <> codepoint) do
+  defp decode_codepoint("U+" <> codepoint) do
     String.to_integer(codepoint, 16)
   end
-
 end

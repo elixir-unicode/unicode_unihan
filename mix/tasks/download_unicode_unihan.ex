@@ -22,7 +22,7 @@ defmodule Mix.Tasks.Unicode.Unihan.Download do
 
   defp required_files do
     [
-      {Path.join(root_url(), "/Unihan.zip"), data_path("unihan.zip")},
+      {Path.join(root_url(), "/Unihan.zip"), data_path("unihan.zip")}
     ]
   end
 
@@ -31,7 +31,7 @@ defmodule Mix.Tasks.Unicode.Unihan.Download do
     |> String.to_charlist()
     |> :zip.extract(cwd: String.to_charlist(Unicode.Unihan.Utils.data_dir()))
 
-    File.rm! data_path("unihan.zip")
+    File.rm!(data_path("unihan.zip"))
   end
 
   def root_url do
@@ -71,71 +71,73 @@ defmodule Mix.Tasks.Unicode.Unihan.Download do
   end
 
   @certificate_locations [
-      # Configured cacertfile
-      Application.compile_env(:unicode, :cacertfile),
+                           # Configured cacertfile
+                           Application.compile_env(:unicode, :cacertfile),
 
-      # Populated if hex package CAStore is configured
-      if(Code.ensure_loaded?(CAStore), do: CAStore.file_path()),
+                           # Populated if hex package CAStore is configured
+                           if(Code.ensure_loaded?(CAStore), do: CAStore.file_path()),
 
-      # Populated if hex package certfi is configured
-      if(Code.ensure_loaded?(:certifi), do: :certifi.cacertfile() |> List.to_string),
+                           # Populated if hex package certfi is configured
+                           if(Code.ensure_loaded?(:certifi),
+                             do: :certifi.cacertfile() |> List.to_string()
+                           ),
 
-      # Debian/Ubuntu/Gentoo etc.
-      "/etc/ssl/certs/ca-certificates.crt",
+                           # Debian/Ubuntu/Gentoo etc.
+                           "/etc/ssl/certs/ca-certificates.crt",
 
-      # Fedora/RHEL 6
-      "/etc/pki/tls/certs/ca-bundle.crt",
+                           # Fedora/RHEL 6
+                           "/etc/pki/tls/certs/ca-bundle.crt",
 
-      # OpenSUSE
-      "/etc/ssl/ca-bundle.pem",
+                           # OpenSUSE
+                           "/etc/ssl/ca-bundle.pem",
 
-      # OpenELEC
-      "/etc/pki/tls/cacert.pem",
+                           # OpenELEC
+                           "/etc/pki/tls/cacert.pem",
 
-      # CentOS/RHEL 7
-      "/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem",
+                           # CentOS/RHEL 7
+                           "/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem",
 
-      # Open SSL on MacOS
-      "/usr/local/etc/openssl/cert.pem",
+                           # Open SSL on MacOS
+                           "/usr/local/etc/openssl/cert.pem",
 
-      # MacOS & Alpine Linux
-      "/etc/ssl/cert.pem"
-  ]
-  |> Enum.reject(&is_nil/1)
+                           # MacOS & Alpine Linux
+                           "/etc/ssl/cert.pem"
+                         ]
+                         |> Enum.reject(&is_nil/1)
 
   def certificate_store do
     @certificate_locations
     |> Enum.find(&File.exists?/1)
     |> raise_if_no_cacertfile
-    |> :erlang.binary_to_list
+    |> :erlang.binary_to_list()
   end
 
   defp raise_if_no_cacertfile(nil) do
     raise RuntimeError, """
-      No certificate trust store was found.
-      Tried looking for: #{inspect @certificate_locations}
+    No certificate trust store was found.
+    Tried looking for: #{inspect(@certificate_locations)}
 
-      A certificate trust store is required in
-      order to download locales for your configuration.
+    A certificate trust store is required in
+    order to download locales for your configuration.
 
-      Since no system installed certificate trust store
-      could be found, one of the following actions may be
-      taken:
+    Since no system installed certificate trust store
+    could be found, one of the following actions may be
+    taken:
 
-      1. Install the hex package `castore`. It will
-         be automatically detected after recompilation.
+    1. Install the hex package `castore`. It will
+       be automatically detected after recompilation.
 
-      2. Install the hex package `certifi`. It will
-         be automatically detected after recomilation.
+    2. Install the hex package `certifi`. It will
+       be automatically detected after recomilation.
 
-      3. Specify the location of a certificate trust store
-         by configuring it in `config.exs`:
+    3. Specify the location of a certificate trust store
+       by configuring it in `config.exs`:
 
-         config :unicode,
-           cacertfile: "/path/to/cacertfile",
-           ...
+       config :unicode,
+         cacertfile: "/path/to/cacertfile",
+         ...
 
-      """
+    """
   end
 
   defp raise_if_no_cacertfile(file) do
@@ -143,8 +145,8 @@ defmodule Mix.Tasks.Unicode.Unihan.Download do
   end
 
   defp https_opts do
-    [ssl:
-      [
+    [
+      ssl: [
         verify: :verify_peer,
         cacertfile: certificate_store(),
         customize_hostname_check: [
@@ -158,4 +160,3 @@ defmodule Mix.Tasks.Unicode.Unihan.Download do
     Path.join(Unicode.Unihan.Utils.data_dir(), filename)
   end
 end
-

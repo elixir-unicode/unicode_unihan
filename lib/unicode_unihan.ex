@@ -54,9 +54,9 @@ defmodule Unicode.Unihan do
 
   """
   def filter(fun) when is_function(fun, 1) do
-    Enum.filter unihan(), fn {_codepoint, value} ->
+    Enum.filter(unihan(), fn {_codepoint, value} ->
       fun.(value)
-    end
+    end)
   end
 
   @doc """
@@ -86,9 +86,8 @@ defmodule Unicode.Unihan do
 
   """
   def reject(fun) when is_function(fun, 1) do
-    Enum.reject unihan(), fn {_codepoint, value} ->
+    Enum.reject(unihan(), fn {_codepoint, value} ->
       fun.(value)
-    end
+    end)
   end
-
 end

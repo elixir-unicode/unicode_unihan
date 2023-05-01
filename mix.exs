@@ -67,7 +67,8 @@ defmodule Unicode.Unihan.MixProject do
     %{
       "GitHub" => "https://github.com/elixir-unicode/unicode_unihan",
       "Readme" => "https://github.com/elixir-unicode/unicode_unihan/blob/v#{@version}/README.md",
-      "Changelog" => "https://github.com/elixir-unicode/unicode_unihan/blob/v#{@version}/CHANGELOG.md"
+      "Changelog" =>
+        "https://github.com/elixir-unicode/unicode_unihan/blob/v#{@version}/CHANGELOG.md"
     }
   end
 
