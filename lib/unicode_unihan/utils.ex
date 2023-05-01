@@ -32,6 +32,7 @@ defmodule Unicode.Unihan.Utils do
   """
   def parse_file(file, map \\ %{}) do
     path = Path.join(@data_dir, ["unihan/", file])
+    fields = unihan_fields()
 
     Enum.reduce File.stream!(path), map, fn line, map ->
       case line do
@@ -51,12 +52,12 @@ defmodule Unicode.Unihan.Utils do
 
           Map.get_and_update(map, codepoint, fn
             nil ->
-              {key, value} = decode_metadata(key, value)
-              {nil, %{String.to_atom(key) => value}}
+              {key, value} = decode_metadata(key, value, fields)
+              {nil, %{key => value}}
 
             current_value when is_map(current_value)->
-              {key, value} = decode_metadata(key, value)
-              {current_value, Map.put(current_value, String.to_atom(key), value)}
+              {key, value} = decode_metadata(key, value, fields)
+              {current_value, Map.put(current_value, key, value)}
           end)
           |> elem(1)
       end
@@ -105,7 +106,36 @@ defmodule Unicode.Unihan.Utils do
   @doc """
   Decode the value of a given metadata key.
   """
-  def decode_metadata(key, value) do
+  def decode_metadata(key, value, fields) do
+    key =
+      String.to_atom(key)
+
+    value =
+      key
+      |> maybe_split_value(value, fields)
+      |> decode_value(key, fields)
+
     {key, value}
   end
+
+  def maybe_split_value(key, value, fields) do
+    field = Map.fetch!(fields, key)
+
+    case field.delimiter do
+      nil -> value
+      delimiter -> String.split(value, delimiter)
+    end
+  end
+
+  def decode_value(value, :kTotalStrokes, _fields) do
+    case Enum.map(value, &String.to_integer/1) do
+      [zh] -> [zh: zh]
+      [hans, hant] -> ["zh-Hans": hans, "zh-Hant": hant]
+    end
+  end
+
+  def decode_value(value, _key, _fields) do
+    value
+  end
+
 end
