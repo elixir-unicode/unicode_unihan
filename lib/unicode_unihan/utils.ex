@@ -64,13 +64,6 @@ defmodule Unicode.Unihan.Utils do
     end
   end
 
-  @doc """
-  Convert a "U+xxxx" codepoint into an integer
-  """
-  def decode_codepoint("U+" <> codepoint) do
-    String.to_integer(codepoint, 16)
-  end
-
   def unihan_fields do
     @data_dir
     |> Path.join("unihan_fields.json")
@@ -127,15 +120,42 @@ defmodule Unicode.Unihan.Utils do
     end
   end
 
+  @dont_decode_fields [
+    :description
+  ]
+
+  def decode_value(value, field, _fields) when field in @dont_decode_fields do
+    value
+  end
+
+  def decode_value(value, :kTraditionalVariant, _fields) do
+    Enum.map(value, &decode_codepoint/1)
+  end
+
+  def decode_value(value, :kSimplifiedVariant, _fields) do
+    Enum.map(value, &decode_codepoint/1)
+  end
+
   def decode_value(value, :kTotalStrokes, _fields) do
     case Enum.map(value, &String.to_integer/1) do
-      [zh] -> [zh: zh]
-      [hans, hant] -> ["zh-Hans": hans, "zh-Hant": hant]
+      [zh] -> %{"zh-Hans": zh, "zh-Hant": zh}
+      [hans, hant] -> %{"zh-Hans": hans, "zh-Hant": hant}
     end
+  end
+
+  def decode_value(value, key, fields) when is_list(value) do
+    Enum.map(value, &decode_value(&1, key, fields))
   end
 
   def decode_value(value, _key, _fields) do
     value
+  end
+
+  @doc """
+  Convert a "U+xxxx" codepoint into an integer
+  """
+  def decode_codepoint("U+" <> codepoint) do
+    String.to_integer(codepoint, 16)
   end
 
 end
