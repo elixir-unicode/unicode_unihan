@@ -130,14 +130,6 @@ defmodule Unicode.Unihan.Utils do
     end
   end
 
-  @dont_decode_fields [
-    :description
-  ]
-
-  defp decode_value(value, field, _fields) when field in @dont_decode_fields do
-    value
-  end
-
   defp decode_value(value, :kTraditionalVariant, _fields) do
     Enum.map(value, &decode_codepoint/1)
   end
