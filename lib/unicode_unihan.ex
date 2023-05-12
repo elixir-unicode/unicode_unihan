@@ -104,9 +104,18 @@ defmodule Unicode.Unihan do
   end
 
   @doc """
-  Takes a Unihan codepoint map or list of maps
+  Takes an integer codepoint, a Unihan codepoint map, or list of maps
   and returns the grapheme (or list of graphemes)
   of the codepoint.
+
+  ### Examples
+
+      iex> Unicode.Unihan.to_string(25342)
+      "拾"
+
+      iex> Unicode.Unihan.unihan("拾")
+      ...> |> Unicode.Unihan.to_string()
+      "拾"
 
   """
   def to_string(codepoint) when is_integer(codepoint) do
