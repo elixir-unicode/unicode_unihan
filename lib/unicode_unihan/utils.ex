@@ -159,16 +159,14 @@ defmodule Unicode.Unihan.Utils do
     String.to_integer(value)
 
   def decode_value(value, :kAlternateTotalStrokes, _fields) do
-    value
+    value # TODO: this is abit messy
   end
 
-  def decode_value(value, :kBigFive, _fields) do
-    value
-  end
+  def decode_value(value, :kBigFive, _fields), do:
+    String.to_integer(value, 16)
 
-  def decode_value(value, :kCangjie, _fields) do
-    value
-  end
+  def decode_value(value, :kCangjie, _fields), do:
+    String.graphemes(value)
 
   def decode_value(value, :kCantonese, _fields) do
     value
