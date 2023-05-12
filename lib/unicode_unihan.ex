@@ -23,6 +23,7 @@ defmodule Unicode.Unihan do
     @unihan_data
   end
 
+  @spec unihan(binary | integer) :: any
   @doc """
   Returns the Unihan database metadata for
   a given codepoint.
@@ -108,6 +109,10 @@ defmodule Unicode.Unihan do
   of the codepoint.
 
   """
+  def to_string(codepoint) when is_integer(codepoint) do
+    <<codepoint :: utf8>>
+  end
+
   def to_string(%{codepoint: codepoint}) when is_integer(codepoint) do
     <<codepoint :: utf8>>
   end
@@ -117,7 +122,7 @@ defmodule Unicode.Unihan do
   end
 
   @doc """
-  Fitler the Unihan database returning selected
+  Filter the Unihan database returning selected
   codepoints.
 
   ### Arguments
@@ -143,6 +148,10 @@ defmodule Unicode.Unihan do
       iex> Unicode.Unihan.filter(&(&1.kTotalStrokes[:"zh-Hans"] != &1.kTotalStrokes[:"zh-Hant"]))
       ...> |> Enum.count
       3
+
+      iex> Unicode.Unihan.filter(&(&1[:kGradeLevel] <= 6))
+      ...> |> Enum.count
+      2632
 
   """
   def filter(fun) when is_function(fun, 1) do

@@ -134,7 +134,7 @@ defmodule Unicode.Unihan.Utils do
   # in the value list go here - before the clause
   # that maps over a list of values individually.
 
-  defp decode_value(value, :kTotalStrokes, _fields) do
+  def decode_value(value, :kTotalStrokes, _fields) do
     case Enum.map(value, &String.to_integer/1) do
       [zh] -> %{"zh-Hans": zh, "zh-Hant": zh}
       [hans, hant] -> %{"zh-Hans": hans, "zh-Hant": hant}
@@ -144,28 +144,416 @@ defmodule Unicode.Unihan.Utils do
   # When its a list, map each value to decode it.
   # Most decode_value clauses should go below this one.
 
-  defp decode_value(value, key, fields) when is_list(value) do
+  def decode_value(value, key, fields) when is_list(value) do
     Enum.map(value, &decode_value(&1, key, fields))
   end
 
-  defp decode_value(value, :kTraditionalVariant, _fields) do
-    decode_codepoint(value)
+  def decode_value(value, :kAccountingNumeric, _fields) do
+    value
   end
 
-  defp decode_value(value, :kSimplifiedVariant, _fields) do
-    decode_codepoint(value)
+  def decode_value(value, :kAlternateTotalStrokes, _fields) do
+    value
   end
 
-  defp decode_value(value, :kHangul, _fields) do
+  def decode_value(value, :kBigFive, _fields) do
+    value
+  end
+
+  def decode_value(value, :kCangjie, _fields) do
+    value
+  end
+
+  def decode_value(value, :kCantonese, _fields) do
+    value
+  end
+
+  def decode_value(value, :kCCCII, _fields) do
+    value
+  end
+
+  def decode_value(value, :kCheungBauer, _fields) do
+    value
+  end
+
+  def decode_value(value, :kCheungBauerIndex, _fields) do
+    value
+  end
+
+  def decode_value(value, :kCihaiT, _fields) do
+    value
+  end
+
+  def decode_value(value, :kCNS1986, _fields) do
+    value
+  end
+
+  def decode_value(value, :kCNS1992, _fields) do
+    value
+  end
+
+  def decode_value(value, :kCompatibilityVariant, _fields) do
+    value
+  end
+
+  def decode_value(value, :kCowles, _fields) do
+    value
+  end
+
+  def decode_value(value, :kDaeJaweon, _fields) do
+    value
+  end
+
+  def decode_value(value, :kDefinition, _fields) do
+    value
+  end
+
+  def decode_value(value, :kEACC, _fields) do
+    value
+  end
+
+  def decode_value(value, :kFenn, _fields) do
+    value
+  end
+
+  def decode_value(value, :kFennIndex, _fields) do
+    value
+  end
+
+  def decode_value(value, :kFourCornerCode, _fields) do
+    value
+  end
+
+  def decode_value(value, :kFrequency, _fields) do
+    value
+  end
+
+  def decode_value(value, :kGB0, _fields) do
+    value
+  end
+
+  def decode_value(value, :kGB1, _fields) do
+    value
+  end
+
+  def decode_value(value, :kGB3, _fields) do
+    value
+  end
+
+  def decode_value(value, :kGB5, _fields) do
+    value
+  end
+
+  def decode_value(value, :kGB7, _fields) do
+    value
+  end
+
+  def decode_value(value, :kGB8, _fields) do
+    value
+  end
+
+  def decode_value(value, :kGradeLevel, _fields) do
+    String.to_integer(value)
+  end
+
+  def decode_value(value, :kGSR, _fields) do
+    value
+  end
+
+  def decode_value(value, :kHangul, _fields) do
     case String.split(value, ":", trim: true) do
       [grapheme] -> %{grapheme: grapheme, source: nil}
       [grapheme, source] -> %{grapheme: grapheme, source: source}
     end
   end
 
+  def decode_value(value, :kHanYu, _fields) do
+    value
+  end
+
+  def decode_value(value, :kHanyuPinlu, _fields) do
+    value
+  end
+
+  def decode_value(value, :kHanyuPinyin, _fields) do
+    value
+  end
+
+  def decode_value(value, :kHDZRadBreak, _fields) do
+    value
+  end
+
+  def decode_value(value, :kHKGlyph, _fields) do
+    value
+  end
+
+  def decode_value(value, :kHKSCS, _fields) do
+    value
+  end
+
+  def decode_value(value, :kIBMJapan, _fields) do
+    value
+  end
+
+  def decode_value(value, :kIICore, _fields) do
+    value
+  end
+
+  def decode_value(value, :kIRG_GSource, _fields) do
+    value
+  end
+
+  def decode_value(value, :kIRG_HSource, _fields) do
+    value
+  end
+
+  def decode_value(value, :kIRG_JSource, _fields) do
+    value
+  end
+
+  def decode_value(value, :kIRG_KPSource, _fields) do
+    value
+  end
+
+  def decode_value(value, :kIRG_KSource, _fields) do
+    value
+  end
+
+  def decode_value(value, :kIRG_MSource, _fields) do
+    value
+  end
+
+  def decode_value(value, :kIRG_SSource, _fields) do
+    value
+  end
+
+  def decode_value(value, :kIRG_TSource, _fields) do
+    value
+  end
+
+  def decode_value(value, :kIRG_UKSource, _fields) do
+    value
+  end
+
+  def decode_value(value, :kIRG_USource, _fields) do
+    value
+  end
+
+  def decode_value(value, :kIRG_VSource, _fields) do
+    value
+  end
+
+  def decode_value(value, :kIRGDaeJaweon, _fields) do
+    value
+  end
+
+  def decode_value(value, :kIRGDaiKanwaZiten, _fields) do
+    value
+  end
+
+  def decode_value(value, :kIRGHanyuDaZidian, _fields) do
+    value
+  end
+
+  def decode_value(value, :kIRGKangXi, _fields) do
+    value
+  end
+
+  def decode_value(value, :kJa, _fields) do
+    value
+  end
+
+  def decode_value(value, :kJapaneseKun, _fields) do
+    value
+  end
+
+  def decode_value(value, :kJapaneseOn, _fields) do
+    value
+  end
+
+  def decode_value(value, :kJinmeiyoKanji, _fields) do
+    value
+  end
+
+  def decode_value(value, :kJis0, _fields) do
+    value
+  end
+
+  def decode_value(value, :kJis1, _fields) do
+    value
+  end
+
+  def decode_value(value, :kJIS0213, _fields) do
+    value
+  end
+
+  def decode_value(value, :kJoyoKanji, _fields) do
+    value
+  end
+
+  def decode_value(value, :kKangXi, _fields) do
+    value
+  end
+
+  def decode_value(value, :kKarlgren, _fields) do
+    value
+  end
+
+  def decode_value(value, :kKorean, _fields) do
+    value
+  end
+
+  def decode_value(value, :kKoreanEducationHanja, _fields) do
+    value
+  end
+
+  def decode_value(value, :kKoreanName, _fields) do
+    value
+  end
+
+  def decode_value(value, :kKPS0, _fields) do
+    value
+  end
+
+  def decode_value(value, :kKPS1, _fields) do
+    value
+  end
+
+  def decode_value(value, :kKSC0, _fields) do
+    value
+  end
+
+  def decode_value(value, :kKSC1, _fields) do
+    value
+  end
+
+  def decode_value(value, :kLau, _fields) do
+    value
+  end
+
+  def decode_value(value, :kMainlandTelegraph, _fields) do
+    value
+  end
+
+  def decode_value(value, :kMandarin, _fields) do
+    value
+  end
+
+  def decode_value(value, :kMatthews, _fields) do
+    value
+  end
+
+  def decode_value(value, :kMeyerWempe, _fields) do
+    value
+  end
+
+  def decode_value(value, :kMorohashi, _fields) do
+    value
+  end
+
+  def decode_value(value, :kNelson, _fields) do
+    value
+  end
+
+  def decode_value(value, :kOtherNumeric, _fields) do
+    value
+  end
+
+  def decode_value(value, :kPhonetic, _fields) do
+    value
+  end
+
+  def decode_value(value, :kPrimaryNumeric, _fields) do
+    value
+  end
+
+  def decode_value(value, :kPseudoGB1, _fields) do
+    value
+  end
+
+  def decode_value(value, :kRSAdobe_Japan1_6, _fields) do
+    value
+  end
+
+  def decode_value(value, :kRSKangXi, _fields) do
+    value
+  end
+
+  def decode_value(value, :kRSUnicode, _fields) do
+    value
+  end
+
+  def decode_value(value, :kSBGY, _fields) do
+    value
+  end
+
+  def decode_value(value, :kSemanticVariant, _fields) do
+    value
+  end
+
+  def decode_value(value, :kSimplifiedVariant, _fields) do
+    decode_codepoint(value)
+  end
+
+  def decode_value(value, :kSpecializedSemanticVariant, _fields) do
+    value
+  end
+
+  def decode_value(value, :kSpoofingVariant, _fields) do
+    value
+  end
+
+  def decode_value(value, :kStrange, _fields) do
+    value
+  end
+
+  def decode_value(value, :kTaiwanTelegraph, _fields) do
+    value
+  end
+
+  def decode_value(value, :kTang, _fields) do
+    value
+  end
+
+  def decode_value(value, :kTGH, _fields) do
+    value
+  end
+
+  def decode_value(value, :kTGHZ2013, _fields) do
+    value
+  end
+
+  def decode_value(value, :kTotalStrokes, _fields) do
+    value
+  end
+
+  def decode_value(value, :kTraditionalVariant, _fields) do
+    decode_codepoint(value)
+  end
+
+  def decode_value(value, :kUnihanCore2020, _fields) do
+    value
+  end
+
+  def decode_value(value, :kVietnamese, _fields) do
+    value
+  end
+
+  def decode_value(value, :kXerox, _fields) do
+    value
+  end
+
+  def decode_value(value, :kXHC1983, _fields) do
+    value
+  end
+
+  def decode_value(value, :kZVariant, _fields) do
+    value
+  end
+
   # The default decoding is to do nothing.
 
-  defp decode_value(value, _key, _fields) do
+  def decode_value(value, _key, _fields) do
     value
   end
 
