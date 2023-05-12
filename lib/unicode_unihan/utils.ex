@@ -143,14 +143,20 @@ defmodule Unicode.Unihan.Utils do
 
   # When its a list, map each value to decode it.
   # Most decode_value clauses should go below this one.
+  # Whenever the list contains only one member, we unwrap the list
+  # for easier access
 
   def decode_value(value, key, fields) when is_list(value) do
-    Enum.map(value, &decode_value(&1, key, fields))
+    list = Enum.map(value, &decode_value(&1, key, fields))
+    if length(list) > 1 do
+      list
+    else
+      List.first(list)
+    end
   end
 
-  def decode_value(value, :kAccountingNumeric, _fields) do
-    value
-  end
+  def decode_value(value, :kAccountingNumeric, _fields), do:
+    String.to_integer(value)
 
   def decode_value(value, :kAlternateTotalStrokes, _fields) do
     value
