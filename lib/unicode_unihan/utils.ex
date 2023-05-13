@@ -255,9 +255,8 @@ defmodule Unicode.Unihan.Utils do
     value
   end
 
-  def decode_value(value, :kFrequency, _fields) do
-    value
-  end
+  def decode_value(value, :kFrequency, _fields), do:
+    String.to_integer(value)
 
   def decode_value(value, :kGB0, _fields) do
     value
