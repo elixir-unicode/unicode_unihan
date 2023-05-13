@@ -313,9 +313,8 @@ defmodule Unicode.Unihan.Utils do
     value
   end
 
-  def decode_value(value, :kHKGlyph, _fields) do
-    value
-  end
+  def decode_value(value, :kHKGlyph, _fields), do:
+    String.to_integer(value)
 
   def decode_value(value, :kHKSCS, _fields) do
     value
