@@ -81,8 +81,11 @@ In practice, the 1-arity function can be written more conveniently using the cap
 ```elixir
 filter(
   &(&1[:kGradeLevel] <= 2 and
-      &1[:kCantonese] == ["si1"])
+      &1[:kCantonese][:tone] == "2")
 )
+|> Enum.sort_by(fn {_codepoint, map} ->
+  map[:kTotalStrokes][:"zh-Hant"]
+end)
 |> Enum.map(fn {_codepoint, map} ->
   Unicode.Unihan.to_string(map)
 end)

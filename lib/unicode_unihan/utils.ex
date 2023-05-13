@@ -1,9 +1,12 @@
 defmodule Unicode.Unihan.Utils do
   @moduledoc """
-  Functions to parse the Unicode Unihand database
+  Functions to parse the Unicode Unihan database
   files.
 
   """
+
+  alias Unicode.Unihan.Cantonese
+
   for file <- Path.wildcard(Path.join(__DIR__, "../../data/**/**")) do
     @external_resource file
   end
@@ -168,9 +171,8 @@ defmodule Unicode.Unihan.Utils do
   def decode_value(value, :kCangjie, _fields), do:
     String.graphemes(value)
 
-  def decode_value(value, :kCantonese, _fields) do
-    value
-  end
+  def decode_value(value, :kCantonese, _fields), do:
+    Cantonese.to_jyutping!(value)
 
   def decode_value(value, :kCCCII, _fields) do
     value

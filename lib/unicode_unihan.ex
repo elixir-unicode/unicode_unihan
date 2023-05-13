@@ -36,42 +36,43 @@ defmodule Unicode.Unihan do
       iex> Unicode.Unihan.unihan(171339)
       %{
         codepoint: 171339,
-        kCantonese: ["ju4"],
+        kCantonese: %{coda: "", jyutping: "ju4", nucleus: "u", onset: "j", tone: "4"},
         kDefinition: "(J) nonstandard variant of 魚 U+9B5A, fish",
-        kHanYu: ["74674.090"],
-        kIRGHanyuDaZidian: ["74674.090"],
-        kIRGKangXi: ["1465.011"],
+        kHanYu: "74674.090",
+        kIRGHanyuDaZidian: "74674.090",
+        kIRGKangXi: "1465.011",
         kIRG_GSource: "GHZ-74674.09",
         kIRG_TSource: "T4-3043",
         kIRG_VSource: "VN-29D4B",
         kJapaneseKun: ["UO", "SAKANA", "SUNADORU"],
-        kJapaneseOn: ["GYO"],
-        kKangXi: ["1465.011"],
-        kNelson: ["0692"],
-        kPhonetic: ["1605"],
+        kJapaneseOn: "GYO",
+        kKangXi: "1465.011",
+        kNelson: "0692",
+        kPhonetic: "1605",
         kRSAdobe_Japan1_6: ["C+13717+195.10.0", "V+13718+195.10.0"],
-        kRSKangXi: ["195.0"],
-        kRSUnicode: ["195.0"],
+        kRSKangXi: "195.0",
+        kRSUnicode: "195.0",
         kTotalStrokes: %{"zh-Hans": 11, "zh-Hant": 11}
       }
+
 
       iex> Unicode.Unihan.unihan("㝰")
       %{
         codepoint: 14192,
-        kCangjie: "JHUS",
-        kCantonese: ["min4"],
+        kCangjie: ["J", "H", "U", "S"],
+        kCantonese: %{coda: "n", jyutping: "min4", nucleus: "i", onset: "m", tone: "4"},
         kDefinition: "unable to meet, empty room",
-        kHanYu: ["20957.030"],
-        kHanyuPinyin: ["20957.030:mián"],
-        kIRGHanyuDaZidian: ["20957.030"],
-        kIRGKangXi: ["0293.010"],
+        kHanYu: "20957.030",
+        kHanyuPinyin: "20957.030:mián",
+        kIRGHanyuDaZidian: "20957.030",
+        kIRGKangXi: "0293.010",
         kIRG_GSource: "G5-3E3C",
         kIRG_KSource: "K3-236A",
         kIRG_TSource: "T4-5A7D",
-        kKangXi: ["0293.010"],
-        kMandarin: ["mián"],
-        kRSUnicode: ["40.15"],
-        kSBGY: ["135.35"],
+        kKangXi: "0293.010",
+        kMandarin: "mián",
+        kRSUnicode: "40.15",
+        kSBGY: "135.35",
         kTotalStrokes: %{"zh-Hans": 18, "zh-Hant": 18}
       }
 

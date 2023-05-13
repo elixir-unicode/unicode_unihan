@@ -32,7 +32,7 @@ defmodule Unicode.Unihan.MixProject do
 
   defp package do
     [
-      maintainers: ["Kip Cole"],
+      maintainers: ["Kip Cole", "Jon Chui"],
       licenses: ["Apache-2.0"],
       logo: "logo.png",
       links: links(),
@@ -56,6 +56,7 @@ defmodule Unicode.Unihan.MixProject do
 
   defp deps do
     [
+      {:csv, "~> 3.0.5"},
       {:jason, "~> 1.0"},
       {:benchee, "~> 1.0", only: :dev, optional: true},
       {:ex_doc, "~> 0.24", only: [:dev, :release], runtime: false, optional: true},
