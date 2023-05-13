@@ -484,17 +484,15 @@ defmodule Unicode.Unihan.Utils do
     value
   end
 
-  def decode_value(value, :kOtherNumeric, _fields) do
-    value
-  end
+  def decode_value(value, :kOtherNumeric, _fields), do:
+    String.to_integer(value)
 
   def decode_value(value, :kPhonetic, _fields) do
     value
   end
 
-  def decode_value(value, :kPrimaryNumeric, _fields) do
-    value
-  end
+  def decode_value(value, :kPrimaryNumeric, _fields), do:
+    String.to_integer(value)
 
   def decode_value(value, :kPseudoGB1, _fields) do
     value
