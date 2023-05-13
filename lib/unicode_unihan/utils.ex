@@ -175,7 +175,7 @@ defmodule Unicode.Unihan.Utils do
     Cantonese.to_jyutping!(value)
 
   def decode_value(value, :kCCCII, _fields) do
-    value
+    value # no parsing needed
   end
 
   def decode_value(value, :kCheungBauer, _fields) do
@@ -236,9 +236,8 @@ defmodule Unicode.Unihan.Utils do
     value
   end
 
-  def decode_value(value, :kDefinition, _fields) do
-    value
-  end
+  def decode_value(value, :kDefinition, _fields), do:
+    String.split(value, ";")
 
   def decode_value(value, :kEACC, _fields) do
     value

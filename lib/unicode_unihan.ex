@@ -37,7 +37,7 @@ defmodule Unicode.Unihan do
       %{
         codepoint: 171339,
         kCantonese: %{coda: "", jyutping: "ju4", nucleus: "u", onset: "j", tone: "4"},
-        kDefinition: "(J) nonstandard variant of 魚 U+9B5A, fish",
+        kDefinition: ["(J) nonstandard variant of 魚 U+9B5A, fish"],
         kHanYu: "74674.090",
         kIRGHanyuDaZidian: "74674.090",
         kIRGKangXi: "1465.011",
@@ -60,7 +60,7 @@ defmodule Unicode.Unihan do
         codepoint: 14192,
         kCangjie: ["J", "H", "U", "S"],
         kCantonese: %{coda: "n", jyutping: "min4", nucleus: "i", onset: "m", tone: "4"},
-        kDefinition: "unable to meet, empty room",
+        kDefinition: ["unable to meet, empty room"],
         kHanYu: "20957.030",
         kHanyuPinyin: "20957.030:mián",
         kIRGHanyuDaZidian: "20957.030",
