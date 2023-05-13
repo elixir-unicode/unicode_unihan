@@ -179,11 +179,37 @@ defmodule Unicode.Unihan.Utils do
   end
 
   def decode_value(value, :kCheungBauer, _fields) do
-    value
+    map =
+      ~r|(?<radical>[0-9]{3})\/(?<stroke>[0-9]{2});(?<cangjie>[A-Z]*);(?<jyutpings>[a-z1-6\[\]\/,]+)|
+      |> Regex.named_captures(value)
+
+    %{
+      radical: map["radical"] |> String.to_integer,
+      stroke:  map["stroke"]  |> String.to_integer,
+      cangjie: map["cangjie"] |> String.graphemes,
+      jyutpings:
+        map["jyutpings"]
+        |> String.split(",")
+        |> Enum.map(fn jyutping ->
+          with {:ok, jyutping_map} <- Cantonese.to_jyutping(jyutping)
+          do
+            jyutping_map
+          else
+            {:error, _msg} -> jyutping
+          end
+        end)
+    }
   end
 
   def decode_value(value, :kCheungBauerIndex, _fields) do
-    value
+    map =
+      ~r|(?<page>[0-9]{3})\.(?<position>[01][0-9])|
+      |> Regex.named_captures(value)
+
+    %{
+      page:     map["page"]     |> String.to_integer,
+      position: map["position"] |> String.to_integer
+    }
   end
 
   def decode_value(value, :kCihaiT, _fields) do

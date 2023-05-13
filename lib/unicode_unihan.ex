@@ -55,7 +55,6 @@ defmodule Unicode.Unihan do
         kTotalStrokes: %{"zh-Hans": 11, "zh-Hant": 11}
       }
 
-
       iex> Unicode.Unihan.unihan("㝰")
       %{
         codepoint: 14192,
