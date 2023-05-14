@@ -150,20 +150,42 @@ defmodule Unicode.Unihan.Utils do
           radical_character = String.to_integer(radical_character, 16)
           unified_ideograph = String.to_integer(unified_ideograph, 16)
 
-          radical = %{
-            radical_number: radical_number,
-            simplified: simplified?,
-            radical_character: radical_character,
-            unified_ideograph: unified_ideograph
-          }
+          radical = radical(radical_number, simplified?, radical_character, unified_ideograph)
+          other_radical = radical(radical_number, !simplified?, radical_character, unified_ideograph)
 
-          Map.put(map, radical_number, radical)
+          # When no value, assume the current value is for both traditional
+          # and simplified. A later entry may overwrite one of them.
+          Map.get_and_update(map, radical_number, fn
+            nil ->
+              {nil, Map.merge(radical, other_radical)}
+
+            current_value when is_map(current_value) ->
+              {current_value, Map.merge(current_value, radical)}
+          end)
+          |> elem(1)
       end
     end)
   end
 
+  defp radical(radical_number, true = _simplified?, radical_character, unified_ideograph) do
+    %{"Hans": radical(radical_number, radical_character, unified_ideograph)}
+  end
+
+  defp radical(radical_number, false = _simplified?, radical_character, unified_ideograph) do
+    %{"Hant": radical(radical_number, radical_character, unified_ideograph)}
+  end
+
+  defp radical(radical_number, radical_character, unified_ideograph) do
+    %{
+      radical_number: radical_number,
+      radical_character: radical_character,
+      unified_ideograph: unified_ideograph
+    }
+  end
+
   # Simplified radicals are represented by radical numbers with a
   # trailing apostrophe `'`.
+
   defp split_radical_number(number) do
     case String.split(number, "'") do
       [number] -> {String.to_integer(number), false}
@@ -198,10 +220,10 @@ defmodule Unicode.Unihan.Utils do
   # in the value list go here - before the clause
   # that maps over a list of values individually.
 
-  def decode_value(value, :kTotalStrokes, _fields) do
+  defp decode_value(value, :kTotalStrokes, _fields) do
     case Enum.map(value, &String.to_integer/1) do
-      [zh] -> %{"zh-Hans": zh, "zh-Hant": zh}
-      [hans, hant] -> %{"zh-Hans": hans, "zh-Hant": hant}
+      [zh] -> %{"Hans": zh, "Hant": zh}
+      [hans, hant] -> %{"Hans": hans, "Hant": hant}
     end
   end
 
@@ -210,440 +232,439 @@ defmodule Unicode.Unihan.Utils do
   # Whenever the list contains only one member, we unwrap the list
   # for easier access
 
-  def decode_value(value, key, fields) when is_list(value) do
+  defp decode_value(value, key, fields) when is_list(value) do
     value
     |> Enum.map(&decode_value(&1, key, fields))
     |> maybe_unwrap()
   end
 
-  def decode_value(value, :kAccountingNumeric, _fields) do
+  defp decode_value(value, :kAccountingNumeric, _fields) do
     String.to_integer(value)
   end
 
-  # TODO: this is abit messy
-  def decode_value(value, :kAlternateTotalStrokes, _fields) do
+  # TODO: this is a bit messy
+  defp decode_value(value, :kAlternateTotalStrokes, _fields) do
     value
   end
 
-  def decode_value(value, :kBigFive, _fields) do
+  defp decode_value(value, :kBigFive, _fields) do
     String.to_integer(value, 16)
   end
 
-  def decode_value(value, :kCangjie, _fields) do
+  defp decode_value(value, :kCangjie, _fields) do
     String.graphemes(value)
   end
 
-  def decode_value(value, :kCantonese, _fields) do
+  defp decode_value(value, :kCantonese, _fields) do
     Cantonese.to_jyutping!(value)
   end
 
-  def decode_value(value, :kCCCII, _fields) do
-    # no parsing needed
+  defp decode_value(value, :kCCCII, _fields) do
     value
   end
 
-  def decode_value(value, :kCheungBauer, _fields) do
+  defp decode_value(value, :kCheungBauer, _fields) do
     ~r|(?<radical>[0-9]{3})\/(?<stroke>[0-9]{2});(?<cangjie>[A-Z]*);(?<jyutpings>[a-z1-6\[\]\/,]+)|
     |> Regex.named_captures(value)
-    |> normalize_captures()
+    |> decode_captures()
   end
 
-  def decode_value(value, :kCheungBauerIndex, _fields) do
+  defp decode_value(value, :kCheungBauerIndex, _fields) do
     ~r|(?<page>[0-9]{3})\.(?<position>[01][0-9])|
     |> Regex.named_captures(value)
-    |> normalize_captures()
+    |> decode_captures()
   end
 
-  def decode_value(value, :kCihaiT, _fields) do
+  defp decode_value(value, :kCihaiT, _fields) do
     ~r|(?<page>[1-9][0-9]{0,3})\.(?<row>[0-9])(?<position>[0-9]{2})|
     |> Regex.named_captures(value)
-    |> normalize_captures()
+    |> decode_captures()
   end
 
-  def decode_value(value, :kCNS1986, _fields) do
+  defp decode_value(value, :kCNS1986, _fields) do
     value
   end
 
-  def decode_value(value, :kCNS1992, _fields) do
+  defp decode_value(value, :kCNS1992, _fields) do
     value
   end
 
-  def decode_value(value, :kCompatibilityVariant, _fields) do
+  defp decode_value(value, :kCompatibilityVariant, _fields) do
     value
   end
 
-  def decode_value(value, :kCowles, _fields) do
+  defp decode_value(value, :kCowles, _fields) do
     value
   end
 
-  def decode_value(value, :kDaeJaweon, _fields) do
+  defp decode_value(value, :kDaeJaweon, _fields) do
     value
   end
 
-  def decode_value(value, :kDefinition, _fields) do
+  defp decode_value(value, :kDefinition, _fields) do
     String.split(value, ";")
   end
 
-  def decode_value(value, :kEACC, _fields) do
+  defp decode_value(value, :kEACC, _fields) do
     value
   end
 
-  def decode_value(value, :kFenn, _fields) do
+  defp decode_value(value, :kFenn, _fields) do
     value
   end
 
-  def decode_value(value, :kFennIndex, _fields) do
+  defp decode_value(value, :kFennIndex, _fields) do
     value
   end
 
-  def decode_value(value, :kFourCornerCode, _fields) do
+  defp decode_value(value, :kFourCornerCode, _fields) do
     value
   end
 
-  def decode_value(value, :kFrequency, _fields) do
+  defp decode_value(value, :kFrequency, _fields) do
     String.to_integer(value)
   end
 
-  def decode_value(value, :kGB0, _fields) do
+  defp decode_value(value, :kGB0, _fields) do
     value
   end
 
-  def decode_value(value, :kGB1, _fields) do
+  defp decode_value(value, :kGB1, _fields) do
     value
   end
 
-  def decode_value(value, :kGB3, _fields) do
+  defp decode_value(value, :kGB3, _fields) do
     value
   end
 
-  def decode_value(value, :kGB5, _fields) do
+  defp decode_value(value, :kGB5, _fields) do
     value
   end
 
-  def decode_value(value, :kGB7, _fields) do
+  defp decode_value(value, :kGB7, _fields) do
     value
   end
 
-  def decode_value(value, :kGB8, _fields) do
+  defp decode_value(value, :kGB8, _fields) do
     value
   end
 
-  def decode_value(value, :kGradeLevel, _fields) do
+  defp decode_value(value, :kGradeLevel, _fields) do
     String.to_integer(value)
   end
 
-  def decode_value(value, :kGSR, _fields) do
+  defp decode_value(value, :kGSR, _fields) do
     value
   end
 
-  def decode_value(value, :kHangul, _fields) do
+  defp decode_value(value, :kHangul, _fields) do
     case String.split(value, ":", trim: true) do
       [grapheme] -> %{grapheme: grapheme, source: nil}
       [grapheme, source] -> %{grapheme: grapheme, source: source}
     end
   end
 
-  def decode_value(value, :kHanYu, _fields) do
+  defp decode_value(value, :kHanYu, _fields) do
     ~r|(?<volume>[1-8])(?<page>[0-9]{4})\.(?<position>[0-3][0-9])(?<virtual>[0-3])|
     |> Regex.named_captures(value)
-    |> normalize_captures()
+    |> decode_captures()
   end
 
-  def decode_value(value, :kHanyuPinlu, _fields) do
+  defp decode_value(value, :kHanyuPinlu, _fields) do
     value
   end
 
-  def decode_value(value, :kHanyuPinyin, _fields) do
+  defp decode_value(value, :kHanyuPinyin, _fields) do
     value
   end
 
-  def decode_value(value, :kHDZRadBreak, _fields) do
+  defp decode_value(value, :kHDZRadBreak, _fields) do
     value
   end
 
-  def decode_value(value, :kHKGlyph, _fields) do
+  defp decode_value(value, :kHKGlyph, _fields) do
     String.to_integer(value)
   end
 
-  def decode_value(value, :kHKSCS, _fields) do
+  defp decode_value(value, :kHKSCS, _fields) do
     value
   end
 
-  def decode_value(value, :kIBMJapan, _fields) do
+  defp decode_value(value, :kIBMJapan, _fields) do
     value
   end
 
-  def decode_value(value, :kIICore, _fields) do
+  defp decode_value(value, :kIICore, _fields) do
     value
   end
 
-  def decode_value(value, :kIRG_GSource, _fields) do
+  defp decode_value(value, :kIRG_GSource, _fields) do
     value
   end
 
-  def decode_value(value, :kIRG_HSource, _fields) do
+  defp decode_value(value, :kIRG_HSource, _fields) do
     value
   end
 
-  def decode_value(value, :kIRG_JSource, _fields) do
+  defp decode_value(value, :kIRG_JSource, _fields) do
     value
   end
 
-  def decode_value(value, :kIRG_KPSource, _fields) do
+  defp decode_value(value, :kIRG_KPSource, _fields) do
     value
   end
 
-  def decode_value(value, :kIRG_KSource, _fields) do
+  defp decode_value(value, :kIRG_KSource, _fields) do
     value
   end
 
-  def decode_value(value, :kIRG_MSource, _fields) do
+  defp decode_value(value, :kIRG_MSource, _fields) do
     value
   end
 
-  def decode_value(value, :kIRG_SSource, _fields) do
+  defp decode_value(value, :kIRG_SSource, _fields) do
     value
   end
 
-  def decode_value(value, :kIRG_TSource, _fields) do
+  defp decode_value(value, :kIRG_TSource, _fields) do
     value
   end
 
-  def decode_value(value, :kIRG_UKSource, _fields) do
+  defp decode_value(value, :kIRG_UKSource, _fields) do
     value
   end
 
-  def decode_value(value, :kIRG_USource, _fields) do
+  defp decode_value(value, :kIRG_USource, _fields) do
     value
   end
 
-  def decode_value(value, :kIRG_VSource, _fields) do
+  defp decode_value(value, :kIRG_VSource, _fields) do
     value
   end
 
-  def decode_value(value, :kIRGDaeJaweon, _fields) do
+  defp decode_value(value, :kIRGDaeJaweon, _fields) do
     value
   end
 
-  def decode_value(value, :kIRGDaiKanwaZiten, _fields) do
+  defp decode_value(value, :kIRGDaiKanwaZiten, _fields) do
     value
   end
 
-  def decode_value(value, :kIRGHanyuDaZidian, _fields) do
+  defp decode_value(value, :kIRGHanyuDaZidian, _fields) do
     ~r|(?<volume>[1-8])(?<page>[0-9]{4})\.(?<position>[0-3][0-9])(?<virtual>[01])|
     |> Regex.named_captures(value)
-    |> normalize_captures()
+    |> decode_captures()
   end
 
-  def decode_value(value, :kIRGKangXi, _fields) do
+  defp decode_value(value, :kIRGKangXi, _fields) do
     ~r|(?<page>[0-9]{4})\.(?<position>[0-9]{2})(?<virtual>[01])|
     |> Regex.named_captures(value)
-    |> normalize_captures()
+    |> decode_captures()
   end
 
-  def decode_value(value, :kJa, _fields) do
+  defp decode_value(value, :kJa, _fields) do
     value
   end
 
-  def decode_value(value, :kJapaneseKun, _fields) do
+  defp decode_value(value, :kJapaneseKun, _fields) do
     value
   end
 
-  def decode_value(value, :kJapaneseOn, _fields) do
+  defp decode_value(value, :kJapaneseOn, _fields) do
     value
   end
 
-  def decode_value(value, :kJinmeiyoKanji, _fields) do
+  defp decode_value(value, :kJinmeiyoKanji, _fields) do
     value
   end
 
-  def decode_value(value, :kJis0, _fields) do
+  defp decode_value(value, :kJis0, _fields) do
     value
   end
 
-  def decode_value(value, :kJis1, _fields) do
+  defp decode_value(value, :kJis1, _fields) do
     value
   end
 
-  def decode_value(value, :kJIS0213, _fields) do
+  defp decode_value(value, :kJIS0213, _fields) do
     value
   end
 
-  def decode_value(value, :kJoyoKanji, _fields) do
+  defp decode_value(value, :kJoyoKanji, _fields) do
     value
   end
 
-  def decode_value(value, :kKangXi, _fields) do
+  defp decode_value(value, :kKangXi, _fields) do
     ~r|(?<page>[0-9]{4})\.(?<position>[0-9]{2})(?<virtual>[01])|
     |> Regex.named_captures(value)
-    |> normalize_captures()
+    |> decode_captures()
   end
 
-  def decode_value(value, :kKarlgren, _fields) do
+  defp decode_value(value, :kKarlgren, _fields) do
     value
   end
 
-  def decode_value(value, :kKorean, _fields) do
+  defp decode_value(value, :kKorean, _fields) do
     value
   end
 
-  def decode_value(value, :kKoreanEducationHanja, _fields) do
+  defp decode_value(value, :kKoreanEducationHanja, _fields) do
     String.to_integer(value)
   end
 
-  def decode_value(value, :kKoreanName, _fields) do
+  defp decode_value(value, :kKoreanName, _fields) do
     String.to_integer(value)
   end
 
-  def decode_value(value, :kKPS0, _fields) do
+  defp decode_value(value, :kKPS0, _fields) do
     value
   end
 
-  def decode_value(value, :kKPS1, _fields) do
+  defp decode_value(value, :kKPS1, _fields) do
     value
   end
 
-  def decode_value(value, :kKSC0, _fields) do
+  defp decode_value(value, :kKSC0, _fields) do
     String.to_integer(value)
   end
 
-  def decode_value(value, :kKSC1, _fields) do
+  defp decode_value(value, :kKSC1, _fields) do
     String.to_integer(value)
   end
 
-  def decode_value(value, :kLau, _fields) do
+  defp decode_value(value, :kLau, _fields) do
     String.to_integer(value)
   end
 
-  def decode_value(value, :kMainlandTelegraph, _fields) do
+  defp decode_value(value, :kMainlandTelegraph, _fields) do
     String.to_integer(value)
   end
 
-  def decode_value(value, :kMandarin, _fields) do
+  defp decode_value(value, :kMandarin, _fields) do
     value
   end
 
-  def decode_value(value, :kMatthews, _fields) do
+  defp decode_value(value, :kMatthews, _fields) do
     value
   end
 
-  def decode_value(value, :kMeyerWempe, _fields) do
+  defp decode_value(value, :kMeyerWempe, _fields) do
     value
   end
 
-  def decode_value(value, :kMorohashi, _fields) do
+  defp decode_value(value, :kMorohashi, _fields) do
     value
   end
 
-  def decode_value(value, :kNelson, _fields) do
+  defp decode_value(value, :kNelson, _fields) do
     String.to_integer(value)
   end
 
-  def decode_value(value, :kOtherNumeric, _fields) do
+  defp decode_value(value, :kOtherNumeric, _fields) do
     String.to_integer(value)
   end
 
-  def decode_value(value, :kPhonetic, _fields) do
+  defp decode_value(value, :kPhonetic, _fields) do
     value
   end
 
-  def decode_value(value, :kPrimaryNumeric, _fields) do
+  defp decode_value(value, :kPrimaryNumeric, _fields) do
     String.to_integer(value)
   end
 
-  def decode_value(value, :kPseudoGB1, _fields) do
+  defp decode_value(value, :kPseudoGB1, _fields) do
     String.to_integer(value)
   end
 
-  def decode_value(value, :kRSAdobe_Japan1_6, _fields) do
+  defp decode_value(value, :kRSAdobe_Japan1_6, _fields) do
     value
   end
 
-  def decode_value(value, :kRSKangXi, _fields) do
+  defp decode_value(value, :kRSKangXi, _fields) do
     ~r|(?<radical>[1-9][0-9]{0,2})\.(?<strokes>-?[0-9]{1,2})|
     |> Regex.named_captures(value)
-    |> normalize_captures()
+    |> decode_captures()
   end
 
-  def decode_value(value, :kRSUnicode, _fields) do
+  defp decode_value(value, :kRSUnicode, _fields) do
     ~r|(?<radical>[1-9][0-9]{0,2})(?<simplified_radical>\'?)\.(?<strokes>-?[0-9]{1,2})|
     |> Regex.named_captures(value)
-    |> normalize_captures()
+    |> decode_captures()
   end
 
-  def decode_value(value, :kSBGY, _fields) do
+  defp decode_value(value, :kSBGY, _fields) do
     ~r|(?<page>[0-9]{3})\.(?<position>[0-7][0-9])|
     |> Regex.named_captures(value)
-    |> normalize_captures()
+    |> decode_captures()
   end
 
-  def decode_value(value, :kSemanticVariant, _fields) do
+  defp decode_value(value, :kSemanticVariant, _fields) do
     value
   end
 
-  def decode_value(value, :kSimplifiedVariant, _fields) do
+  defp decode_value(value, :kSimplifiedVariant, _fields) do
     decode_codepoint(value)
   end
 
-  def decode_value(value, :kSpecializedSemanticVariant, _fields) do
+  defp decode_value(value, :kSpecializedSemanticVariant, _fields) do
     value
   end
 
-  def decode_value(value, :kSpoofingVariant, _fields) do
+  defp decode_value(value, :kSpoofingVariant, _fields) do
     value
   end
 
-  def decode_value(value, :kStrange, _fields) do
+  defp decode_value(value, :kStrange, _fields) do
     value
   end
 
-  def decode_value(value, :kTaiwanTelegraph, _fields) do
+  defp decode_value(value, :kTaiwanTelegraph, _fields) do
     value
   end
 
-  def decode_value(value, :kTang, _fields) do
+  defp decode_value(value, :kTang, _fields) do
     value
   end
 
-  def decode_value(value, :kTGH, _fields) do
+  defp decode_value(value, :kTGH, _fields) do
     value
   end
 
-  def decode_value(value, :kTGHZ2013, _fields) do
+  defp decode_value(value, :kTGHZ2013, _fields) do
     value
   end
 
-  def decode_value(value, :kTotalStrokes, _fields) do
+  defp decode_value(value, :kTotalStrokes, _fields) do
     value
   end
 
-  def decode_value(value, :kTraditionalVariant, _fields) do
+  defp decode_value(value, :kTraditionalVariant, _fields) do
     decode_codepoint(value)
   end
 
-  def decode_value(value, :kUnihanCore2020, _fields) do
+  defp decode_value(value, :kUnihanCore2020, _fields) do
     value
   end
 
-  def decode_value(value, :kVietnamese, _fields) do
+  defp decode_value(value, :kVietnamese, _fields) do
     value
   end
 
-  def decode_value(value, :kXerox, _fields) do
+  defp decode_value(value, :kXerox, _fields) do
     value
   end
 
-  def decode_value(value, :kXHC1983, _fields) do
+  defp decode_value(value, :kXHC1983, _fields) do
     value
   end
 
-  def decode_value(value, :kZVariant, _fields) do
+  defp decode_value(value, :kZVariant, _fields) do
     value
   end
 
   # The default decoding is to do nothing.
 
-  def decode_value(value, _key, _fields) do
+  defp decode_value(value, _key, _fields) do
     value
   end
 
@@ -662,47 +683,55 @@ defmodule Unicode.Unihan.Utils do
   end
 
   # Convert captures to atom keys and
-  # integer values
-  defp normalize_captures(map) do
+  # decoded value (by default try to convert
+  # the value to an integer)
+
+  defp decode_captures(map) do
     map
-    |> Enum.map(fn
-      {"virtual", "0"} ->
-        {:virtual, false}
-
-      {"virtual", "1"} ->
-        {:virtual, true}
-
-      {"simplified_radical", "'"} ->
-        {:simplified_radical, true}
-
-      {"simplified_radical", ""} ->
-        {:simplified_radical, false}
-
-      {"jyutpings", value} ->
-        jyutpings =
-          value
-          |> String.split(",")
-          |> Enum.map(fn jyutping ->
-            case Cantonese.to_jyutping(jyutping) do
-              {:ok, jyutping_map} -> jyutping_map
-              _other -> jyutping
-            end
-          end)
-
-        {:jyutpings, jyutpings}
-
-      {key, value} ->
-        key =
-          String.to_atom(key)
-
-        value =
-          case Integer.parse(value) do
-           {integer, ""} -> integer
-           _other -> value
-          end
-
-        {key, value}
-    end)
+    |> Enum.map(&decode_capture/1)
     |> Map.new()
+  end
+
+  defp decode_capture({"virtual", "0"}) do
+    {:virtual, false}
+  end
+
+  defp decode_capture({"virtual", "1"}) do
+    {:virtual, true}
+  end
+
+  defp decode_capture({"simplified_radical", "'"}) do
+    {:simplified_radical, true}
+  end
+
+  defp decode_capture({"simplified_radical", ""}) do
+    {:simplified_radical, false}
+  end
+
+  defp decode_capture({"jyutpings", value}) do
+    jyutpings =
+      value
+      |> String.split(",")
+      |> Enum.map(fn jyutping ->
+        case Cantonese.to_jyutping(jyutping) do
+          {:ok, jyutping_map} -> jyutping_map
+          _other -> jyutping
+        end
+      end)
+
+    {:jyutpings, jyutpings}
+  end
+
+  defp decode_capture({key, value}) do
+    key =
+      String.to_atom(key)
+
+    value =
+      case Integer.parse(value) do
+       {integer, ""} -> integer
+       _other -> value
+      end
+
+    {key, value}
   end
 end
