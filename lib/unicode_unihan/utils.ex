@@ -213,7 +213,15 @@ defmodule Unicode.Unihan.Utils do
   end
 
   def decode_value(value, :kCihaiT, _fields) do
-    value
+    map =
+      ~r|(?<page>[1-9][0-9]{0,3})\.(?<row>[0-9])(?<position>[0-9]{2})|
+      |> Regex.named_captures(value)
+
+    %{
+      page:     map["page"]     |> String.to_integer(),
+      row:      map["row"]      |> String.to_integer(),
+      position: map["position"] |> String.to_integer()
+    }
   end
 
   def decode_value(value, :kCNS1986, _fields) do
@@ -385,7 +393,18 @@ defmodule Unicode.Unihan.Utils do
   end
 
   def decode_value(value, :kIRGKangXi, _fields) do
-    value
+    map =
+      ~r|(?<page>[0-9]{4})\.(?<position>[0-9]{2})(?<virtual>[01])|
+      |> Regex.named_captures(value)
+
+    %{
+      page:     map["page"]     |> String.to_integer,
+      position: map["position"] |> String.to_integer,
+      virtual:  case map["virtual"] do
+                  "0" -> false
+                  "1" -> true
+                end
+    }
   end
 
   def decode_value(value, :kJa, _fields) do
