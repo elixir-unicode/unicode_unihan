@@ -50,11 +50,10 @@ defmodule Unicode.Unihan do
         kNelson: "0692",
         kPhonetic: "1605",
         kRSAdobe_Japan1_6: ["C+13717+195.10.0", "V+13718+195.10.0"],
-        kRSKangXi: "195.0",
-        kRSUnicode: "195.0",
+        kRSKangXi: %{radical: 195, strokes: 0},
+        kRSUnicode: %{radical: 195, simplified_radical: false, strokes: 0},
         kTotalStrokes: %{"zh-Hans": 11, "zh-Hant": 11}
       }
-
 
       iex> Unicode.Unihan.unihan("㝰")
       %{
@@ -71,7 +70,7 @@ defmodule Unicode.Unihan do
         kIRG_TSource: "T4-5A7D",
         kKangXi: %{page: 293, position: 1, virtual: false},
         kMandarin: "mián",
-        kRSUnicode: "40.15",
+        kRSUnicode: %{radical: 40, simplified_radical: false, strokes: 15},
         kSBGY: "135.35",
         kTotalStrokes: %{"zh-Hans": 18, "zh-Hant": 18}
       }

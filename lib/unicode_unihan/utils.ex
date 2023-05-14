@@ -514,11 +514,29 @@ defmodule Unicode.Unihan.Utils do
   end
 
   def decode_value(value, :kRSKangXi, _fields) do
-    value
+    map =
+      ~r|(?<radical>[1-9][0-9]{0,2})\.(?<strokes>-?[0-9]{1,2})|
+      |> Regex.named_captures(value)
+
+    %{
+      radical: map["radical"] |> String.to_integer(),
+      strokes: map["strokes"] |> String.to_integer()
+    }
   end
 
   def decode_value(value, :kRSUnicode, _fields) do
-    value
+    map =
+      ~r|(?<radical>[1-9][0-9]{0,2})(?<simplified_radical>\'?)\.(?<strokes>-?[0-9]{1,2})|
+      |> Regex.named_captures(value)
+
+    %{
+      radical: map["radical"] |> String.to_integer(),
+      simplified_radical: case map["simplified_radical"] do
+          ""  -> false
+          "'" -> true
+        end,
+      strokes: map["strokes"] |> String.to_integer()
+    }
   end
 
   def decode_value(value, :kSBGY, _fields) do
