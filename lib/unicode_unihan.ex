@@ -46,7 +46,7 @@ defmodule Unicode.Unihan do
         kIRG_VSource: "VN-29D4B",
         kJapaneseKun: ["UO", "SAKANA", "SUNADORU"],
         kJapaneseOn: "GYO",
-        kKangXi: "1465.011",
+        kKangXi: %{page: 1465, position: 1, virtual: true},
         kNelson: "0692",
         kPhonetic: "1605",
         kRSAdobe_Japan1_6: ["C+13717+195.10.0", "V+13718+195.10.0"],
@@ -54,6 +54,7 @@ defmodule Unicode.Unihan do
         kRSUnicode: "195.0",
         kTotalStrokes: %{"zh-Hans": 11, "zh-Hant": 11}
       }
+
 
       iex> Unicode.Unihan.unihan("㝰")
       %{
@@ -68,7 +69,7 @@ defmodule Unicode.Unihan do
         kIRG_GSource: "G5-3E3C",
         kIRG_KSource: "K3-236A",
         kIRG_TSource: "T4-5A7D",
-        kKangXi: "0293.010",
+        kKangXi: %{page: 293, position: 1, virtual: false},
         kMandarin: "mián",
         kRSUnicode: "40.15",
         kSBGY: "135.35",

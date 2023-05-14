@@ -421,7 +421,18 @@ defmodule Unicode.Unihan.Utils do
   end
 
   def decode_value(value, :kKangXi, _fields) do
-    value
+    map =
+      ~r|(?<page>[0-9]{4})\.(?<position>[0-9]{2})(?<virtual>[01])|
+      |> Regex.named_captures(value)
+
+    %{
+      page:     map["page"]     |> String.to_integer,
+      position: map["position"] |> String.to_integer,
+      virtual:  case map["virtual"] do
+                  "0" -> false
+                  "1" -> true
+                end
+    }
   end
 
   def decode_value(value, :kKarlgren, _fields) do
