@@ -48,21 +48,23 @@ defmodule Unicode.Unihan.Radical do
 
   """
   def radical(index, key \\ :unified_ideograph)
-  def radical(index, :unified_ideograph) when is_integer(index), do:
-    Map.get(radicals(), index)[:unified_ideograph]
-    |> Unicode.Unihan.to_string()
 
-  def radical(index, :radical_character) when is_integer(index), do:
-    Map.get(radicals(), index)[:radical_character]
-    |> Unicode.Unihan.to_string()
+  def radical(index, :unified_ideograph) when is_integer(index),
+    do:
+      Map.get(radicals(), index)[:unified_ideograph]
+      |> Unicode.Unihan.to_string()
 
-  def radical(index, :simplified) when is_integer(index), do:
-    Map.get(radicals(), index)[:simplified]
+  def radical(index, :radical_character) when is_integer(index),
+    do:
+      Map.get(radicals(), index)[:radical_character]
+      |> Unicode.Unihan.to_string()
 
-  def radical(index, :all) when is_integer(index), do:
-    Map.get(radicals(), index)
+  def radical(index, :simplified) when is_integer(index),
+    do: Map.get(radicals(), index)[:simplified]
 
-    @doc """
+  def radical(index, :all) when is_integer(index), do: Map.get(radicals(), index)
+
+  @doc """
   Filter the Unicode CJK radical database returning selected
   codepoints.
 

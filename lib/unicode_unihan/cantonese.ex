@@ -3,14 +3,27 @@ defmodule Unicode.Unihan.Cantonese do
   `Unicode.Unihan.Cantonese` acts on pronunciations as a simple string (e.g., "faan1", "gwai3"), and provides functions to decompose these into standard structs as well as checking their validity.
   """
 
-  @external_resource index_path = "./data/cantonese/jyutping_index.csv" |> Path.expand
+  @external_resource index_path = "./data/cantonese/jyutping_index.csv" |> Path.expand()
 
   jyutping_index =
     index_path
     |> File.stream!([:trim_bom])
     |> CSV.decode!(headers: true)
-    |> Enum.map(fn %{"onset" => onset, "nucleus" => nucleus, "coda" => coda, "tone" => tone, "jyutping" => jyutping} ->
-      %{onset: onset, nucleus: nucleus, coda: coda, tone: tone, final: nucleus <> coda, jyutping: jyutping}
+    |> Enum.map(fn %{
+                     "onset" => onset,
+                     "nucleus" => nucleus,
+                     "coda" => coda,
+                     "tone" => tone,
+                     "jyutping" => jyutping
+                   } ->
+      %{
+        onset: onset,
+        nucleus: nucleus,
+        coda: coda,
+        tone: tone,
+        final: nucleus <> coda,
+        jyutping: jyutping
+      }
     end)
 
   @doc """
@@ -36,17 +49,17 @@ defmodule Unicode.Unihan.Cantonese do
   """
 
   for entry <- jyutping_index do
-    def to_jyutping(unquote(entry.jyutping)), do:
-      {:ok,
-        %{
-          onset:    unquote(entry.onset),
-          nucleus:  unquote(entry.nucleus),
-          coda:     unquote(entry.coda),
-          tone:     unquote(entry.tone),
-          final:    unquote(entry.final),
-          jyutping: unquote(entry.jyutping)
-        }
-      }
+    def to_jyutping(unquote(entry.jyutping)),
+      do:
+        {:ok,
+         %{
+           onset: unquote(entry.onset),
+           nucleus: unquote(entry.nucleus),
+           coda: unquote(entry.coda),
+           tone: unquote(entry.tone),
+           final: unquote(entry.final),
+           jyutping: unquote(entry.jyutping)
+         }}
 
     def to_jyutping!(unquote(entry.jyutping)) do
       {:ok, result} = to_jyutping(unquote(entry.jyutping))
@@ -54,10 +67,10 @@ defmodule Unicode.Unihan.Cantonese do
     end
   end
 
-  def to_jyutping(no_match) when is_binary(no_match), do:
-    {:error, "#{no_match} is not a valid jyutping"}
-  def to_jyutping(_not_string), do:
-    {:error, "to_jyutping() requires a string as input"}
+  def to_jyutping(no_match) when is_binary(no_match),
+    do: {:error, "#{no_match} is not a valid jyutping"}
+
+  def to_jyutping(_not_string), do: {:error, "to_jyutping() requires a string as input"}
 
   @doc """
   Returns true if the jyutping is validly constructed.  This does not state anything about their usage in the language.
@@ -84,5 +97,6 @@ defmodule Unicode.Unihan.Cantonese do
   for entry <- jyutping_index do
     def is_valid?(unquote(entry.jyutping)), do: true
   end
+
   def is_valid?(str) when is_binary(str), do: false
 end

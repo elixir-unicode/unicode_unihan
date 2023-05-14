@@ -150,7 +150,7 @@ defmodule Unicode.Unihan.Utils do
           radical_character = String.to_integer(radical_character, 16)
           unified_ideograph = String.to_integer(unified_ideograph, 16)
 
-          radical =  %{
+          radical = %{
             radical_number: radical_number,
             simplified: simplified?,
             radical_character: radical_character,
@@ -165,7 +165,7 @@ defmodule Unicode.Unihan.Utils do
   # Simplified radicals are represented by radical numbers with a
   # trailing apostrophe `'`.
   defp split_radical_number(number) do
-    case String.split(number,"'") do
+    case String.split(number, "'") do
       [number] -> {String.to_integer(number), false}
       [number, _prime] -> {String.to_integer(number), true}
     end
@@ -220,8 +220,9 @@ defmodule Unicode.Unihan.Utils do
     String.to_integer(value)
   end
 
+  # TODO: this is abit messy
   def decode_value(value, :kAlternateTotalStrokes, _fields) do
-    value # TODO: this is abit messy
+    value
   end
 
   def decode_value(value, :kBigFive, _fields) do
@@ -237,53 +238,26 @@ defmodule Unicode.Unihan.Utils do
   end
 
   def decode_value(value, :kCCCII, _fields) do
-    value # no parsing needed
+    # no parsing needed
+    value
   end
 
   def decode_value(value, :kCheungBauer, _fields) do
-    map =
-      ~r|(?<radical>[0-9]{3})\/(?<stroke>[0-9]{2});(?<cangjie>[A-Z]*);(?<jyutpings>[a-z1-6\[\]\/,]+)|
-      |> Regex.named_captures(value)
-
-    %{
-      radical: map["radical"] |> String.to_integer,
-      stroke:  map["stroke"]  |> String.to_integer,
-      cangjie: map["cangjie"] |> String.graphemes,
-      jyutpings:
-        map["jyutpings"]
-        |> String.split(",")
-        |> Enum.map(fn jyutping ->
-          with {:ok, jyutping_map} <- Cantonese.to_jyutping(jyutping)
-          do
-            jyutping_map
-          else
-            {:error, _msg} -> jyutping
-          end
-        end)
-    }
+    ~r|(?<radical>[0-9]{3})\/(?<stroke>[0-9]{2});(?<cangjie>[A-Z]*);(?<jyutpings>[a-z1-6\[\]\/,]+)|
+    |> Regex.named_captures(value)
+    |> normalize_captures()
   end
 
   def decode_value(value, :kCheungBauerIndex, _fields) do
-    map =
-      ~r|(?<page>[0-9]{3})\.(?<position>[01][0-9])|
-      |> Regex.named_captures(value)
-
-    %{
-      page:     map["page"]     |> String.to_integer,
-      position: map["position"] |> String.to_integer
-    }
+    ~r|(?<page>[0-9]{3})\.(?<position>[01][0-9])|
+    |> Regex.named_captures(value)
+    |> normalize_captures()
   end
 
   def decode_value(value, :kCihaiT, _fields) do
-    map =
-      ~r|(?<page>[1-9][0-9]{0,3})\.(?<row>[0-9])(?<position>[0-9]{2})|
-      |> Regex.named_captures(value)
-
-    %{
-      page:     map["page"]     |> String.to_integer(),
-      row:      map["row"]      |> String.to_integer(),
-      position: map["position"] |> String.to_integer()
-    }
+    ~r|(?<page>[1-9][0-9]{0,3})\.(?<row>[0-9])(?<position>[0-9]{2})|
+    |> Regex.named_captures(value)
+    |> normalize_captures()
   end
 
   def decode_value(value, :kCNS1986, _fields) do
@@ -370,19 +344,9 @@ defmodule Unicode.Unihan.Utils do
   end
 
   def decode_value(value, :kHanYu, _fields) do
-    map =
-      ~r|(?<volume>[1-8])(?<page>[0-9]{4})\.(?<position>[0-3][0-9])(?<virtual>[0-3])|
-      |> Regex.named_captures(value)
-
-    %{
-      volume:   map["volume"]   |> String.to_integer,
-      page:     map["page"]     |> String.to_integer,
-      position: map["position"] |> String.to_integer,
-      virtual:  case map["virtual"] do
-                  "0" -> false
-                  _   -> true
-                end
-    }
+    ~r|(?<volume>[1-8])(?<page>[0-9]{4})\.(?<position>[0-3][0-9])(?<virtual>[0-3])|
+    |> Regex.named_captures(value)
+    |> normalize_captures()
   end
 
   def decode_value(value, :kHanyuPinlu, _fields) do
@@ -466,34 +430,15 @@ defmodule Unicode.Unihan.Utils do
   end
 
   def decode_value(value, :kIRGHanyuDaZidian, _fields) do
-    map =
-      ~r|(?<volume>[1-8])(?<page>[0-9]{4})\.(?<position>[0-3][0-9])(?<virtual>[01])|
-      |> Regex.named_captures(value)
-
-    %{
-      volume:   map["volume"]   |> String.to_integer,
-      page:     map["page"]     |> String.to_integer,
-      position: map["position"] |> String.to_integer,
-      virtual:  case map["virtual"] do
-                  "0" -> false
-                  "1" -> true
-                end
-    }
+    ~r|(?<volume>[1-8])(?<page>[0-9]{4})\.(?<position>[0-3][0-9])(?<virtual>[01])|
+    |> Regex.named_captures(value)
+    |> normalize_captures()
   end
 
   def decode_value(value, :kIRGKangXi, _fields) do
-    map =
-      ~r|(?<page>[0-9]{4})\.(?<position>[0-9]{2})(?<virtual>[01])|
-      |> Regex.named_captures(value)
-
-    %{
-      page:     map["page"]     |> String.to_integer,
-      position: map["position"] |> String.to_integer,
-      virtual:  case map["virtual"] do
-                  "0" -> false
-                  "1" -> true
-                end
-    }
+    ~r|(?<page>[0-9]{4})\.(?<position>[0-9]{2})(?<virtual>[01])|
+    |> Regex.named_captures(value)
+    |> normalize_captures()
   end
 
   def decode_value(value, :kJa, _fields) do
@@ -529,18 +474,9 @@ defmodule Unicode.Unihan.Utils do
   end
 
   def decode_value(value, :kKangXi, _fields) do
-    map =
-      ~r|(?<page>[0-9]{4})\.(?<position>[0-9]{2})(?<virtual>[01])|
-      |> Regex.named_captures(value)
-
-    %{
-      page:     map["page"]     |> String.to_integer,
-      position: map["position"] |> String.to_integer,
-      virtual:  case map["virtual"] do
-                  "0" -> false
-                  "1" -> true
-                end
-    }
+    ~r|(?<page>[0-9]{4})\.(?<position>[0-9]{2})(?<virtual>[01])|
+    |> Regex.named_captures(value)
+    |> normalize_captures()
   end
 
   def decode_value(value, :kKarlgren, _fields) do
@@ -624,40 +560,21 @@ defmodule Unicode.Unihan.Utils do
   end
 
   def decode_value(value, :kRSKangXi, _fields) do
-    map =
-      ~r|(?<radical>[1-9][0-9]{0,2})\.(?<strokes>-?[0-9]{1,2})|
-      |> Regex.named_captures(value)
-
-    %{
-      radical: map["radical"] |> String.to_integer(),
-      strokes: map["strokes"] |> String.to_integer()
-    }
+    ~r|(?<radical>[1-9][0-9]{0,2})\.(?<strokes>-?[0-9]{1,2})|
+    |> Regex.named_captures(value)
+    |> normalize_captures()
   end
 
   def decode_value(value, :kRSUnicode, _fields) do
-    map =
-      ~r|(?<radical>[1-9][0-9]{0,2})(?<simplified_radical>\'?)\.(?<strokes>-?[0-9]{1,2})|
-      |> Regex.named_captures(value)
-
-    %{
-      radical: map["radical"] |> String.to_integer(),
-      simplified_radical: case map["simplified_radical"] do
-          ""  -> false
-          "'" -> true
-        end,
-      strokes: map["strokes"] |> String.to_integer()
-    }
+    ~r|(?<radical>[1-9][0-9]{0,2})(?<simplified_radical>\'?)\.(?<strokes>-?[0-9]{1,2})|
+    |> Regex.named_captures(value)
+    |> normalize_captures()
   end
 
   def decode_value(value, :kSBGY, _fields) do
-    map =
-      ~r|(?<page>[0-9]{3})\.(?<position>[0-7][0-9])|
-      |> Regex.named_captures(value)
-
-    %{
-      page:     map["page"]     |> String.to_integer(),
-      position: map["position"] |> String.to_integer()
-    }
+    ~r|(?<page>[0-9]{3})\.(?<position>[0-7][0-9])|
+    |> Regex.named_captures(value)
+    |> normalize_captures()
   end
 
   def decode_value(value, :kSemanticVariant, _fields) do
@@ -742,5 +659,50 @@ defmodule Unicode.Unihan.Utils do
     |> String.downcase()
     |> String.replace(" ", "_")
     |> String.to_atom()
+  end
+
+  # Convert captures to atom keys and
+  # integer values
+  defp normalize_captures(map) do
+    map
+    |> Enum.map(fn
+      {"virtual", "0"} ->
+        {:virtual, false}
+
+      {"virtual", "1"} ->
+        {:virtual, true}
+
+      {"simplified_radical", "'"} ->
+        {:simplified_radical, true}
+
+      {"simplified_radical", ""} ->
+        {:simplified_radical, false}
+
+      {"jyutpings", value} ->
+        jyutpings =
+          value
+          |> String.split(",")
+          |> Enum.map(fn jyutping ->
+            case Cantonese.to_jyutping(jyutping) do
+              {:ok, jyutping_map} -> jyutping_map
+              _other -> jyutping
+            end
+          end)
+
+        {:jyutpings, jyutpings}
+
+      {key, value} ->
+        key =
+          String.to_atom(key)
+
+        value =
+          case Integer.parse(value) do
+           {integer, ""} -> integer
+           _other -> value
+          end
+
+        {key, value}
+    end)
+    |> Map.new()
   end
 end

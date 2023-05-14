@@ -8,10 +8,10 @@ defmodule Unicode.Unihan do
 
   @doc false
   defguard is_hex(c1, c2, c3, c4)
-    when (c1 in ?0..?9 or c1 in ?A..?Z) or
-      (c2 in ?0..?9 or c2 in ?A..?Z) or
-      (c3 in ?0..?9 or c3 in ?A..?Z) or
-      (c3 in ?0..?9 or c4 in ?A..?Z)
+           when c1 in ?0..?9 or c1 in ?A..?Z or
+                  (c2 in ?0..?9 or c2 in ?A..?Z) or
+                  (c3 in ?0..?9 or c3 in ?A..?Z) or
+                  (c3 in ?0..?9 or c4 in ?A..?Z)
 
   @doc """
   Returns the Unihan database as a mapping
@@ -119,11 +119,11 @@ defmodule Unicode.Unihan do
 
   """
   def to_string(codepoint) when is_integer(codepoint) do
-    <<codepoint :: utf8>>
+    <<codepoint::utf8>>
   end
 
   def to_string(%{codepoint: codepoint}) when is_integer(codepoint) do
-    <<codepoint :: utf8>>
+    <<codepoint::utf8>>
   end
 
   def to_string([%{codepoint: codepoint} | _rest] = unihan_list) when is_integer(codepoint) do
