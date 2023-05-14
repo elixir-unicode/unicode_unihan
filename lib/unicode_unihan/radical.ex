@@ -55,28 +55,28 @@ defmodule Unicode.Unihan.Radical do
   """
   def radical(index, key \\ :unified_ideograph)
 
-  def radical(index, :unified_ideograph) when is_integer(index) and index in 1..@max_radical do
+  def radical(index, :unified_ideograph) when index in 1..@max_radical do
     radicals()
     |> Map.get(index)
     # |> Map.get(:unified_ideograph)
     # |> Unicode.Unihan.to_string()
   end
 
-  def radical(index, :radical_character) when is_integer(index) and index in 1..@max_radical do
+  def radical(index, :radical_character) when index in 1..@max_radical do
     radicals()
     |> Map.get(index)
     # |> Map.get(:radical_character)
     # |> Unicode.Unihan.to_string()
   end
 
-  def radical(index, :simplified) when is_integer(index) and index in 1..@max_radical do
+  def radical(index, :simplified) when index in 1..@max_radical do
     radicals()
     |> Map.get(index)
     # |> Map.get(:simplified)
     # |> Unicode.Unihan.to_string()
   end
 
-  def radical(index, :all) when is_integer(index) and index in 1..@max_radical do
+  def radical(index, :all) when index in 1..@max_radical do
     Map.get(radicals(), index)
   end
 
