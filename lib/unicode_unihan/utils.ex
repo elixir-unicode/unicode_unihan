@@ -144,12 +144,14 @@ defmodule Unicode.Unihan.Utils do
           unified_ideograph = String.to_integer(unified_ideograph, 16)
 
           Map.put(map, radical_number,
-            %{prime: prime?, radical_character: radical_character, unified_ideograph: unified_ideograph})
+            %{simplified: prime?, radical_character: radical_character, unified_ideograph: unified_ideograph, radical_number: radical_number})
       end
     end)
   end
 
   defp split_radical_number(number) do
+    # in CJKradical.txt, simplified radicals are appended in their
+    # radical numbers with an apostrophe '
     case String.split(number,"'") do
       [number] -> {String.to_integer(number), false}
       [number, _prime] -> {String.to_integer(number), true}

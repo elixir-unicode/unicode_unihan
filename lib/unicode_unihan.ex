@@ -28,7 +28,7 @@ defmodule Unicode.Unihan do
   Returns the Unihan database metadata for
   a given codepoint.
 
-  THe codepoint can be expressed as an integer
+  The codepoint can be expressed as an integer
   or a grapheme.
 
   ### Examples
@@ -47,7 +47,7 @@ defmodule Unicode.Unihan do
         kJapaneseKun: ["UO", "SAKANA", "SUNADORU"],
         kJapaneseOn: "GYO",
         kKangXi: %{page: 1465, position: 1, virtual: true},
-        kNelson: "0692",
+        kNelson: 692,
         kPhonetic: "1605",
         kRSAdobe_Japan1_6: ["C+13717+195.10.0", "V+13718+195.10.0"],
         kRSKangXi: %{radical: 195, strokes: 0},
