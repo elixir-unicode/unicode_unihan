@@ -113,6 +113,49 @@ defmodule Unicode.Unihan.Utils do
     |> Map.new()
   end
 
+  @doc """
+  Parse the cjk_radicals.txt file.
+
+  There is one line per CJK radical number. Each line contains three
+  fields, separated by a semicolon (';'). The first field is the
+  CJK radical number. The second field is the CJK radical character.
+  The third field is the CJK unified ideograph.
+
+  """
+  def parse_radicals do
+    path = Path.join(data_dir(), "cjk_radicals.txt")
+
+    Enum.reduce(File.stream!(path), %{}, fn line, map ->
+      case line do
+        <<"#", _rest::bitstring>> ->
+          map
+
+        <<"\n", _rest::bitstring>> ->
+          map
+
+        data ->
+          [radical_number, radical_character, unified_ideograph] =
+            data
+            |> String.split(";", trim: true)
+            |> Enum.map(&String.trim/1)
+
+          {radical_number, prime?} = split_radical_number(radical_number)
+          radical_character = String.to_integer(radical_character, 16)
+          unified_ideograph = String.to_integer(unified_ideograph, 16)
+
+          Map.put(map, radical_number,
+            %{prime: prime?, radical_character: radical_character, unified_ideograph: unified_ideograph})
+      end
+    end)
+  end
+
+  defp split_radical_number(number) do
+    case String.split(number,"'") do
+      [number] -> {String.to_integer(number), false}
+      [number, _prime] -> {String.to_integer(number), true}
+    end
+  end
+
   defp decode_metadata(key, value, fields) do
     key = String.to_atom(key)
 

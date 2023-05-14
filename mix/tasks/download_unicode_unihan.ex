@@ -11,8 +11,7 @@ defmodule Mix.Tasks.Unicode.Unihan.Download do
 
   @root_url "https://www.unicode.org/Public/UCD/latest/ucd/"
 
-  @download_dir Path.join(Unicode.Unihan.Utils.data_dir(), "unihan/")
-  |> Path.expand()
+  @download_dir Unicode.Unihan.Utils.data_dir() |> Path.expand()
 
   @doc false
   def run(_) do
@@ -25,14 +24,17 @@ defmodule Mix.Tasks.Unicode.Unihan.Download do
 
   defp required_files do
     [
-      {Path.join(root_url(), "/Unihan.zip"), data_path("unihan.zip")}
+      {Path.join(root_url(), "/Unihan.zip"), data_path("unihan.zip")},
+      {Path.join(root_url(), "/CJKRadicals.txt"), data_path("cjk_radicals.txt")}
     ]
   end
 
   def extract_unihan_database! do
+    extract_dir = Path.join(@download_dir, "unihan")
+
     data_path("unihan.zip")
     |> String.to_charlist()
-    |> :zip.extract(cwd: String.to_charlist(@download_dir))
+    |> :zip.extract(cwd: String.to_charlist(extract_dir))
 
     File.rm!(data_path("unihan.zip"))
   end
@@ -74,39 +76,39 @@ defmodule Mix.Tasks.Unicode.Unihan.Download do
   end
 
   @certificate_locations [
-                           # Configured cacertfile
-                           Application.compile_env(:unicode, :cacertfile),
+   # Configured cacertfile
+   Application.compile_env(:unicode, :cacertfile),
 
-                           # Populated if hex package CAStore is configured
-                           if(Code.ensure_loaded?(CAStore), do: CAStore.file_path()),
+   # Populated if hex package CAStore is configured
+   if(Code.ensure_loaded?(CAStore), do: CAStore.file_path()),
 
-                           # Populated if hex package certfi is configured
-                           if(Code.ensure_loaded?(:certifi),
-                             do: :certifi.cacertfile() |> List.to_string()
-                           ),
+   # Populated if hex package certfi is configured
+   if(Code.ensure_loaded?(:certifi),
+     do: :certifi.cacertfile() |> List.to_string()
+   ),
 
-                           # Debian/Ubuntu/Gentoo etc.
-                           "/etc/ssl/certs/ca-certificates.crt",
+   # Debian/Ubuntu/Gentoo etc.
+   "/etc/ssl/certs/ca-certificates.crt",
 
-                           # Fedora/RHEL 6
-                           "/etc/pki/tls/certs/ca-bundle.crt",
+   # Fedora/RHEL 6
+   "/etc/pki/tls/certs/ca-bundle.crt",
 
-                           # OpenSUSE
-                           "/etc/ssl/ca-bundle.pem",
+   # OpenSUSE
+   "/etc/ssl/ca-bundle.pem",
 
-                           # OpenELEC
-                           "/etc/pki/tls/cacert.pem",
+   # OpenELEC
+   "/etc/pki/tls/cacert.pem",
 
-                           # CentOS/RHEL 7
-                           "/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem",
+   # CentOS/RHEL 7
+   "/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem",
 
-                           # Open SSL on MacOS
-                           "/usr/local/etc/openssl/cert.pem",
+   # Open SSL on MacOS
+   "/usr/local/etc/openssl/cert.pem",
 
-                           # MacOS & Alpine Linux
-                           "/etc/ssl/cert.pem"
-                         ]
-                         |> Enum.reject(&is_nil/1)
+   # MacOS & Alpine Linux
+   "/etc/ssl/cert.pem"
+ ]
+ |> Enum.reject(&is_nil/1)
 
   def certificate_store do
     @certificate_locations
