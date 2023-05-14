@@ -19,11 +19,14 @@ defmodule Unicode.Unihan.Radical do
 
   ### Arguments
 
-  * `index` is the Unicode radical number (1--214), reported from various radical-stroke properties (e.g., `kRSUnicode`).
+  * `index` is the Unicode radical number (1--214), reported from various
+    radical-stroke properties (e.g., `kRSUnicode`).
 
   * an optional argument, which can be
-    * `:unified_ideograph` (default) shows the grapheme in the (normal) CJK unified ideograph Unicode block (hexadecimal 4000--6000)
-    * `:radical_character` shows the grapheme in the special, contiguous KangXi Radical block (2F00--2FD5)
+    * `:unified_ideograph` (default) shows the grapheme in the (normal) CJK
+       unified ideograph Unicode block (hexadecimal 4000--6000)
+    * `:radical_character` shows the grapheme in the special, contiguous
+       KangXi Radical block (2F00--2FD5)
     * `:all` returns the full map for the radical
 
   ### Examples
@@ -44,25 +47,33 @@ defmodule Unicode.Unihan.Radical do
       false
 
       iex> Unicode.Unihan.Radical.radical(72, :all)
-      %{simplified: false, radical_character: 12103, unified_ideograph: 26085, radical_number: 72}
+      %{
+        Hans: %{radical_character: 12103, radical_number: 72, unified_ideograph: 26085},
+        Hant: %{radical_character: 12103, radical_number: 72, unified_ideograph: 26085}
+      }
 
   """
   def radical(index, key \\ :unified_ideograph)
 
-  def radical(index, :unified_ideograph) when is_integer(index),
-    do:
-      Map.get(radicals(), index)[:unified_ideograph]
-      |> Unicode.Unihan.to_string()
+  def radical(index, :unified_ideograph) when is_integer(index) do
+    radicals()
+    |> Map.get(index)[:unified_ideograph]
+    |> Unicode.Unihan.to_string()
+  end
 
-  def radical(index, :radical_character) when is_integer(index),
-    do:
-      Map.get(radicals(), index)[:radical_character]
-      |> Unicode.Unihan.to_string()
+  def radical(index, :radical_character) when is_integer(index) do
+    radicals()
+    |> Map.get(index)[:radical_character]
+    |> Unicode.Unihan.to_string()
+  end
 
-  def radical(index, :simplified) when is_integer(index),
-    do: Map.get(radicals(), index)[:simplified]
+  def radical(index, :simplified) when is_integer(index) do
+    Map.get(radicals(), index)[:simplified]
+  end
 
-  def radical(index, :all) when is_integer(index), do: Map.get(radicals(), index)
+  def radical(index, :all) when is_integer(index) do
+    Map.get(radicals(), index)
+  end
 
   @doc """
   Filter the Unicode CJK radical database returning selected

@@ -7,19 +7,25 @@ defmodule Unicode.Unihan.Utils do
 
   alias Unicode.Unihan.Cantonese
 
-  for file <- Path.wildcard(Path.join(__DIR__, "../../data/**/**")) do
-    @external_resource file
-  end
-
-  @doc false
   @data_dir Path.join(__DIR__, "../../data") |> Path.expand()
-  def data_dir do
-    @data_dir
-  end
 
   @unihan_subdir "unihan"
   @unihan_fields_file "unihan_fields.json"
   @cjk_radicals_file "cjk_radicals.txt"
+  @jyutping_index_file "cantonese/jyutping_index.csv"
+
+  for file <- Path.wildcard(Path.join(__DIR__, "../../data/**/**")) do
+    @external_resource file
+  end
+
+  @external_resource Path.join(@data_dir, @jyutping_index_file) |> Path.expand()
+  @external_resource Path.join(@data_dir, @unihan_fields_file) |> Path.expand()
+  @external_resource Path.join(@data_dir, @cjk_radicals_file) |> Path.expand()
+
+  @doc false
+  def data_dir do
+    @data_dir
+  end
 
   @doc """
   Parse all Unicode Unihan files and return
@@ -118,6 +124,26 @@ defmodule Unicode.Unihan.Utils do
   end
 
   @doc """
+  Parse the jyutping_index.csv file.
+
+  """
+  def parse_cantonese do
+    @data_dir
+    |> Path.join(@jyutping_index_file)
+    |> File.stream!([:trim_bom])
+    |> CSV.decode!(headers: true)
+    |> Enum.map(fn map ->
+      map =
+        map
+        |> atomize_keys()
+        |> Map.put(:final, map["nucleus"] <> map["coda"])
+
+      {map[:jyutping], map}
+    end)
+    |> Map.new()
+  end
+
+  @doc """
   Parse the cjk_radicals.txt file.
 
   There is one line per CJK radical number. Each line contains three
@@ -151,7 +177,9 @@ defmodule Unicode.Unihan.Utils do
           unified_ideograph = String.to_integer(unified_ideograph, 16)
 
           radical = radical(radical_number, simplified?, radical_character, unified_ideograph)
-          other_radical = radical(radical_number, !simplified?, radical_character, unified_ideograph)
+
+          other_radical =
+            radical(radical_number, !simplified?, radical_character, unified_ideograph)
 
           # When no value, assume the current value is for both traditional
           # and simplified. A later entry may overwrite one of them.
@@ -168,11 +196,11 @@ defmodule Unicode.Unihan.Utils do
   end
 
   defp radical(radical_number, true = _simplified?, radical_character, unified_ideograph) do
-    %{"Hans": radical(radical_number, radical_character, unified_ideograph)}
+    %{Hans: radical(radical_number, radical_character, unified_ideograph)}
   end
 
   defp radical(radical_number, false = _simplified?, radical_character, unified_ideograph) do
-    %{"Hant": radical(radical_number, radical_character, unified_ideograph)}
+    %{Hant: radical(radical_number, radical_character, unified_ideograph)}
   end
 
   defp radical(radical_number, radical_character, unified_ideograph) do
@@ -222,8 +250,8 @@ defmodule Unicode.Unihan.Utils do
 
   defp decode_value(value, :kTotalStrokes, _fields) do
     case Enum.map(value, &String.to_integer/1) do
-      [zh] -> %{"Hans": zh, "Hant": zh}
-      [hans, hant] -> %{"Hans": hans, "Hant": hant}
+      [zh] -> %{Hans: zh, Hant: zh}
+      [hans, hant] -> %{Hans: hans, Hant: hant}
     end
   end
 
@@ -723,15 +751,20 @@ defmodule Unicode.Unihan.Utils do
   end
 
   defp decode_capture({key, value}) do
-    key =
-      String.to_atom(key)
+    key = String.to_atom(key)
 
     value =
       case Integer.parse(value) do
-       {integer, ""} -> integer
-       _other -> value
+        {integer, ""} -> integer
+        _other -> value
       end
 
     {key, value}
+  end
+
+  defp atomize_keys(map) do
+    map
+    |> Enum.map(fn {key, value} -> {String.to_atom(key), value} end)
+    |> Map.new()
   end
 end

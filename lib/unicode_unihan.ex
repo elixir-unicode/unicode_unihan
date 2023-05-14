@@ -52,7 +52,7 @@ defmodule Unicode.Unihan do
         kRSAdobe_Japan1_6: ["C+13717+195.10.0", "V+13718+195.10.0"],
         kRSKangXi: %{radical: 195, strokes: 0},
         kRSUnicode: %{radical: 195, simplified_radical: false, strokes: 0},
-        kTotalStrokes: %{"zh-Hans": 11, "zh-Hant": 11}
+        kTotalStrokes: %{"Hans": 11, "Hant": 11}
       }
 
       iex> Unicode.Unihan.unihan("㝰")
@@ -72,7 +72,7 @@ defmodule Unicode.Unihan do
         kMandarin: "mián",
         kRSUnicode: %{radical: 40, simplified_radical: false, strokes: 15},
         kSBGY: %{page: 135, position: 35},
-        kTotalStrokes: %{"zh-Hans": 18, "zh-Hant": 18}
+        kTotalStrokes: %{"Hans": 18, "Hant": 18}
       }
 
   """
@@ -150,11 +150,11 @@ defmodule Unicode.Unihan do
 
   ### Example
 
-      iex> Unicode.Unihan.filter(&(&1.kTotalStrokes[:"zh-Hans"] > 30))
+      iex> Unicode.Unihan.filter(&(&1.kTotalStrokes[:"Hans"] > 30))
       ...> |> Enum.count()
       238
 
-      iex> Unicode.Unihan.filter(&(&1.kTotalStrokes[:"zh-Hans"] != &1.kTotalStrokes[:"zh-Hant"]))
+      iex> Unicode.Unihan.filter(&(&1.kTotalStrokes[:"Hans"] != &1.kTotalStrokes[:"Hant"]))
       ...> |> Enum.count
       3
 
@@ -190,7 +190,7 @@ defmodule Unicode.Unihan do
 
   ### Example
 
-      iex> Unicode.Unihan.reject(&(&1.kTotalStrokes[:"zh-Hans"] > 30))
+      iex> Unicode.Unihan.reject(&(&1.kTotalStrokes[:"Hans"] > 30))
       ...> |> Enum.count()
       97822
 

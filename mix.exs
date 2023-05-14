@@ -56,7 +56,7 @@ defmodule Unicode.Unihan.MixProject do
 
   defp deps do
     [
-      {:csv, "~> 3.0.5"},
+      {:csv, "~> 3.0"},
       {:jason, "~> 1.0"},
       {:benchee, "~> 1.0", only: :dev, optional: true},
       {:ex_doc, "~> 0.24", only: [:dev, :release], runtime: false, optional: true},
