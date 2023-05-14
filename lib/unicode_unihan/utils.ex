@@ -531,20 +531,17 @@ defmodule Unicode.Unihan.Utils do
     value
   end
 
-  def decode_value(value, :kKSC0, _fields) do
-    value
-  end
+  def decode_value(value, :kKSC0, _fields), do:
+    String.to_integer(value)
 
-  def decode_value(value, :kKSC1, _fields) do
-    value
-  end
+  def decode_value(value, :kKSC1, _fields), do:
+    String.to_integer(value)
 
   def decode_value(value, :kLau, _fields), do:
     String.to_integer(value)
 
-  def decode_value(value, :kMainlandTelegraph, _fields) do
-    value
-  end
+  def decode_value(value, :kMainlandTelegraph, _fields), do:
+    String.to_integer(value)
 
   def decode_value(value, :kMandarin, _fields) do
     value
@@ -562,9 +559,8 @@ defmodule Unicode.Unihan.Utils do
     value
   end
 
-  def decode_value(value, :kNelson, _fields) do
-    value
-  end
+  def decode_value(value, :kNelson, _fields), do:
+    String.to_integer(value)
 
   def decode_value(value, :kOtherNumeric, _fields), do:
     String.to_integer(value)
@@ -576,9 +572,8 @@ defmodule Unicode.Unihan.Utils do
   def decode_value(value, :kPrimaryNumeric, _fields), do:
     String.to_integer(value)
 
-  def decode_value(value, :kPseudoGB1, _fields) do
-    value
-  end
+  def decode_value(value, :kPseudoGB1, _fields), do:
+    String.to_integer(value)
 
   def decode_value(value, :kRSAdobe_Japan1_6, _fields) do
     value
