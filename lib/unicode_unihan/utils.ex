@@ -668,7 +668,7 @@ defmodule Unicode.Unihan.Utils do
     value
   end
 
-  # Decodes a standard `U+xxxx` codepoing into
+  # Decodes a standard `U+xxxx` codepoint into
   # its integer form.
 
   defp decode_codepoint("U+" <> codepoint) do
