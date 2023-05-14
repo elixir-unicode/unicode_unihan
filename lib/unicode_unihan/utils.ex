@@ -17,16 +17,20 @@ defmodule Unicode.Unihan.Utils do
     @data_dir
   end
 
+  @unihan_subdir "unihan"
+  @unihan_fields_file "unihan_fields.json"
+  @cjk_radicals_file "cjk_radicals.txt"
+
   @doc """
   Parse all Unicode Unihan files and return
   a mapping from codepoint to a map of metadata
   for that codepoint.
 
   """
-  @subdir "unihan"
+
   def parse_files do
     @data_dir
-    |> Path.join(@subdir)
+    |> Path.join(@unihan_subdir)
     |> File.ls!()
     |> Enum.reduce(%{}, &parse_file(&1, &2))
   end
@@ -38,7 +42,7 @@ defmodule Unicode.Unihan.Utils do
 
   """
   def parse_file(file, map \\ %{}) do
-    path = Path.join(@data_dir, [@subdir, "/", file])
+    path = Path.join(@data_dir, [@unihan_subdir, "/", file])
     fields = unihan_fields()
 
     Enum.reduce(File.stream!(path), map, fn line, map ->
@@ -78,7 +82,7 @@ defmodule Unicode.Unihan.Utils do
   """
   def unihan_fields do
     @data_dir
-    |> Path.join("unihan_fields.json")
+    |> Path.join(@unihan_fields_file)
     |> File.read!()
     |> Jason.decode!()
     |> Map.get("records")
@@ -121,9 +125,12 @@ defmodule Unicode.Unihan.Utils do
   CJK radical number. The second field is the CJK radical character.
   The third field is the CJK unified ideograph.
 
+  Simplified radicals are represented by radical numbers with a
+  trailing apostrophe `'`.
+
   """
   def parse_radicals do
-    path = Path.join(data_dir(), "cjk_radicals.txt")
+    path = Path.join(data_dir(), @cjk_radicals_file)
 
     Enum.reduce(File.stream!(path), %{}, fn line, map ->
       case line do
@@ -139,19 +146,25 @@ defmodule Unicode.Unihan.Utils do
             |> String.split(";", trim: true)
             |> Enum.map(&String.trim/1)
 
-          {radical_number, prime?} = split_radical_number(radical_number)
+          {radical_number, simplified?} = split_radical_number(radical_number)
           radical_character = String.to_integer(radical_character, 16)
           unified_ideograph = String.to_integer(unified_ideograph, 16)
 
-          Map.put(map, radical_number,
-            %{simplified: prime?, radical_character: radical_character, unified_ideograph: unified_ideograph, radical_number: radical_number})
+          radical =  %{
+            radical_number: radical_number,
+            simplified: simplified?,
+            radical_character: radical_character,
+            unified_ideograph: unified_ideograph
+          }
+
+          Map.put(map, radical_number, radical)
       end
     end)
   end
 
+  # Simplified radicals are represented by radical numbers with a
+  # trailing apostrophe `'`.
   defp split_radical_number(number) do
-    # in CJKradical.txt, simplified radicals are appended in their
-    # radical numbers with an apostrophe '
     case String.split(number,"'") do
       [number] -> {String.to_integer(number), false}
       [number, _prime] -> {String.to_integer(number), true}
@@ -168,6 +181,9 @@ defmodule Unicode.Unihan.Utils do
 
     {key, value}
   end
+
+  defp maybe_unwrap([value]), do: value
+  defp maybe_unwrap(value), do: value
 
   defp maybe_split_value(key, value, fields) do
     field = Map.fetch!(fields, key)
@@ -195,29 +211,30 @@ defmodule Unicode.Unihan.Utils do
   # for easier access
 
   def decode_value(value, key, fields) when is_list(value) do
-    list = Enum.map(value, &decode_value(&1, key, fields))
-    if length(list) > 1 do
-      list
-    else
-      List.first(list)
-    end
+    value
+    |> Enum.map(&decode_value(&1, key, fields))
+    |> maybe_unwrap()
   end
 
-  def decode_value(value, :kAccountingNumeric, _fields), do:
+  def decode_value(value, :kAccountingNumeric, _fields) do
     String.to_integer(value)
+  end
 
   def decode_value(value, :kAlternateTotalStrokes, _fields) do
     value # TODO: this is abit messy
   end
 
-  def decode_value(value, :kBigFive, _fields), do:
+  def decode_value(value, :kBigFive, _fields) do
     String.to_integer(value, 16)
+  end
 
-  def decode_value(value, :kCangjie, _fields), do:
+  def decode_value(value, :kCangjie, _fields) do
     String.graphemes(value)
+  end
 
-  def decode_value(value, :kCantonese, _fields), do:
+  def decode_value(value, :kCantonese, _fields) do
     Cantonese.to_jyutping!(value)
+  end
 
   def decode_value(value, :kCCCII, _fields) do
     value # no parsing needed
@@ -289,8 +306,9 @@ defmodule Unicode.Unihan.Utils do
     value
   end
 
-  def decode_value(value, :kDefinition, _fields), do:
+  def decode_value(value, :kDefinition, _fields) do
     String.split(value, ";")
+  end
 
   def decode_value(value, :kEACC, _fields) do
     value
@@ -308,8 +326,9 @@ defmodule Unicode.Unihan.Utils do
     value
   end
 
-  def decode_value(value, :kFrequency, _fields), do:
+  def decode_value(value, :kFrequency, _fields) do
     String.to_integer(value)
+  end
 
   def decode_value(value, :kGB0, _fields) do
     value
@@ -378,8 +397,9 @@ defmodule Unicode.Unihan.Utils do
     value
   end
 
-  def decode_value(value, :kHKGlyph, _fields), do:
+  def decode_value(value, :kHKGlyph, _fields) do
     String.to_integer(value)
+  end
 
   def decode_value(value, :kHKSCS, _fields) do
     value
@@ -531,11 +551,13 @@ defmodule Unicode.Unihan.Utils do
     value
   end
 
-  def decode_value(value, :kKoreanEducationHanja, _fields), do:
+  def decode_value(value, :kKoreanEducationHanja, _fields) do
     String.to_integer(value)
+  end
 
-  def decode_value(value, :kKoreanName, _fields), do:
+  def decode_value(value, :kKoreanName, _fields) do
     String.to_integer(value)
+  end
 
   def decode_value(value, :kKPS0, _fields) do
     value
@@ -545,17 +567,21 @@ defmodule Unicode.Unihan.Utils do
     value
   end
 
-  def decode_value(value, :kKSC0, _fields), do:
+  def decode_value(value, :kKSC0, _fields) do
     String.to_integer(value)
+  end
 
-  def decode_value(value, :kKSC1, _fields), do:
+  def decode_value(value, :kKSC1, _fields) do
     String.to_integer(value)
+  end
 
-  def decode_value(value, :kLau, _fields), do:
+  def decode_value(value, :kLau, _fields) do
     String.to_integer(value)
+  end
 
-  def decode_value(value, :kMainlandTelegraph, _fields), do:
+  def decode_value(value, :kMainlandTelegraph, _fields) do
     String.to_integer(value)
+  end
 
   def decode_value(value, :kMandarin, _fields) do
     value
@@ -573,21 +599,25 @@ defmodule Unicode.Unihan.Utils do
     value
   end
 
-  def decode_value(value, :kNelson, _fields), do:
+  def decode_value(value, :kNelson, _fields) do
     String.to_integer(value)
+  end
 
-  def decode_value(value, :kOtherNumeric, _fields), do:
+  def decode_value(value, :kOtherNumeric, _fields) do
     String.to_integer(value)
+  end
 
   def decode_value(value, :kPhonetic, _fields) do
     value
   end
 
-  def decode_value(value, :kPrimaryNumeric, _fields), do:
+  def decode_value(value, :kPrimaryNumeric, _fields) do
     String.to_integer(value)
+  end
 
-  def decode_value(value, :kPseudoGB1, _fields), do:
+  def decode_value(value, :kPseudoGB1, _fields) do
     String.to_integer(value)
+  end
 
   def decode_value(value, :kRSAdobe_Japan1_6, _fields) do
     value
