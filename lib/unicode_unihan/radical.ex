@@ -44,7 +44,7 @@ defmodule Unicode.Unihan.Radical do
       false
 
       iex> Unicode.Unihan.Radical.radical(72, :all)
-      %{prime: false, radical_character: 12103, unified_ideograph: 26085}
+      %{simplified: false, radical_character: 12103, unified_ideograph: 26085, radical_number: 72}
 
   """
   def radical(index, key \\ :unified_ideograph)
@@ -58,7 +58,6 @@ defmodule Unicode.Unihan.Radical do
 
   def radical(index, :simplified) when is_integer(index), do:
     Map.get(radicals(), index)[:simplified]
-    |> Unicode.Unihan.to_string()
 
   def radical(index, :all) when is_integer(index), do:
     Map.get(radicals(), index)

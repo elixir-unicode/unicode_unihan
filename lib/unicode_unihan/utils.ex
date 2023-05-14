@@ -446,7 +446,19 @@ defmodule Unicode.Unihan.Utils do
   end
 
   def decode_value(value, :kIRGHanyuDaZidian, _fields) do
-    value
+    map =
+      ~r|(?<volume>[1-8])(?<page>[0-9]{4})\.(?<position>[0-3][0-9])(?<virtual>[01])|
+      |> Regex.named_captures(value)
+
+    %{
+      volume:   map["volume"]   |> String.to_integer,
+      page:     map["page"]     |> String.to_integer,
+      position: map["position"] |> String.to_integer,
+      virtual:  case map["virtual"] do
+                  "0" -> false
+                  "1" -> true
+                end
+    }
   end
 
   def decode_value(value, :kIRGKangXi, _fields) do

@@ -10,7 +10,7 @@ defmodule Unicode.Unihan.Cantonese do
     |> File.stream!([:trim_bom])
     |> CSV.decode!(headers: true)
     |> Enum.map(fn %{"onset" => onset, "nucleus" => nucleus, "coda" => coda, "tone" => tone, "jyutping" => jyutping} ->
-      %{onset: onset, nucleus: nucleus, coda: coda, tone: tone, jyutping: jyutping}
+      %{onset: onset, nucleus: nucleus, coda: coda, tone: tone, final: nucleus <> coda, jyutping: jyutping}
     end)
 
   @doc """
@@ -43,6 +43,7 @@ defmodule Unicode.Unihan.Cantonese do
           nucleus:  unquote(entry.nucleus),
           coda:     unquote(entry.coda),
           tone:     unquote(entry.tone),
+          final:    unquote(entry.final),
           jyutping: unquote(entry.jyutping)
         }
       }

@@ -36,10 +36,10 @@ defmodule Unicode.Unihan do
       iex> Unicode.Unihan.unihan(171339)
       %{
         codepoint: 171339,
-        kCantonese: %{coda: "", jyutping: "ju4", nucleus: "u", onset: "j", tone: "4"},
+        kCantonese: %{coda: "", final: "u", jyutping: "ju4", nucleus: "u", onset: "j", tone: "4"},
         kDefinition: ["(J) nonstandard variant of 魚 U+9B5A, fish"],
         kHanYu: %{page: 4674, position: 9, virtual: false, volume: 7},
-        kIRGHanyuDaZidian: "74674.090",
+        kIRGHanyuDaZidian: %{page: 4674, position: 9, virtual: false, volume: 7},
         kIRGKangXi: %{page: 1465, position: 1, virtual: true},
         kIRG_GSource: "GHZ-74674.09",
         kIRG_TSource: "T4-3043",
@@ -59,11 +59,11 @@ defmodule Unicode.Unihan do
       %{
         codepoint: 14192,
         kCangjie: ["J", "H", "U", "S"],
-        kCantonese: %{coda: "n", jyutping: "min4", nucleus: "i", onset: "m", tone: "4"},
+        kCantonese: %{coda: "n", final: "in", jyutping: "min4", nucleus: "i", onset: "m", tone: "4"},
         kDefinition: ["unable to meet, empty room"],
         kHanYu: %{page: 957, position: 3, virtual: false, volume: 2},
         kHanyuPinyin: "20957.030:mián",
-        kIRGHanyuDaZidian: "20957.030",
+        kIRGHanyuDaZidian: %{page: 957, position: 3, virtual: false, volume: 2},
         kIRGKangXi: %{page: 293, position: 1, virtual: false},
         kIRG_GSource: "G5-3E3C",
         kIRG_KSource: "K3-236A",
