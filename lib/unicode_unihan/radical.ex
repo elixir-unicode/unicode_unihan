@@ -6,9 +6,7 @@ defmodule Unicode.Unihan.Radical do
   """
   alias Unicode.Unihan.Utils
 
-  @external_resource Path.join(Utils.data_dir(), "cjk_radicals.txt")
-  @radicals Unicode.Unihan.Utils.parse_radicals()
-
+  @radicals Utils.parse_radicals()
   def radicals do
     @radicals
   end
@@ -19,10 +17,10 @@ defmodule Unicode.Unihan.Radical do
 
   ### Arguments
 
-  * `index` is the Unicode radical number (1--214), reported from various
-    radical-stroke properties (e.g., `kRSUnicode`).
+  * `index` is the Unicode radical number (1..214), reported from various
+    radical stroke properties such as `kRSUnicode`.
 
-  * an optional argument, which can be
+  * an optional argument, which can be one of:
     * `:unified_ideograph` (default) shows the grapheme in the (normal) CJK
        unified ideograph Unicode block (hexadecimal 4000--6000)
     * `:radical_character` shows the grapheme in the special, contiguous
@@ -57,18 +55,23 @@ defmodule Unicode.Unihan.Radical do
 
   def radical(index, :unified_ideograph) when is_integer(index) do
     radicals()
-    |> Map.get(index)[:unified_ideograph]
+    |> Map.get(index)
+    |> Map.get(:unified_ideograph)
     |> Unicode.Unihan.to_string()
   end
 
   def radical(index, :radical_character) when is_integer(index) do
     radicals()
-    |> Map.get(index)[:radical_character]
+    |> Map.get(index)
+    |> Map.get(:radical_character)
     |> Unicode.Unihan.to_string()
   end
 
   def radical(index, :simplified) when is_integer(index) do
-    Map.get(radicals(), index)[:simplified]
+    radicals()
+    |> Map.get(index)
+    |> Map.get(:simplified)
+    |> Unicode.Unihan.to_string()
   end
 
   def radical(index, :all) when is_integer(index) do
@@ -108,6 +111,7 @@ defmodule Unicode.Unihan.Radical do
     Enum.filter(radicals(), fn {_radical_number, value} ->
       fun.(value)
     end)
+    |> Map.new()
   end
 
   @doc """
@@ -144,5 +148,6 @@ defmodule Unicode.Unihan.Radical do
     Enum.reject(radicals(), fn {_radical_number, value} ->
       fun.(value)
     end)
+    |> Map.new()
   end
 end

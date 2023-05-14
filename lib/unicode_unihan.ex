@@ -3,6 +3,7 @@ defmodule Unicode.Unihan do
   Functions to introspect the Unicode Unihan character database.
 
   """
+  alias Unicode.Unihan.Utils
 
   import Kernel, except: [to_string: 1]
 
@@ -18,7 +19,7 @@ defmodule Unicode.Unihan do
   of a codepoint to its metadata.
 
   """
-  @unihan_data Unicode.Unihan.Utils.parse_files()
+  @unihan_data Utils.parse_files()
   def unihan do
     @unihan_data
   end
@@ -167,6 +168,7 @@ defmodule Unicode.Unihan do
     Enum.filter(unihan(), fn {_codepoint, value} ->
       fun.(value)
     end)
+    |> Map.new()
   end
 
   @doc """
@@ -199,6 +201,7 @@ defmodule Unicode.Unihan do
     Enum.reject(unihan(), fn {_codepoint, value} ->
       fun.(value)
     end)
+    |> Map.new()
   end
 
   @doc """
@@ -206,7 +209,7 @@ defmodule Unicode.Unihan do
   Unihan database.
 
   """
-  @unihan_fields Unicode.Unihan.Utils.unihan_fields()
+  @unihan_fields Utils.unihan_fields()
   def unihan_fields do
     @unihan_fields
   end
