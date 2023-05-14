@@ -7,6 +7,8 @@ defmodule Unicode.Unihan.Radical do
   alias Unicode.Unihan.Utils
 
   @radicals Utils.parse_radicals()
+  @max_radical Map.keys(@radicals) |> Enum.max()
+
   def radicals do
     @radicals
   end
@@ -53,29 +55,40 @@ defmodule Unicode.Unihan.Radical do
   """
   def radical(index, key \\ :unified_ideograph)
 
-  def radical(index, :unified_ideograph) when is_integer(index) do
+  def radical(index, :unified_ideograph) when is_integer(index) and index in 1..@max_radical do
     radicals()
     |> Map.get(index)
-    |> Map.get(:unified_ideograph)
-    |> Unicode.Unihan.to_string()
+    # |> Map.get(:unified_ideograph)
+    # |> Unicode.Unihan.to_string()
   end
 
-  def radical(index, :radical_character) when is_integer(index) do
+  def radical(index, :radical_character) when is_integer(index) and index in 1..@max_radical do
     radicals()
     |> Map.get(index)
-    |> Map.get(:radical_character)
-    |> Unicode.Unihan.to_string()
+    # |> Map.get(:radical_character)
+    # |> Unicode.Unihan.to_string()
   end
 
-  def radical(index, :simplified) when is_integer(index) do
+  def radical(index, :simplified) when is_integer(index) and index in 1..@max_radical do
     radicals()
     |> Map.get(index)
-    |> Map.get(:simplified)
-    |> Unicode.Unihan.to_string()
+    # |> Map.get(:simplified)
+    # |> Unicode.Unihan.to_string()
   end
 
-  def radical(index, :all) when is_integer(index) do
+  def radical(index, :all) when is_integer(index) and index in 1..@max_radical do
     Map.get(radicals(), index)
+  end
+
+  def radical(index, _) when not is_integer(index) do
+    {:error, "Invalid radical number. Valid numbers are an integer in the range 1..#{inspect @max_radical}"}
+  end
+
+  def radical(_index, attr) do
+    {:error,
+      "Invalid attribute. Valid attributes are :unified_ideograph, :radical_character, :simplified, :all. " <>
+      "Found #{inspect attr}"
+    }
   end
 
   @doc """
