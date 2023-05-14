@@ -38,7 +38,7 @@ defmodule Unicode.Unihan do
         codepoint: 171339,
         kCantonese: %{coda: "", jyutping: "ju4", nucleus: "u", onset: "j", tone: "4"},
         kDefinition: ["(J) nonstandard variant of 魚 U+9B5A, fish"],
-        kHanYu: "74674.090",
+        kHanYu: %{page: 4674, position: 9, virtual: false, volume: 7},
         kIRGHanyuDaZidian: "74674.090",
         kIRGKangXi: %{page: 1465, position: 1, virtual: true},
         kIRG_GSource: "GHZ-74674.09",
@@ -61,7 +61,7 @@ defmodule Unicode.Unihan do
         kCangjie: ["J", "H", "U", "S"],
         kCantonese: %{coda: "n", jyutping: "min4", nucleus: "i", onset: "m", tone: "4"},
         kDefinition: ["unable to meet, empty room"],
-        kHanYu: "20957.030",
+        kHanYu: %{page: 957, position: 3, virtual: false, volume: 2},
         kHanyuPinyin: "20957.030:mián",
         kIRGHanyuDaZidian: "20957.030",
         kIRGKangXi: %{page: 293, position: 1, virtual: false},
@@ -71,7 +71,7 @@ defmodule Unicode.Unihan do
         kKangXi: %{page: 293, position: 1, virtual: false},
         kMandarin: "mián",
         kRSUnicode: %{radical: 40, simplified_radical: false, strokes: 15},
-        kSBGY: "135.35",
+        kSBGY: %{page: 135, position: 35},
         kTotalStrokes: %{"zh-Hans": 18, "zh-Hant": 18}
       }
 

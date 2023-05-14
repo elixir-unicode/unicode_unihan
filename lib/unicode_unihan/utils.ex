@@ -306,7 +306,19 @@ defmodule Unicode.Unihan.Utils do
   end
 
   def decode_value(value, :kHanYu, _fields) do
-    value
+    map =
+      ~r|(?<volume>[1-8])(?<page>[0-9]{4})\.(?<position>[0-3][0-9])(?<virtual>[0-3])|
+      |> Regex.named_captures(value)
+
+    %{
+      volume:   map["volume"]   |> String.to_integer,
+      page:     map["page"]     |> String.to_integer,
+      position: map["position"] |> String.to_integer,
+      virtual:  case map["virtual"] do
+                  "0" -> false
+                  _   -> true
+                end
+    }
   end
 
   def decode_value(value, :kHanyuPinlu, _fields) do
@@ -484,9 +496,8 @@ defmodule Unicode.Unihan.Utils do
     value
   end
 
-  def decode_value(value, :kLau, _fields) do
-    value
-  end
+  def decode_value(value, :kLau, _fields), do:
+    String.to_integer(value)
 
   def decode_value(value, :kMainlandTelegraph, _fields) do
     value
@@ -557,7 +568,14 @@ defmodule Unicode.Unihan.Utils do
   end
 
   def decode_value(value, :kSBGY, _fields) do
-    value
+    map =
+      ~r|(?<page>[0-9]{3})\.(?<position>[0-7][0-9])|
+      |> Regex.named_captures(value)
+
+    %{
+      page:     map["page"]     |> String.to_integer(),
+      position: map["position"] |> String.to_integer()
+    }
   end
 
   def decode_value(value, :kSemanticVariant, _fields) do
