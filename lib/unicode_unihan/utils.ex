@@ -462,13 +462,11 @@ defmodule Unicode.Unihan.Utils do
     value
   end
 
-  def decode_value(value, :kKoreanEducationHanja, _fields) do
-    value
-  end
+  def decode_value(value, :kKoreanEducationHanja, _fields), do:
+    String.to_integer(value)
 
-  def decode_value(value, :kKoreanName, _fields) do
-    value
-  end
+  def decode_value(value, :kKoreanName, _fields), do:
+    String.to_integer(value)
 
   def decode_value(value, :kKPS0, _fields) do
     value
