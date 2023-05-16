@@ -39,15 +39,25 @@ defmodule Unicode.Unihan.Cantonese do
       {:error, "to_jyutping/1 requires a string as input"}
 
   """
-  def to_jyutping!(jyutping) when is_binary(jyutping) do
+
+  def to_jyutping(jyutping) when is_binary(jyutping) do
     case Map.fetch(jyutping_index(), jyutping) do
-      {:ok, result} -> result
+      {:ok, result} -> {:ok, result}
       :error -> {:error, "Invalid jyutping. Found #{inspect(jyutping)}"}
     end
   end
 
   def to_jyutping(_not_string) do
     {:error, "to_jyutping/1 requires a string as input"}
+  end
+
+  def to_jyutping!(jyutping) when is_binary(jyutping) do
+    {:ok, result} = to_jyutping(jyutping)
+    result
+  end
+
+  def to_jyutping!(_not_string) do
+    {:error, "to_jyutping!/1 requires a string as input"}
   end
 
   @doc """

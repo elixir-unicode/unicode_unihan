@@ -9,6 +9,8 @@ defmodule Unicode.Unihan.Radical do
   @radicals Utils.parse_radicals()
   @max_radical Map.keys(@radicals) |> Enum.max()
 
+  @default_opts [script: :Hant, glyph: :unified_ideograph]
+
   def radicals do
     @radicals
   end
@@ -31,62 +33,58 @@ defmodule Unicode.Unihan.Radical do
 
   ### Examples
 
-      iex> Unicode.Unihan.Radical.radical(72)
-      "日"
+      iex> Unicode.Unihan.Radical.radical(187)
+      "馬"
 
-      iex> Unicode.Unihan.Radical.radical(72, :unified_ideograph)
-      "日"
+      iex> Unicode.Unihan.Radical.radical(187, script: :Hans)
+      "马"
 
-      iex> Unicode.Unihan.Radical.radical(72, :radical_character)
-      "⽇"
+      iex> Unicode.Unihan.Radical.radical(187, script: :Hant, glyph: :radical_character)
+      "⾺"
 
-      iex> Unicode.Unihan.Radical.radical(72, :unified_ideograph) == Unicode.Unihan.Radical.radical(72, :radical_character)
+      iex> Unicode.Unihan.Radical.radical(187) == Unicode.Unihan.Radical.radical(187, script: :Hant, glyph: :radical_character)
       false
 
-      iex> Unicode.Unihan.Radical.radical(72, :simplified)
-      false
-
-      iex> Unicode.Unihan.Radical.radical(72, :all)
+      iex> Unicode.Unihan.Radical.radical(187, :all)
       %{
-        Hans: %{radical_character: 12103, radical_number: 72, unified_ideograph: 26085},
-        Hant: %{radical_character: 12103, radical_number: 72, unified_ideograph: 26085}
+        Hans: %{
+          radical_character: 12002,
+          radical_number: 187,
+          unified_ideograph: 39532
+        },
+        Hant: %{
+          radical_character: 12218,
+          radical_number: 187,
+          unified_ideograph: 39340
+        }
       }
 
+      iex> Unicode.Unihan.Radical.radical(999)
+      {:error, "Invalid radical number. Valid numbers are an integer in the range 1..214"}
+
   """
-  def radical(index, key \\ :unified_ideograph)
-
-  def radical(index, :unified_ideograph) when index in 1..@max_radical do
-    radicals()
-    |> Map.get(index)
-    # |> Map.get(:unified_ideograph)
-    # |> Unicode.Unihan.to_string()
-  end
-
-  def radical(index, :radical_character) when index in 1..@max_radical do
-    radicals()
-    |> Map.get(index)
-    # |> Map.get(:radical_character)
-    # |> Unicode.Unihan.to_string()
-  end
-
-  def radical(index, :simplified) when index in 1..@max_radical do
-    radicals()
-    |> Map.get(index)
-    # |> Map.get(:simplified)
-    # |> Unicode.Unihan.to_string()
-  end
+  def radical(index, opts \\ [])
 
   def radical(index, :all) when index in 1..@max_radical do
     Map.get(radicals(), index)
   end
 
-  def radical(index, _) when not is_integer(index) do
+  def radical(index, opts) when index in 1..@max_radical do
+    opts = Keyword.merge(@default_opts, opts)
+    radicals()
+    |> Map.get(index)
+    |> Map.get(opts[:script])
+    |> Map.get(opts[:glyph])
+    |> Unicode.Unihan.to_string()
+  end
+
+  def radical(index, _) when not is_integer(index) or index > @max_radical do
     {:error, "Invalid radical number. Valid numbers are an integer in the range 1..#{inspect @max_radical}"}
   end
 
   def radical(_index, attr) do
     {:error,
-      "Invalid attribute. Valid attributes are :unified_ideograph, :radical_character, :simplified, :all. " <>
+      "Invalid attribute. The keyword list accepts :Hans or :Hant for the :script keyword, and either :unified_ideograph or :radical_character for the :glyph keyword." <>
       "Found #{inspect attr}"
     }
   end
@@ -111,11 +109,7 @@ defmodule Unicode.Unihan.Radical do
 
   ### Example
 
-      iex> Unicode.Unihan.Radical.filter(&(&1[:simplified] == true))
-      ...> |> Enum.count()
-      26
-
-      iex> Unicode.Unihan.Radical.filter(&(&1[:radical_number] < 5))
+      iex> Unicode.Unihan.Radical.filter(&(&1[:Hant][:radical_number] < 5))
       ...> |> Enum.count()
       4
 
@@ -148,11 +142,7 @@ defmodule Unicode.Unihan.Radical do
 
   ### Example
 
-      iex> Unicode.Unihan.Radical.reject(&(&1[:simplified] == true))
-      ...> |> Enum.count()
-      188
-
-      iex> Unicode.Unihan.Radical.reject(&(&1[:radical_number] < 5))
+      iex> Unicode.Unihan.Radical.reject(&(&1[:Hant][:radical_number] < 5))
       ...> |> Enum.count()
       210
 
