@@ -642,9 +642,70 @@ defmodule Unicode.Unihan.Utils do
     decode_codepoint(value)
   end
 
-  defp decode_value(value, :kStrange, _fields) do
-    value
+  defp decode_value("A", :kStrange, _fields) do
+    %{category: :asymmetric}
   end
+
+  defp decode_value("C", :kStrange, _fields) do
+    %{category: :cursive}
+  end
+
+  defp decode_value("U", :kStrange, _fields) do
+    %{category: :unusual}
+  end
+
+  defp decode_value("B:"<>value, :kStrange, _fields) do
+    %{category: :bopomofo, codepoint: decode_codepoint(value)}
+  end
+
+  defp decode_value("H:"<>value, :kStrange, _fields) do
+    %{category: :hangul, codepoint: decode_codepoint(value)}
+  end
+
+  defp decode_value("S:"<>value, :kStrange, _fields) do
+    %{category: :stroke_heavy, strokes: String.to_integer(value)}
+  end
+
+  defp decode_value(value, :kStrange, _fields) do
+    [category | unicode] = String.split(value, ":")
+    category =
+      case category do
+        "F" -> :fully_reflective
+        "M" -> :mirrored
+        "O" -> :odd
+        "R" -> :rotated
+        "I" -> :incomplete
+        "K" -> :katakana
+      end
+
+    codepoints = Enum.map(unicode, &decode_codepoint/1)
+    if codepoints == [] do
+      %{category: category}
+    else
+      %{category: category, codepoints: codepoints}
+    end
+
+  end
+
+  # defp decode_value("A", :kStrange, _fields) do
+  #   {category: :asymmetric}
+  # end
+
+  # defp decode_value("A", :kStrange, _fields) do
+  #   {category: :asymmetric}
+  # end
+
+  # defp decode_value("A", :kStrange, _fields) do
+  #   {category: :asymmetric}
+  # end
+
+  # defp decode_value("A", :kStrange, _fields) do
+  #   {category: :asymmetric}
+  # end
+
+  # defp decode_value("A", :kStrange, _fields) do
+  #   {category: :asymmetric}
+  # end
 
   defp decode_value(value, :kTaiwanTelegraph, _fields) do
     String.to_integer(value)
