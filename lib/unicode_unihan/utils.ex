@@ -651,7 +651,9 @@ defmodule Unicode.Unihan.Utils do
   end
 
   defp decode_value(value, :kTang, _fields) do
-    value # TODO: complex
+    ~r|(?<frequent>\*?)(?<reading>\S+)|
+    |> Regex.named_captures(value)
+    |> decode_captures()
   end
 
   defp decode_value(value, :kTGH, _fields) do
@@ -681,7 +683,9 @@ defmodule Unicode.Unihan.Utils do
   end
 
   defp decode_value(value, :kXHC1983, _fields) do
-    value # TODO: complex
+    ~r|(?<page>[0-9]{4})\.(?<position>[0-9]{2})(?<entry>[0-9])\*?(,[0-9]{4}\.[0-9]{3}\*?)*:(?<reading>\S+)|
+    |> Regex.named_captures(value)
+    |> decode_captures()
   end
 
   defp decode_value(value, :kZVariant, _fields) do
@@ -727,6 +731,14 @@ defmodule Unicode.Unihan.Utils do
 
   defp decode_capture({"virtual", "1"}) do
     {:virtual, true}
+  end
+
+  defp decode_capture({"frequent", ""}) do
+    {:frequent, false}
+  end
+
+  defp decode_capture({"frequent", "*"}) do
+    {:frequent, true}
   end
 
   defp decode_capture({"simplified_radical", "'"}) do
