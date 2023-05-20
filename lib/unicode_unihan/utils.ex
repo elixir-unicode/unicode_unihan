@@ -639,7 +639,7 @@ defmodule Unicode.Unihan.Utils do
   end
 
   defp decode_value(value, :kSpoofingVariant, _fields) do
-    value
+    decode_codepoint(value)
   end
 
   defp decode_value(value, :kStrange, _fields) do
@@ -647,15 +647,17 @@ defmodule Unicode.Unihan.Utils do
   end
 
   defp decode_value(value, :kTaiwanTelegraph, _fields) do
-    value
+    String.to_integer(value)
   end
 
   defp decode_value(value, :kTang, _fields) do
-    value
+    value # TODO: complex
   end
 
   defp decode_value(value, :kTGH, _fields) do
-    value
+    ~r|(?<year>20[0-9]{2}):(?<index>[1-9][0-9]{0,3})|
+    |> Regex.named_captures(value)
+    |> decode_captures()
   end
 
   defp decode_value(value, :kTGHZ2013, _fields) do
