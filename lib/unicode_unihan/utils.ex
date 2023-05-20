@@ -687,7 +687,9 @@ defmodule Unicode.Unihan.Utils do
   end
 
   defp decode_value(value, :kZVariant, _fields) do
-    value
+    ~r|U\+(?<hex_codepoint>[23]?[0-9A-F]{4})(<[ks][A-Za-z0-9_]+(:[TBZ]+)?(,[ks][A-Za-z0-9_]+(:[TBZ]+)?)*)?|
+    |> Regex.named_captures(value)
+    |> decode_captures()
   end
 
   # The default decoding is to do nothing.
@@ -734,6 +736,10 @@ defmodule Unicode.Unihan.Utils do
 
   defp decode_capture({"simplified_radical", ""}) do
     {:simplified_radical, false}
+  end
+
+  defp decode_capture({"hex_codepoint", value}) do
+    {:codepoint, String.to_integer(value, 16)}
   end
 
   defp decode_capture({"jyutpings", value}) do
