@@ -662,10 +662,6 @@ defmodule Unicode.Unihan.Utils do
     value
   end
 
-  defp decode_value(value, :kTotalStrokes, _fields) do
-    value
-  end
-
   defp decode_value(value, :kTraditionalVariant, _fields) do
     decode_codepoint(value)
   end
