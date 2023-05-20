@@ -671,7 +671,7 @@ defmodule Unicode.Unihan.Utils do
   end
 
   defp decode_value(value, :kUnihanCore2020, _fields) do
-    value
+    String.graphemes(value)
   end
 
   defp decode_value(value, :kVietnamese, _fields) do
@@ -683,11 +683,12 @@ defmodule Unicode.Unihan.Utils do
   end
 
   defp decode_value(value, :kXHC1983, _fields) do
-    value
+    value # TODO: complex
   end
 
   defp decode_value(value, :kZVariant, _fields) do
-    ~r|U\+(?<hex_codepoint>[23]?[0-9A-F]{4})(<[ks][A-Za-z0-9_]+(:[TBZ]+)?(,[ks][A-Za-z0-9_]+(:[TBZ]+)?)*)?|
+    # TODO: properly capture source (section after <)
+    ~r|(?<hex_codepoint>U\+[23]?[0-9A-F]{4})(<[ks][A-Za-z0-9_]+(:[TBZ]+)?(,[ks][A-Za-z0-9_]+(:[TBZ]+)?)*)?|
     |> Regex.named_captures(value)
     |> decode_captures()
   end
@@ -739,7 +740,7 @@ defmodule Unicode.Unihan.Utils do
   end
 
   defp decode_capture({"hex_codepoint", value}) do
-    {:codepoint, String.to_integer(value, 16)}
+    {:codepoint, decode_codepoint(value)}
   end
 
   defp decode_capture({"jyutpings", value}) do
