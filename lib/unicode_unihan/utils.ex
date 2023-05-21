@@ -609,15 +609,25 @@ defmodule Unicode.Unihan.Utils do
   end
 
   defp decode_value(value, :kMatthews, _fields) do
-    value
+    # not clear what trailing a or 0.5 represents
+    {index, trail} = Integer.parse(value)
+    %{
+      index:    index,
+      trailing: trail
+    }
   end
 
   defp decode_value(value, :kMeyerWempe, _fields) do
-    value
+    # not clear what "subsidiary letters" represent
+    ~r|(?<index>[1-9][0-9]{0,3})(?<letter>[a-t*]?)|
+    |> Regex.named_captures(value)
+    |> decode_captures()
   end
 
   defp decode_value(value, :kMorohashi, _fields) do
-    value
+    ~r|(?<index>[0-9]{5})(?<prime>\'?)|
+    |> Regex.named_captures(value)
+    |> decode_captures()
   end
 
   defp decode_value(value, :kNelson, _fields) do
