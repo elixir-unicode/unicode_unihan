@@ -459,47 +459,58 @@ defmodule Unicode.Unihan.Utils do
   end
 
   defp decode_value(value, :kIRG_GSource, _fields) do
-    value
+    [source | mapping] = String.split(value, "-")
+    %{source: source, mapping: mapping}
   end
 
   defp decode_value(value, :kIRG_HSource, _fields) do
-    value
+    [source, mapping] = String.split(value, "-")
+    %{source: source, mapping: mapping}
   end
 
   defp decode_value(value, :kIRG_JSource, _fields) do
-    value
+    [source, mapping] = String.split(value, "-")
+    %{source: source, mapping: mapping}
   end
 
   defp decode_value(value, :kIRG_KPSource, _fields) do
-    value
+    [source, mapping] = String.split(value, "-")
+    %{source: source, mapping: mapping}
   end
 
   defp decode_value(value, :kIRG_KSource, _fields) do
-    value
+    [source, mapping] = String.split(value, "-")
+    %{source: source, mapping: mapping}
   end
 
   defp decode_value(value, :kIRG_MSource, _fields) do
-    value
+    [source, mapping] = String.split(value, "-")
+    %{source: source, mapping: mapping}
   end
 
   defp decode_value(value, :kIRG_SSource, _fields) do
-    value
+    [source, mapping] = String.split(value, "-")
+    %{source: source, mapping: mapping}
   end
 
   defp decode_value(value, :kIRG_TSource, _fields) do
-    value
+    [source, mapping] = String.split(value, "-")
+    %{source: source, mapping: mapping}
   end
 
   defp decode_value(value, :kIRG_UKSource, _fields) do
-    value
+    [source, mapping] = String.split(value, "-")
+    %{source: source, mapping: mapping}
   end
 
   defp decode_value(value, :kIRG_USource, _fields) do
-    value
+    [source, mapping] = String.split(value, "-")
+    %{source: source, mapping: mapping}
   end
 
   defp decode_value(value, :kIRG_VSource, _fields) do
-    value
+    [source, mapping] = String.split(value, "-")
+    %{source: source, mapping: mapping}
   end
 
   defp decode_value(value, :kIRGDaeJaweon, _fields) do
@@ -565,7 +576,8 @@ defmodule Unicode.Unihan.Utils do
   end
 
   defp decode_value(value, :kKarlgren, _fields) do
-    value
+    {index, trail} = Integer.parse(value)
+    %{index: index, trail: trail}
   end
 
   defp decode_value(value, :kKorean, _fields) do
