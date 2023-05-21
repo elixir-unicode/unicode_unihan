@@ -348,11 +348,26 @@ defmodule Unicode.Unihan.Utils do
   end
 
   defp decode_value(value, :kFennIndex, _fields) do
-    value
+    ~r|(?<page>[0-9][0-9]{0,2})\.(?<position>[01][0-9])|
+    |> Regex.named_captures(value)
+    |> decode_captures()
   end
 
   defp decode_value(value, :kFourCornerCode, _fields) do
-    value
+    # despite decimal-looking, this is not a numerical index
+    codes =
+      value
+      |> String.graphemes()
+      |> Enum.reject(&(&1 == "."))
+      |> Enum.map(&String.to_integer/1)
+
+    %{
+      upper_left:   Enum.at(codes, 0),
+      upper_right:  Enum.at(codes, 1),
+      lower_left:   Enum.at(codes, 2),
+      lower_right:  Enum.at(codes, 3),
+      center:       Enum.at(codes, 4)
+    }
   end
 
   defp decode_value(value, :kFrequency, _fields) do
@@ -360,27 +375,27 @@ defmodule Unicode.Unihan.Utils do
   end
 
   defp decode_value(value, :kGB0, _fields) do
-    value
+    String.to_integer(value)
   end
 
   defp decode_value(value, :kGB1, _fields) do
-    value
+    String.to_integer(value)
   end
 
   defp decode_value(value, :kGB3, _fields) do
-    value
+    String.to_integer(value)
   end
 
   defp decode_value(value, :kGB5, _fields) do
-    value
+    String.to_integer(value)
   end
 
   defp decode_value(value, :kGB7, _fields) do
-    value
+    String.to_integer(value)
   end
 
   defp decode_value(value, :kGB8, _fields) do
-    value
+    String.to_integer(value)
   end
 
   defp decode_value(value, :kGradeLevel, _fields) do
@@ -388,7 +403,9 @@ defmodule Unicode.Unihan.Utils do
   end
 
   defp decode_value(value, :kGSR, _fields) do
-    value
+    ~r|(?<index>[0-9]{4})(?<letter>[a-vx-z])(?<prime>\'?)|
+    |> Regex.named_captures(value)
+    |> decode_captures()
   end
 
   defp decode_value(value, :kHangul, _fields) do
