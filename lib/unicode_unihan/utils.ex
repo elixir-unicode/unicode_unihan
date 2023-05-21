@@ -438,15 +438,19 @@ defmodule Unicode.Unihan.Utils do
   end
 
   defp decode_value(value, :kHKSCS, _fields) do
-    value
+    String.to_integer(value, 16)
   end
 
   defp decode_value(value, :kIBMJapan, _fields) do
-    value
+    String.to_integer(value, 16)
   end
 
   defp decode_value(value, :kIICore, _fields) do
-    value
+    [priority | irg] = String.graphemes(value)
+    %{
+      priority: priority,
+      irg:      irg
+    }
   end
 
   defp decode_value(value, :kIRG_GSource, _fields) do
