@@ -318,15 +318,19 @@ defmodule Unicode.Unihan.Utils do
   end
 
   defp decode_value(value, :kCompatibilityVariant, _fields) do
-    value
+    decode_codepoint(value)
   end
 
   defp decode_value(value, :kCowles, _fields) do
-    value
+    # The fractional value is dropped
+    {index, _fraction} = Integer.parse(value)
+    index
   end
 
   defp decode_value(value, :kDaeJaweon, _fields) do
-    value
+    ~r|(?<page>[0-9]{4})\.(?<position>[0-9]{2})(?<virtual>[01])|
+    |> Regex.named_captures(value)
+    |> decode_captures()
   end
 
   defp decode_value(value, :kDefinition, _fields) do
@@ -334,11 +338,13 @@ defmodule Unicode.Unihan.Utils do
   end
 
   defp decode_value(value, :kEACC, _fields) do
-    value
+    String.to_integer(value, 16)
   end
 
   defp decode_value(value, :kFenn, _fields) do
-    value
+    ~r|(?<fenn_phonetic>[0-9]+)a?(?<importance>[A-KP*])|
+    |> Regex.named_captures(value)
+    |> decode_captures()
   end
 
   defp decode_value(value, :kFennIndex, _fields) do
@@ -684,28 +690,7 @@ defmodule Unicode.Unihan.Utils do
     else
       %{category: category, codepoints: codepoints}
     end
-
   end
-
-  # defp decode_value("A", :kStrange, _fields) do
-  #   {category: :asymmetric}
-  # end
-
-  # defp decode_value("A", :kStrange, _fields) do
-  #   {category: :asymmetric}
-  # end
-
-  # defp decode_value("A", :kStrange, _fields) do
-  #   {category: :asymmetric}
-  # end
-
-  # defp decode_value("A", :kStrange, _fields) do
-  #   {category: :asymmetric}
-  # end
-
-  # defp decode_value("A", :kStrange, _fields) do
-  #   {category: :asymmetric}
-  # end
 
   defp decode_value(value, :kTaiwanTelegraph, _fields) do
     String.to_integer(value)
