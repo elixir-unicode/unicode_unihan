@@ -663,7 +663,19 @@ defmodule Unicode.Unihan.Utils do
   end
 
   defp decode_value(value, :kSemanticVariant, _fields) do
-    value
+    list = String.split(value, "<")
+    codepoint = Enum.at(list, 0) |> decode_codepoint()
+    sources   = Enum.at(list, 1)
+
+    # This does not split the source by its trailing : descriptor
+    case sources do
+      nil -> %{codepoint: codepoint}
+      _   -> %{
+                codepoint:  codepoint,
+                sources:    sources
+                            |> String.split(",")
+              }
+    end
   end
 
   defp decode_value(value, :kSimplifiedVariant, _fields) do
@@ -671,7 +683,18 @@ defmodule Unicode.Unihan.Utils do
   end
 
   defp decode_value(value, :kSpecializedSemanticVariant, _fields) do
-    value
+    list = String.split(value, "<")
+    codepoint = Enum.at(list, 0) |> decode_codepoint()
+    sources   = Enum.at(list, 1)
+
+    case sources do
+      nil -> %{codepoint: codepoint}
+      _   -> %{
+                codepoint:  codepoint,
+                sources:    sources
+                            |> String.split(",")
+              }
+    end
   end
 
   defp decode_value(value, :kSpoofingVariant, _fields) do
