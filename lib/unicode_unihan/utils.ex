@@ -422,15 +422,20 @@ defmodule Unicode.Unihan.Utils do
   end
 
   defp decode_value(value, :kHanyuPinlu, _fields) do
-    value
+    ~r|(?<reading>\S+)\((?<frequency>[0-9]+)\)|
+    |> Regex.named_captures(value)
+    |> decode_captures()
   end
 
   defp decode_value(value, :kHanyuPinyin, _fields) do
-    value
+    value # TODO: complex
   end
 
   defp decode_value(value, :kHDZRadBreak, _fields) do
-    value
+    # don't really understand what this field is for?  JC 2023-05
+    ~r|\S+\[(?<hex_codepoint>U\+2F[0-9A-D][0-9A-F])\]:(?<volume>[1-8])(?<page>[0-9]{4})\.(?<position>[0-3][0-9])(?<virtual>0)|
+    |> Regex.named_captures(value)
+    |> decode_captures()
   end
 
   defp decode_value(value, :kHKGlyph, _fields) do
@@ -498,11 +503,15 @@ defmodule Unicode.Unihan.Utils do
   end
 
   defp decode_value(value, :kIRGDaeJaweon, _fields) do
-    value
+    ~r|(?<page>[0-9]{4})\.(?<position>[0-9]{2})(?<virtual>[01])|
+    |> Regex.named_captures(value)
+    |> decode_captures()
   end
 
   defp decode_value(value, :kIRGDaiKanwaZiten, _fields) do
-    value
+    ~r|(?<index>[0-9]{5})(?<prime>\'?)|
+    |> Regex.named_captures(value)
+    |> decode_captures()
   end
 
   defp decode_value(value, :kIRGHanyuDaZidian, _fields) do
