@@ -651,7 +651,13 @@ defmodule Unicode.Unihan.Utils do
   end
 
   defp decode_value(value, :kPhonetic, _fields) do
-    value
+    {class, trail} = Integer.parse(value)
+    case trail do
+      ""  -> %{class: class}
+      "*" -> %{class: class, implicit: true}
+      "x" -> %{class: class, error: true}
+      _ -> %{class: class, subsidiary: trail}
+    end
   end
 
   defp decode_value(value, :kPrimaryNumeric, _fields) do
@@ -663,7 +669,9 @@ defmodule Unicode.Unihan.Utils do
   end
 
   defp decode_value(value, :kRSAdobe_Japan1_6, _fields) do
-    value
+    ~r|(?<code>[CV])\+(?<cid>[0-9]{1,5})\+(?<kangxi>[1-9][0-9]{0,2})\.(?<strokes_radical>[1-9][0-9]?)\.(?<strokes_residue>[0-9]{1,2})|
+    |> Regex.named_captures(value)
+    |> decode_captures()
   end
 
   defp decode_value(value, :kRSKangXi, _fields) do

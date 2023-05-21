@@ -42,9 +42,9 @@ defmodule Unicode.Unihan do
         kHanYu: %{page: 4674, position: 9, virtual: false, volume: 7},
         kIRGHanyuDaZidian: %{page: 4674, position: 9, virtual: false, volume: 7},
         kIRGKangXi: %{page: 1465, position: 1, virtual: true},
-        kIRG_GSource: "GHZ-74674.09",
-        kIRG_TSource: "T4-3043",
-        kIRG_VSource: "VN-29D4B",
+        kIRG_GSource: %{mapping: ["74674.09"], source: "GHZ"},
+        kIRG_TSource: %{mapping: "3043", source: "T4"},
+        kIRG_VSource: %{mapping: "29D4B", source: "VN"},
         kJapaneseKun: ["UO", "SAKANA", "SUNADORU"],
         kJapaneseOn: "GYO",
         kKangXi: %{page: 1465, position: 1, virtual: true},
@@ -53,7 +53,7 @@ defmodule Unicode.Unihan do
         kRSAdobe_Japan1_6: ["C+13717+195.10.0", "V+13718+195.10.0"],
         kRSKangXi: %{radical: 195, strokes: 0},
         kRSUnicode: %{radical: 195, simplified_radical: false, strokes: 0},
-        kTotalStrokes: %{"Hans": 11, "Hant": 11}
+        kTotalStrokes: %{Hans: 11, Hant: 11}
       }
 
       iex> Unicode.Unihan.unihan("㝰")
@@ -66,14 +66,14 @@ defmodule Unicode.Unihan do
         kHanyuPinyin: "20957.030:mián",
         kIRGHanyuDaZidian: %{page: 957, position: 3, virtual: false, volume: 2},
         kIRGKangXi: %{page: 293, position: 1, virtual: false},
-        kIRG_GSource: "G5-3E3C",
-        kIRG_KSource: "K3-236A",
-        kIRG_TSource: "T4-5A7D",
+        kIRG_GSource: %{mapping: ["3E3C"], source: "G5"},
+        kIRG_KSource: %{mapping: "236A", source: "K3"},
+        kIRG_TSource: %{mapping: "5A7D", source: "T4"},
         kKangXi: %{page: 293, position: 1, virtual: false},
         kMandarin: "mián",
         kRSUnicode: %{radical: 40, simplified_radical: false, strokes: 15},
         kSBGY: %{page: 135, position: 35},
-        kTotalStrokes: %{"Hans": 18, "Hant": 18}
+        kTotalStrokes: %{Hans: 18, Hant: 18}
       }
 
   """
