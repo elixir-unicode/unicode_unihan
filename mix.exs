@@ -38,6 +38,7 @@ defmodule Unicode.Unihan.MixProject do
       links: links(),
       files: [
         "lib",
+        "docs",
         "data",
         "logo.png",
         "mix.exs",
