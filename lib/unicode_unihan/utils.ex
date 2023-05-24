@@ -550,7 +550,15 @@ defmodule Unicode.Unihan.Utils do
   end
 
   defp decode_value(value, :kJinmeiyoKanji, _fields) do
-    value
+    [year | codepoint] = String.split(value, ":")
+    case codepoint do
+      [] -> %{year: String.to_integer(year)}
+      _  ->
+        %{
+          year: String.to_integer(year),
+          codepoint: codepoint |> Enum.at(0) |> decode_codepoint()
+        }
+    end
   end
 
   defp decode_value(value, :kJis0, _fields) do
@@ -565,8 +573,12 @@ defmodule Unicode.Unihan.Utils do
     value
   end
 
-  defp decode_value(value, :kJoyoKanji, _fields) do
-    value
+  defp decode_value("U+"<>codepoint, :kJoyoKanji, _fields) do
+    %{codepoint: String.to_integer(codepoint, 16)}
+  end
+
+  defp decode_value(year, :kJoyoKanji, _fields) do
+    %{year: String.to_integer(year)}
   end
 
   defp decode_value(value, :kKangXi, _fields) do
