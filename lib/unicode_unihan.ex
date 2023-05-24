@@ -49,8 +49,11 @@ defmodule Unicode.Unihan do
         kJapaneseOn: "GYO",
         kKangXi: %{page: 1465, position: 1, virtual: true},
         kNelson: 692,
-        kPhonetic: "1605",
-        kRSAdobe_Japan1_6: ["C+13717+195.10.0", "V+13718+195.10.0"],
+        kPhonetic: %{class: 1605},
+        kRSAdobe_Japan1_6: [
+          %{cid: 13717, code: "C", kangxi: 195, strokes_radical: 10, strokes_residue: 0},
+          %{cid: 13718, code: "V", kangxi: 195, strokes_radical: 10, strokes_residue: 0}
+        ],
         kRSKangXi: %{radical: 195, strokes: 0},
         kRSUnicode: %{radical: 195, simplified_radical: false, strokes: 0},
         kTotalStrokes: %{Hans: 11, Hant: 11}

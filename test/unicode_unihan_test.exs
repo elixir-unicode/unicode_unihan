@@ -4,4 +4,5 @@ defmodule Unicode.Test do
   doctest Unicode.Unihan
   doctest Unicode.Unihan.Cantonese
   doctest Unicode.Unihan.Radical
+  doctest Unicode.Unihan.Cangjie
 end
