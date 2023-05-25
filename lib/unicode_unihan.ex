@@ -66,7 +66,7 @@ defmodule Unicode.Unihan do
         kCantonese: %{coda: "n", final: "in", jyutping: "min4", nucleus: "i", onset: "m", tone: "4"},
         kDefinition: ["unable to meet, empty room"],
         kHanYu: %{page: 957, position: 3, virtual: false, volume: 2},
-        kHanyuPinyin: "20957.030:mián",
+        kHanyuPinyin: %{location: [%{page: 20957, position: 3, virtual: false}], readings: ["mián"]},
         kIRGHanyuDaZidian: %{page: 957, position: 3, virtual: false, volume: 2},
         kIRGKangXi: %{page: 293, position: 1, virtual: false},
         kIRG_GSource: %{mapping: ["3E3C"], source: "G5"},

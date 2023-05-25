@@ -428,7 +428,25 @@ defmodule Unicode.Unihan.Utils do
   end
 
   defp decode_value(value, :kHanyuPinyin, _fields) do
-    value # TODO: complex
+    [locations, readings] = String.split(value, ":")
+
+    locations =
+      locations
+      |> String.split(",")
+      |> Enum.map(fn location ->
+        ~r|(?<page>[1-8][0-9]{4})\.(?<position>[0-3][0-9])(?<virtual>[0-3])|
+        |> Regex.named_captures(location)
+        |> decode_captures()
+      end)
+
+    readings =
+      readings
+      |> String.split(",")
+
+    %{
+      location: locations,
+      readings: readings
+    }
   end
 
   defp decode_value(value, :kHDZRadBreak, _fields) do
