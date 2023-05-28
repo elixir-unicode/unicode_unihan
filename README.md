@@ -24,3 +24,4 @@ The docs can be found at [https://hexdocs.pm/unicode_unihan](https://hexdocs.pm/
 
 See the [guide to Unihan and Unihan introspection](https://raw.githubusercontent.com/elixir-unicode/unicode_unihan/main/docs/unihan_walkthrough.livemd) livebook.
 
+[![Run in Livebook](https://livebook.dev/badge/v1/blue.svg)](https://livebook.dev/run?url=https%3A%2F%2Fraw.githubusercontent.com%2Felixir-unicode%2Funicode_unihan%2Fmain%2Fdocs%2Funihan_walkthrough.livemd)
