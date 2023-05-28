@@ -19,3 +19,8 @@ end
 ```
 
 The docs can be found at [https://hexdocs.pm/unicode_unihan](https://hexdocs.pm/unicode_unihan).
+
+## Tutorial livebooks
+
+See the [guide to Unihan and Unihan introspection](https://raw.githubusercontent.com/elixir-unicode/unicode_unihan/main/docs/unihan_walkthrough.livemd) livebook.
+
