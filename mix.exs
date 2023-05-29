@@ -81,10 +81,22 @@ defmodule Unicode.Unihan.MixProject do
       logo: "logo.png",
       extras: [
         "README.md",
+        "docs/fields/fields.md",
+        "docs/fields/dictionary_indices.md",
+        "docs/fields/dictionary_like_data.md",
+        "docs/fields/irg_sources.md",
+        "docs/fields/numeric_values.md",
+        "docs/fields/other_mappings.md",
+        "docs/fields/radical_stroke_counts.md",
+        "docs/fields/readings.md",
+        "docs/fields/variants.md",
         "LICENSE.md",
-        "CHANGELOG.md"
+        "CHANGELOG.md",
       ],
       formatters: ["html"],
+      groups_for_extras: [
+        "Fields": Path.wildcard("docs/fields/*.md")
+      ],
       skip_undefined_reference_warnings_on: ["changelog", "CHANGELOG.md"]
     ]
   end

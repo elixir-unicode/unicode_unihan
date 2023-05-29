@@ -1,12 +1,12 @@
 # UniHan tutorial
 
-## Setup
-
-This LiveBook requires you to connect to a running IEx node from  `Unicode.Unihan`.
-
 ```elixir
-import Unicode.Unihan
+Mix.install([
+  {:unicode_unihan, "~> 0.1.0"}
+])
 ```
+
+## Setup
 
 The `Unihan` module lets you work with the Unihan database at three levels of granularity:
 
@@ -39,7 +39,7 @@ unihan(33836) == unihan("U+842C")
 
 The map can be accessed through the unicode keys **as atoms**.  These keys are specified in [Annex #38](https://www.unicode.org/reports/tr38/).
 
-The values have been further parsed, often into maps of their own; key naming of these smaller maps are not specified by Unihan, and have taken (in general) to be consistent to the implementation in Python's [unihan-etl](https://github.com/cihai/unihan-etl/blob/master/src/unihan_etl/expansion.py) library.
+The values have been further parsed, often into maps of their own; key naming of these smaller maps are not specified by Unihan, and have taken (in general) to be consistent to the implementation in Python's [unihan-etl](https://github.com/cihai/unihan-etl/blob/master/src/unihan_etl/expansion.py) library.  See documentation on Hexdocs for details.
 
 Note that these maps can be accessed using `Access` (square brackets `[]`), or the method dot notation (`.`).  The former returns `nil` when the key does not exist, whereas the latter throws an exception.
 

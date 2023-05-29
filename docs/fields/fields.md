@@ -4,7 +4,7 @@ The UniHan database provides detailed descriptions for each CJK ideograph.  Thes
 
 Fields in Unihan, for historical reasons, have names that begins with `k`.  Examples include `kGradeLevel`, `kKangXi`, and `kStrange`.  The string in each field can contain a single entry, or a list of entries separated by a delimiter; each entry is encoded in a special format according to the needs of the field.  For example, `kKangXi` describes where to find the ideograph in the 《康熙字典》Kangxi Dictionary, and a typical entry may be "1187.061".  The user is expected to consult the Unihan specifications to interpret this as page 1187, position 6, and virtual (the trailing 1 indicates that the ideograph is *not* actually in the dictionary).
 
-The `Unicode.UniHan` module simplifies access by parsing these into sensible structures.  Each character is represented as a map, with atom keys (e.g., `:kKangXi`) used to access fields.  Where multiple entries exists inside a field, they are split into a list; each entry is parsed into a map.  The example entry above would be structured to 
+The `Unicode.Unihan` module simplifies access by parsing these into sensible structures.  Each character is represented as a map, with atom keys (e.g., `:kKangXi`) used to access fields.  Where multiple entries exists inside a field, they are split into a list; each entry is parsed into a map.  The example entry above would be structured to 
 
 ```
 %{
