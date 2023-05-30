@@ -16,6 +16,10 @@ The `Unihan` module lets you work with the Unihan database at three levels of gr
 
 This LiveBook walks you through these three levels.
 
+```elixir
+import Unicode.Unihan
+```
+
 ## Single Unicode Lookup
 
 The `Unihan` library provides, first and foremost, fast lookups of the range of data within the Unihan database.  The function `unihan/1` accepts a variety of input, and returns the information contained within the Unihan database as a parsed map.
@@ -83,12 +87,9 @@ filter(
   &(&1[:kGradeLevel] <= 2 and
       &1[:kCantonese][:tone] == "1")
 )
-|> Enum.sort_by(
-  fn {_codepoint, map} ->
-    map[:kTotalStrokes][:Hant]
-  end,
-  :asc
-)
+|> Enum.sort_by(fn {_codepoint, map} ->
+  map[:kTotalStrokes][:Hant]
+end)
 |> Enum.map(fn {_codepoint, map} ->
   Unicode.Unihan.to_string(map)
 end)
