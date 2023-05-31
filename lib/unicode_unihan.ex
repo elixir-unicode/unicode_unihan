@@ -57,10 +57,14 @@ defmodule Unicode.Unihan do
   end
 
   defp maybe_load_unihan(codepoint) do
-    unless :persistent_term.get(:unihan_codepoints, nil) do
+    unless already_loaded?() do
       load_unihan()
       unihan_get(codepoint)
     end
+  end
+
+  defp already_loaded? do
+    :persistent_term.get(:unihan_codepoints, nil)
   end
 
   @spec unihan(binary | integer) :: any
