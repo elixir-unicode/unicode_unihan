@@ -15,13 +15,40 @@ defmodule Unicode.Unihan do
                   (c3 in ?0..?9 or c4 in ?A..?Z)
 
   @doc """
-  Returns the Unihan database as a mapping
-  of a codepoint to its metadata.
+  Load the unihan data into :persistent_term
+
+  First the existence of an erlang term format
+  file of the unihan database is found. If so,
+  it is loaded. If not (the first time the function
+  is called), the file is generated and then loaded.
 
   """
-  @unihan_data Utils.parse_files()
-  def unihan do
-    @unihan_data
+  def load_unihan do
+    unihan_path = Utils.unihan_path()
+
+    if File.exists?(unihan_path) do
+      unihan =
+        unihan_path
+        |> File.read!
+        |> :erlang.binary_to_term()
+
+      Enum.each(unihan, fn {codepoint, data} -> :persistent_term.put({:unihan, codepoint}, data) end)
+
+      unihan_codepoints = Map.keys(unihan)
+      :persistent_term.put(:unihan_codepoints, unihan_codepoints)
+    else
+      IO.puts "Parsing the Unihan database (this may take up to a minute)"
+      Utils.save_unihan!
+      load_unihan()
+    end
+  end
+
+  defp unihan_get(codepoint) do
+    :persistent_term.get({:unihan, codepoint})
+  end
+
+  defp unihan_codepoints do
+    :persistent_term.get(:unihan_codepoints)
   end
 
   @spec unihan(binary | integer) :: any
@@ -81,11 +108,11 @@ defmodule Unicode.Unihan do
 
   """
   def unihan(codepoint) when is_integer(codepoint) do
-    Map.get(unihan(), codepoint)
+    unihan_get(codepoint)
   end
 
   def unihan(<<codepoint::utf8>>) do
-    Map.get(unihan(), codepoint)
+   unihan_get(codepoint)
   end
 
   # U\\+[23]?[0-9A-F]{4}
@@ -95,7 +122,7 @@ defmodule Unicode.Unihan do
 
     hex
     |> String.to_integer(16)
-    |> unihan()
+    |> unihan_get()
   end
 
   def unihan("U+" <> <<c1::utf8, c2::utf8, c3::utf8, c4::utf8, c5::utf8, c6::utf8>>)
@@ -104,7 +131,7 @@ defmodule Unicode.Unihan do
 
     hex
     |> String.to_integer(16)
-    |> unihan()
+    |> unihan_get()
   end
 
   @doc """
@@ -168,10 +195,10 @@ defmodule Unicode.Unihan do
 
   """
   def filter(fun) when is_function(fun, 1) do
-    Enum.filter(unihan(), fn {_codepoint, value} ->
-      fun.(value)
+    Enum.reduce(unihan_codepoints(), Map.new(), fn codepoint, acc ->
+      value = unihan_get(codepoint)
+      if fun.(value), do: Map.put(acc, codepoint, value), else: acc
     end)
-    |> Map.new()
   end
 
   @doc """
@@ -201,10 +228,10 @@ defmodule Unicode.Unihan do
 
   """
   def reject(fun) when is_function(fun, 1) do
-    Enum.reject(unihan(), fn {_codepoint, value} ->
-      fun.(value)
+    Enum.reduce(unihan_codepoints(), Map.new(), fn codepoint, acc ->
+      value = unihan_get(codepoint)
+      if fun.(value), do: acc, else: Map.put(acc, codepoint, value)
     end)
-    |> Map.new()
   end
 
   @doc """

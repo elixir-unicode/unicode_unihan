@@ -7,11 +7,13 @@ defmodule Mix.Tasks.Unicode.Unihan.Download do
   use Mix.Task
   require Logger
 
+  alias Unicode.Unihan.Utils
+
   @shortdoc "Download Unicode Unihan database"
 
   @root_url "https://www.unicode.org/Public/UCD/latest/ucd/"
 
-  @download_dir Unicode.Unihan.Utils.data_dir() |> Path.expand()
+  @download_dir Utils.data_dir() |> Path.expand()
 
   @doc false
   def run(_) do
@@ -20,6 +22,7 @@ defmodule Mix.Tasks.Unicode.Unihan.Download do
 
     Enum.each(required_files(), &download_file/1)
     extract_unihan_database!()
+    Utils.save_unihan!()
   end
 
   defp required_files do
@@ -29,7 +32,7 @@ defmodule Mix.Tasks.Unicode.Unihan.Download do
     ]
   end
 
-  def extract_unihan_database! do
+  defp extract_unihan_database! do
     extract_dir = Path.join(@download_dir, "unihan")
 
     data_path("unihan.zip")
@@ -39,7 +42,7 @@ defmodule Mix.Tasks.Unicode.Unihan.Download do
     File.rm!(data_path("unihan.zip"))
   end
 
-  def root_url do
+  defp root_url do
     @root_url
   end
 

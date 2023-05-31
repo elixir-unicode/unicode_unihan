@@ -14,6 +14,12 @@ defmodule Unicode.Unihan.Utils do
   @cjk_radicals_file "cjk_radicals.txt"
   @jyutping_index_file "cantonese/jyutping_index.csv"
 
+  @codepoints_file "unihan_codepoints.etf"
+  @unihan_codepoints_path Path.join(@data_dir, @codepoints_file)
+
+  @unihan_etf_file "unihan.etf"
+  @unihan_etf_path Path.join(@data_dir, @unihan_etf_file)
+
   for file <- Path.wildcard(Path.join(__DIR__, "../../data/**/**")) do
     @external_resource file
   end
@@ -25,6 +31,24 @@ defmodule Unicode.Unihan.Utils do
   @doc false
   def data_dir do
     @data_dir
+  end
+
+  @doc false
+  def unihan_path do
+    @unihan_etf_path
+  end
+
+  @doc false
+  def unihan_codepoints_path do
+    @unihan_codepoints_path
+  end
+
+  @doc false
+  def save_unihan! do
+    unihan = Unicode.Unihan.Utils.parse_files()
+    unihan_binary = :erlang.term_to_binary(unihan)
+    unihan_path = Unicode.Unihan.Utils.unihan_path()
+    File.write!(unihan_path, unihan_binary)
   end
 
   @doc """
@@ -353,21 +377,17 @@ defmodule Unicode.Unihan.Utils do
     |> decode_captures()
   end
 
+  # despite decimal-looking, this is not a numerical index
   defp decode_value(value, :kFourCornerCode, _fields) do
-    # despite decimal-looking, this is not a numerical index
     codes =
       value
       |> String.graphemes()
       |> Enum.reject(&(&1 == "."))
       |> Enum.map(&String.to_integer/1)
 
-    %{
-      upper_left:   Enum.at(codes, 0),
-      upper_right:  Enum.at(codes, 1),
-      lower_left:   Enum.at(codes, 2),
-      lower_right:  Enum.at(codes, 3),
-      center:       Enum.at(codes, 4)
-    }
+    [:upper_left, :upper_right, :lower_left, :lower_right, :center]
+    |> Enum.zip(codes)
+    |> Map.new()
   end
 
   defp decode_value(value, :kFrequency, _fields) do
