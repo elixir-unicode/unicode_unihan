@@ -15,7 +15,11 @@ defmodule Unicode.Unihan do
                   (c3 in ?0..?9 or c4 in ?A..?Z)
 
   @doc """
-  Load the unihan data into :persistent_term
+  Load the unihan data into :persistent_term.
+
+  This function will be called on the first access
+  by `Unicode.Unihan.unihan/1` but can be called
+  on application load if required.
 
   First the existence of an erlang term format
   file of the unihan database is found. If so,
@@ -27,6 +31,7 @@ defmodule Unicode.Unihan do
     unihan_path = Utils.unihan_path()
 
     if File.exists?(unihan_path) do
+      IO.puts "Loading the Unihan database."
       unihan =
         unihan_path
         |> File.read!
@@ -37,18 +42,25 @@ defmodule Unicode.Unihan do
       unihan_codepoints = Map.keys(unihan)
       :persistent_term.put(:unihan_codepoints, unihan_codepoints)
     else
-      IO.puts "Parsing the Unihan database (this may take up to a minute)"
+      IO.puts "Parsing the Unihan database (this may take a few seconds)."
       Utils.save_unihan!
       load_unihan()
     end
   end
 
   defp unihan_get(codepoint) do
-    :persistent_term.get({:unihan, codepoint})
+    :persistent_term.get({:unihan, codepoint}, nil) || maybe_load_unihan(codepoint)
   end
 
   defp unihan_codepoints do
-    :persistent_term.get(:unihan_codepoints)
+    :persistent_term.get(:unihan_codepoints, nil) || (load_unihan() && unihan_codepoints())
+  end
+
+  defp maybe_load_unihan(codepoint) do
+    unless :persistent_term.get(:unihan_codepoints, nil) do
+      load_unihan()
+      unihan_get(codepoint)
+    end
   end
 
   @spec unihan(binary | integer) :: any

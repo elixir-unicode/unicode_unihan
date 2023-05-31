@@ -6,7 +6,7 @@ This is the changelog for Unicode Unihan v0.2.0 released on May 31st, 2023.  For
 
 ### Enhancements 
 
-* Improves compilation time by orders of magnitude by switching to use `:persistent_term` for storing the Unihan database. This change requires that `Unicode.Unihan.load_unihan/0` is called at application load or startup as a first call before any other functions are called. 
+* Improves compilation time by orders of magnitude by switching to use `:persistent_term` for storing the Unihan database.
 
 ## Unicode Unihan v0.1.0
 

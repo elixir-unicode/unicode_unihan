@@ -20,10 +20,6 @@ end
 
 The docs can be found at [https://hexdocs.pm/unicode_unihan](https://hexdocs.pm/unicode_unihan).
 
-### Usage
-
-The function `Unicode.Unihan.load_unihan/0` must be the first function called in order to load the Unihan database into `:persistent_term`. This call can be made directly in an `iex` or `livebook` session or added to an applications `start/0` function.
-
 ## Tutorial livebooks
 
 See the [guide to Unihan and Unihan introspection](https://raw.githubusercontent.com/elixir-unicode/unicode_unihan/main/docs/unihan_walkthrough.livemd) livebook.
