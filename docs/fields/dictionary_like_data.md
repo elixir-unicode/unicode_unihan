@@ -129,7 +129,7 @@ This is an abridged entry.  For examples and details, see [its entry](https://ww
 > Category O = [O]dd Component (includes one or more components that are symbol-like or are otherwise considered odd)
 > Category R = [R]otated (is either rotated or includes one or more components that are rotated)
 > Category S = [S]troke-heavy (has 40 or more strokes)
-> Category U = [U]nusual Arrangment/Structure (has an unusual structure or component arrangement)
+> Category U = [U]nusual Arrangement/Structure (has an unusual structure or component arrangement)
 
 > This property is fully documented in [UTN43](https://www.unicode.org/notes/tn43/), Unihan Database Property “kStrange”.
 
