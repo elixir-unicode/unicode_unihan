@@ -99,7 +99,7 @@ defmodule Unicode.Unihan.Radical do
     the attribute map for a given codepoint. if the
     function returns a `truthy` value then the codepoint
     is included in the returned data. If the return
-    value is `falsy` then the codepoint is ommitted
+    value is `falsy` then the codepoint is omitted
     from the returned list.
 
   ### Returns
@@ -132,7 +132,7 @@ defmodule Unicode.Unihan.Radical do
     the attribute map for a given codepoint. if the
     function returns a `falsy` value then the codepoint
     is included in the returned data. If the return
-    value is `truthy` then the codepoint is ommitted
+    value is `truthy` then the codepoint is omitted
     from the returned list.
 
   ### Returns

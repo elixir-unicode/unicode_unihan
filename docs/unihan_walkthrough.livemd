@@ -12,9 +12,9 @@ The `Unihan` module lets you work with the Unihan database at three levels of gr
 
 * individual characters,
 * population of characters, and
-* attributes of/fields within characters
+* attributes of fields within characters
 
-This LiveBook walks you through these three levels.
+This Livebook walks you through these three levels.
 
 ```elixir
 import Unicode.Unihan
