@@ -6,7 +6,7 @@ This is the changelog for Unicode Unihan v0.3.0 released onJune 4th, 2023.  For 
 
 ### Bug Fixes
 
-* Ensure all data paths are resolved at runtime, not compile time
+* Ensure all data paths are resolved at runtime, not compile time.
 
 * Move data/ to priv/ since only priv/ is preserved in releases.
 
