@@ -1,5 +1,15 @@
 # Changelog
 
+## Unicode Unihan v0.3.0
+
+This is the changelog for Unicode Unihan v0.3.0 released onJune 4th, 2023.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-unicode/unicode_unihan/tags)
+
+### Bug Fixes
+
+* Ensure all data paths are resolved at runtime, not compile time
+
+* Move data/ to priv/ since only priv/ is preserved in releases.
+
 ## Unicode Unihan v0.2.0
 
 This is the changelog for Unicode Unihan v0.2.0 released on May 31st, 2023.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-unicode/unicode_unihan/tags)
