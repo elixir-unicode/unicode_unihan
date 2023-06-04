@@ -7,40 +7,32 @@ defmodule Unicode.Unihan.Utils do
 
   alias Unicode.Unihan.Cantonese
 
-  @data_dir Path.join(__DIR__, "../../data") |> Path.expand()
+  @app_name :unicode_unihan
 
   @unihan_subdir "unihan"
   @unihan_fields_file "unihan_fields.json"
   @cjk_radicals_file "cjk_radicals.txt"
   @jyutping_index_file "cantonese/jyutping_index.csv"
-
   @codepoints_file "unihan_codepoints.etf"
-  @unihan_codepoints_path Path.join(@data_dir, @codepoints_file)
-
   @unihan_etf_file "unihan.etf"
-  @unihan_etf_path Path.join(@data_dir, @unihan_etf_file)
 
-  for file <- Path.wildcard(Path.join(__DIR__, "../../data/**/**")) do
+  for file <- Path.wildcard(Path.join(:code.priv_dir(@app_name), "/**/*.{json,txt,csv}")) do
     @external_resource file
   end
 
-  @external_resource Path.join(@data_dir, @jyutping_index_file) |> Path.expand()
-  @external_resource Path.join(@data_dir, @unihan_fields_file) |> Path.expand()
-  @external_resource Path.join(@data_dir, @cjk_radicals_file) |> Path.expand()
-
   @doc false
   def data_dir do
-    @data_dir
+    :code.priv_dir(@app_name)
   end
 
   @doc false
   def unihan_path do
-    @unihan_etf_path
+    Path.join(data_dir(), @unihan_etf_file)
   end
 
   @doc false
   def unihan_codepoints_path do
-    @unihan_codepoints_path
+    Path.join(data_dir(), @codepoints_file)
   end
 
   @doc false
@@ -59,7 +51,7 @@ defmodule Unicode.Unihan.Utils do
   """
 
   def parse_files do
-    @data_dir
+    data_dir()
     |> Path.join(@unihan_subdir)
     |> File.ls!()
     |> Enum.reduce(%{}, &parse_file(&1, &2))
@@ -72,7 +64,7 @@ defmodule Unicode.Unihan.Utils do
 
   """
   def parse_file(file, map \\ %{}) do
-    path = Path.join(@data_dir, [@unihan_subdir, "/", file])
+    path = Path.join(data_dir(), [@unihan_subdir, "/", file])
     fields = unihan_fields()
 
     Enum.reduce(File.stream!(path), map, fn line, map ->
@@ -111,7 +103,7 @@ defmodule Unicode.Unihan.Utils do
 
   """
   def unihan_fields do
-    @data_dir
+    data_dir()
     |> Path.join(@unihan_fields_file)
     |> File.read!()
     |> Jason.decode!()
@@ -152,7 +144,7 @@ defmodule Unicode.Unihan.Utils do
 
   """
   def parse_cantonese do
-    @data_dir
+    data_dir()
     |> Path.join(@jyutping_index_file)
     |> File.stream!([:trim_bom])
     |> CSV.decode!(headers: true)

@@ -1,7 +1,7 @@
 defmodule Unicode.Unihan.MixProject do
   use Mix.Project
 
-  @version "0.2.0"
+  @version "0.3.0"
 
   def project do
     [
@@ -39,10 +39,10 @@ defmodule Unicode.Unihan.MixProject do
       files: [
         "lib",
         "docs",
-        "data/cantonese/",
-        "data/unihan/",
-        "data/*.txt",
-        "data/*.json",
+        "priv/cantonese/",
+        "priv/unihan/",
+        "priv/*.txt",
+        "priv/*.json",
         "logo.png",
         "mix.exs",
         "README*",
