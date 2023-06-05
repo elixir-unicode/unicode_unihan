@@ -12,7 +12,7 @@ defmodule Unicode.Unihan.MixProject do
       build_embedded: Mix.env() == :prod,
       deps: deps(),
       docs: docs(),
-      name: "Unicode",
+      name: "Unicode Unihan",
       source_url: "https://github.com/elixir-unicode/unicode_unihan",
       description: description(),
       package: package(),
