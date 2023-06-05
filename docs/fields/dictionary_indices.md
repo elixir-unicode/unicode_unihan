@@ -6,7 +6,29 @@
 
 ### Shape of return
 
+```elixir
+%{
+    page: 381,
+    position: 1
+}
+```
+
+Both `:page` and `:position` are integers.
+
+Where multiple entries were provided in Cheung & Bauer, the entries are provided as a list:
+
+```elixir
+   [
+     %{page: 366, position: 5},
+     %{page: 366, position: 6},
+     %{page: 366, position: 7},
+     %{page: 366, position: 8}
+   ]
+```
+
 ### Notes
+
+Cheung Bauer includes 967 characters specifically used in representing Cantonese.  Examples include 㖭,㗎, and 𬧊.  Note that many of these characters reside in the Extension planes and may not be contained in standard fonts.
 
 ## kCihaiT
 ### Description
@@ -14,7 +36,15 @@
 
 ### Shape of return
 
+```elixir
+%{page: 1552, position: 7, row: 4}
+```
+
+All three values are integers.
+
 ### Notes
+
+13,886 characters contains an `:kCihaiT` field.  These are exclusively Traditional characters.
 
 ## kCowles
 ### Description
@@ -24,7 +54,11 @@
 
 ### Shape of return
 
+`:kCowles` returns *exclusively* an integer.
+
 ### Notes
+
+4863 Traditional characters.  Note that trailing decimals are dropped in this parsing implementation.
 
 ## kDaeJaweon
 ### Description
