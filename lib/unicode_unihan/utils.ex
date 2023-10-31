@@ -164,11 +164,11 @@ defmodule Unicode.Unihan.Utils do
 
   There is one line per CJK radical number. Each line contains three
   fields, separated by a semicolon (';'). The first field is the
-  CJK radical number. The second field is the CJK radical character.
-  The third field is the CJK unified ideograph.
+  CJK radical number. The second field is the CJK radical character, which may be absent. The third field is the CJK unified ideograph.
 
-  Simplified radicals are represented by radical numbers with a
-  trailing apostrophe `'`.
+  A given radical may have three variants, sharing the same radical number but described in separate lines.  These variants are noted with one or two trailing apostrophes `'`:
+  * one trailing apostrophe `'`: simplified radicals
+  * two trailing apostrophe `''`: japanese radicals (added in 2023 version 15.1)
 
   """
   def parse_radicals do
@@ -188,14 +188,24 @@ defmodule Unicode.Unihan.Utils do
             |> String.split(";", trim: true)
             |> Enum.map(&String.trim/1)
 
-          {radical_number, simplified?} = split_radical_number(radical_number)
-          radical_character = String.to_integer(radical_character, 16)
+          {radical_number, variant} = split_radical_number(radical_number)
+
+          radical_character =
+            case radical_character != "" do
+              true ->
+                String.to_integer(radical_character, 16)
+
+              false ->
+                nil
+                # 182, 208, 210, 211, 212, and 213 has no radical character
+            end
+
           unified_ideograph = String.to_integer(unified_ideograph, 16)
 
-          radical = radical(radical_number, simplified?, radical_character, unified_ideograph)
+          radical = radical(radical_number, variant, radical_character, unified_ideograph)
 
           other_radical =
-            radical(radical_number, !simplified?, radical_character, unified_ideograph)
+            radical(radical_number, variant, radical_character, unified_ideograph)
 
           # When no value, assume the current value is for both traditional
           # and simplified. A later entry may overwrite one of them.
@@ -211,12 +221,16 @@ defmodule Unicode.Unihan.Utils do
     end)
   end
 
-  defp radical(radical_number, true = _simplified?, radical_character, unified_ideograph) do
+  defp radical(radical_number, :simplified = _variant, radical_character, unified_ideograph) do
     %{Hans: radical(radical_number, radical_character, unified_ideograph)}
   end
 
-  defp radical(radical_number, false = _simplified?, radical_character, unified_ideograph) do
+  defp radical(radical_number, :traditional = _variant, radical_character, unified_ideograph) do
     %{Hant: radical(radical_number, radical_character, unified_ideograph)}
+  end
+
+  defp radical(radical_number, :japanese = _variant, radical_character, unified_ideograph) do
+    %{Hanj: radical(radical_number, radical_character, unified_ideograph)}
   end
 
   defp radical(radical_number, radical_character, unified_ideograph) do
@@ -228,12 +242,14 @@ defmodule Unicode.Unihan.Utils do
   end
 
   # Simplified radicals are represented by radical numbers with a
-  # trailing apostrophe `'`.
+  # trailing apostrophe `'`; Japanese radicals are represented by radical numbers with two trailing apostrophes `''`.
 
   defp split_radical_number(number) do
     case String.split(number, "'") do
-      [number] -> {String.to_integer(number), false}
-      [number, _prime] -> {String.to_integer(number), true}
+      [number] -> {String.to_integer(number), :traditional}
+      [number, _prime] -> {String.to_integer(number), :simplified}
+      # quick fix
+      [number, _prime, _double_prime] -> {String.to_integer(number), :japanese}
     end
   end
 
@@ -482,9 +498,10 @@ defmodule Unicode.Unihan.Utils do
 
   defp decode_value(value, :kIICore, _fields) do
     [priority | irg] = String.graphemes(value)
+
     %{
       priority: priority,
-      irg:      irg
+      irg: irg
     }
   end
 
@@ -581,9 +598,12 @@ defmodule Unicode.Unihan.Utils do
 
   defp decode_value(value, :kJinmeiyoKanji, _fields) do
     [year | codepoint] = String.split(value, ":")
+
     case codepoint do
-      [] -> %{year: String.to_integer(year)}
-      _  ->
+      [] ->
+        %{year: String.to_integer(year)}
+
+      _ ->
         %{
           year: String.to_integer(year),
           codepoint: codepoint |> Enum.at(0) |> decode_codepoint()
@@ -603,7 +623,7 @@ defmodule Unicode.Unihan.Utils do
     value
   end
 
-  defp decode_value("U+"<>codepoint, :kJoyoKanji, _fields) do
+  defp decode_value("U+" <> codepoint, :kJoyoKanji, _fields) do
     %{codepoint: String.to_integer(codepoint, 16)}
   end
 
@@ -665,8 +685,9 @@ defmodule Unicode.Unihan.Utils do
   defp decode_value(value, :kMatthews, _fields) do
     # not clear what trailing a or 0.5 represents
     {index, trail} = Integer.parse(value)
+
     %{
-      index:    index,
+      index: index,
       trailing: trail
     }
   end
@@ -694,8 +715,9 @@ defmodule Unicode.Unihan.Utils do
 
   defp decode_value(value, :kPhonetic, _fields) do
     {class, trail} = Integer.parse(value)
+
     case trail do
-      ""  -> %{class: class}
+      "" -> %{class: class}
       "*" -> %{class: class, implicit: true}
       "x" -> %{class: class, error: true}
       _ -> %{class: class, subsidiary: trail}
@@ -737,16 +759,20 @@ defmodule Unicode.Unihan.Utils do
   defp decode_value(value, :kSemanticVariant, _fields) do
     list = String.split(value, "<")
     codepoint = Enum.at(list, 0) |> decode_codepoint()
-    sources   = Enum.at(list, 1)
+    sources = Enum.at(list, 1)
 
     # This does not split the source by its trailing : descriptor
     case sources do
-      nil -> %{codepoint: codepoint}
-      _   -> %{
-                codepoint:  codepoint,
-                sources:    sources
-                            |> String.split(",")
-              }
+      nil ->
+        %{codepoint: codepoint}
+
+      _ ->
+        %{
+          codepoint: codepoint,
+          sources:
+            sources
+            |> String.split(",")
+        }
     end
   end
 
@@ -757,15 +783,19 @@ defmodule Unicode.Unihan.Utils do
   defp decode_value(value, :kSpecializedSemanticVariant, _fields) do
     list = String.split(value, "<")
     codepoint = Enum.at(list, 0) |> decode_codepoint()
-    sources   = Enum.at(list, 1)
+    sources = Enum.at(list, 1)
 
     case sources do
-      nil -> %{codepoint: codepoint}
-      _   -> %{
-                codepoint:  codepoint,
-                sources:    sources
-                            |> String.split(",")
-              }
+      nil ->
+        %{codepoint: codepoint}
+
+      _ ->
+        %{
+          codepoint: codepoint,
+          sources:
+            sources
+            |> String.split(",")
+        }
     end
   end
 
@@ -785,20 +815,21 @@ defmodule Unicode.Unihan.Utils do
     %{category: :unusual}
   end
 
-  defp decode_value("B:"<>value, :kStrange, _fields) do
+  defp decode_value("B:" <> value, :kStrange, _fields) do
     %{category: :bopomofo, codepoint: decode_codepoint(value)}
   end
 
-  defp decode_value("H:"<>value, :kStrange, _fields) do
+  defp decode_value("H:" <> value, :kStrange, _fields) do
     %{category: :hangul, codepoint: decode_codepoint(value)}
   end
 
-  defp decode_value("S:"<>value, :kStrange, _fields) do
+  defp decode_value("S:" <> value, :kStrange, _fields) do
     %{category: :stroke_heavy, strokes: String.to_integer(value)}
   end
 
   defp decode_value(value, :kStrange, _fields) do
     [category | unicode] = String.split(value, ":")
+
     category =
       case category do
         "F" -> :fully_reflective
@@ -810,6 +841,7 @@ defmodule Unicode.Unihan.Utils do
       end
 
     codepoints = Enum.map(unicode, &decode_codepoint/1)
+
     if codepoints == [] do
       %{category: category}
     else

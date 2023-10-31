@@ -42,6 +42,9 @@ defmodule Unicode.Unihan.Radical do
       iex> Unicode.Unihan.Radical.radical(187, script: :Hant, glyph: :radical_character)
       "⾺"
 
+      iex> Unicode.Unihan.Radical.radical(213, script: :Hanj)
+      "亀"
+
       iex> Unicode.Unihan.Radical.radical(187) == Unicode.Unihan.Radical.radical(187, script: :Hant, glyph: :radical_character)
       false
 
@@ -59,6 +62,25 @@ defmodule Unicode.Unihan.Radical do
         }
       }
 
+      iex> Unicode.Unihan.Radical.radical(182, :all)
+      %{
+        Hans: %{
+          radical_character: 11995,
+          radical_number: 182,
+          unified_ideograph: 39118
+        },
+        Hant: %{
+          radical_character: 12213,
+          radical_number: 182,
+          unified_ideograph: 39080
+        },
+        Hanj: %{
+          radical_character: nil,
+          radical_number: 182,
+          unified_ideograph: 205508
+        }
+      }
+
       iex> Unicode.Unihan.Radical.radical(999)
       {:error, "Invalid radical number. Valid numbers are an integer in the range 1..214"}
 
@@ -71,6 +93,7 @@ defmodule Unicode.Unihan.Radical do
 
   def radical(index, opts) when index in 1..@max_radical do
     opts = Keyword.merge(@default_opts, opts)
+
     radicals()
     |> Map.get(index)
     |> Map.get(opts[:script])
@@ -79,14 +102,14 @@ defmodule Unicode.Unihan.Radical do
   end
 
   def radical(index, _) when not is_integer(index) or index > @max_radical do
-    {:error, "Invalid radical number. Valid numbers are an integer in the range 1..#{inspect @max_radical}"}
+    {:error,
+     "Invalid radical number. Valid numbers are an integer in the range 1..#{inspect(@max_radical)}"}
   end
 
   def radical(_index, attr) do
     {:error,
-      "Invalid attribute. The keyword list accepts :Hans or :Hant for the :script keyword, and either :unified_ideograph or :radical_character for the :glyph keyword." <>
-      "Found #{inspect attr}"
-    }
+     "Invalid attribute. The keyword list accepts :Hans or :Hant for the :script keyword, and either :unified_ideograph or :radical_character for the :glyph keyword." <>
+       "Found #{inspect(attr)}"}
   end
 
   @doc """
