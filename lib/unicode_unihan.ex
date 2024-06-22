@@ -80,46 +80,80 @@ defmodule Unicode.Unihan do
       iex> Unicode.Unihan.unihan(171339)
       %{
         codepoint: 171339,
-        kCantonese: %{coda: "", final: "u", jyutping: "ju4", nucleus: "u", onset: "j", tone: "4"},
+        kTotalStrokes: %{Hant: 11, Hans: 11},
+        kCantonese: %{
+          final: "u",
+          jyutping: "ju4",
+          coda: "",
+          nucleus: "u",
+          onset: "j",
+          tone: "4"
+        },
         kDefinition: ["(J) nonstandard variant of 魚 U+9B5A, fish"],
-        kHanYu: %{page: 4674, position: 9, virtual: false, volume: 7},
-        kIRGHanyuDaZidian: %{page: 4674, position: 9, virtual: false, volume: 7},
-        kIRGKangXi: %{page: 1465, position: 1, virtual: true},
-        kIRG_GSource: %{mapping: ["74674.09"], source: "GHZ"},
-        kIRG_TSource: %{mapping: "3043", source: "T4"},
-        kIRG_VSource: %{mapping: "29D4B", source: "VN"},
+        kHanYu: %{position: 9, virtual: false, page: 4674, volume: 7},
+        kIRG_GSource: %{source: "GHZ", mapping: ["74674.09"]},
+        kIRG_TSource: %{source: "T4", mapping: "3043"},
+        kIRG_VSource: %{source: "VN", mapping: "29D4B"},
+        kIRGHanyuDaZidian: %{position: 9, virtual: false, page: 4674, volume: 7},
+        kIRGKangXi: %{position: 1, virtual: true, page: 1465},
         kJapaneseKun: ["UO", "SAKANA", "SUNADORU"],
         kJapaneseOn: "GYO",
-        kKangXi: %{page: 1465, position: 1, virtual: true},
+        kKangXi: %{position: 1, virtual: true, page: 1465},
+        kMorohashi: %{index: 45958, prime: ""},
         kNelson: 692,
         kPhonetic: %{class: 1605},
         kRSAdobe_Japan1_6: [
-          %{cid: 13717, code: "C", kangxi: 195, strokes_radical: 10, strokes_residue: 0},
-          %{cid: 13718, code: "V", kangxi: 195, strokes_radical: 10, strokes_residue: 0}
+          %{
+            code: "C",
+            cid: 13717,
+            kangxi: 195,
+            strokes_radical: 10,
+            strokes_residue: 0
+          },
+          %{
+            code: "V",
+            cid: 13718,
+            kangxi: 195,
+            strokes_radical: 10,
+            strokes_residue: 0
+          }
         ],
-        kRSKangXi: %{radical: 195, strokes: 0},
-        kRSUnicode: %{radical: 195, simplified_radical: false, strokes: 0},
-        kTotalStrokes: %{Hans: 11, Hant: 11}
+        kRSUnicode: %{radical: 195, strokes: 0, simplified_radical: false},
+        kJapanese: ["ギョ", "うお"],
+        kMojiJoho: "MJ055080"
       }
 
       iex> Unicode.Unihan.unihan("㝰")
       %{
         codepoint: 14192,
+        kTotalStrokes: %{Hant: 18, Hans: 18},
         kCangjie: ["J", "H", "U", "S"],
-        kCantonese: %{coda: "n", final: "in", jyutping: "min4", nucleus: "i", onset: "m", tone: "4"},
+        kCantonese: %{
+          final: "in",
+          jyutping: "min4",
+          coda: "n",
+          nucleus: "i",
+          onset: "m",
+          tone: "4"
+        },
         kDefinition: ["unable to meet, empty room"],
-        kHanYu: %{page: 957, position: 3, virtual: false, volume: 2},
-        kHanyuPinyin: %{location: [%{page: 20957, position: 3, virtual: false}], readings: ["mián"]},
-        kIRGHanyuDaZidian: %{page: 957, position: 3, virtual: false, volume: 2},
-        kIRGKangXi: %{page: 293, position: 1, virtual: false},
-        kIRG_GSource: %{mapping: ["3E3C"], source: "G5"},
-        kIRG_KSource: %{mapping: "236A", source: "K3"},
-        kIRG_TSource: %{mapping: "5A7D", source: "T4"},
-        kKangXi: %{page: 293, position: 1, virtual: false},
+        kHanYu: %{position: 3, virtual: false, page: 957, volume: 2},
+        kHanyuPinyin: %{
+          location: [%{position: 3, virtual: false, page: 20957}],
+          readings: ["mián"]
+        },
+        kIRG_GSource: %{source: "G5", mapping: ["3E3C"]},
+        kIRG_KSource: %{source: "K3", mapping: "236A"},
+        kIRG_TSource: %{source: "T4", mapping: "5A7D"},
+        kIRGHanyuDaZidian: %{position: 3, virtual: false, page: 957, volume: 2},
+        kIRGKangXi: %{position: 1, virtual: false, page: 293},
+        kKangXi: %{position: 1, virtual: false, page: 293},
         kMandarin: "mián",
-        kRSUnicode: %{radical: 40, simplified_radical: false, strokes: 15},
-        kSBGY: %{page: 135, position: 35},
-        kTotalStrokes: %{Hans: 18, Hant: 18}
+        kMorohashi: %{index: 7359, prime: ""},
+        kRSUnicode: %{radical: 40, strokes: 15, simplified_radical: false},
+        kSBGY: %{position: 35, page: 135},
+        kJapanese: ["ベン", "メン"],
+        kMojiJoho: "MJ000772"
       }
 
   """
@@ -240,7 +274,7 @@ defmodule Unicode.Unihan do
 
       iex> Unicode.Unihan.reject(&(&1.kTotalStrokes[:"Hans"] > 30))
       ...> |> Enum.count()
-      97822
+      98444
 
   """
   def reject(fun) when is_function(fun, 1) do

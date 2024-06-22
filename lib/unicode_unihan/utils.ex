@@ -14,8 +14,6 @@ defmodule Unicode.Unihan.Utils do
   @jyutping_index_file "cantonese/jyutping_index.csv"
   @codepoints_file "unihan_codepoints.etf"
   @unihan_etf_file "unihan.etf"
-
-  @unihan_fields_file "unihan_fields.json"
   @unihan_fields_etf "unihan_fields.etf"
 
   def unihan_properties_file do
@@ -101,48 +99,6 @@ defmodule Unicode.Unihan.Utils do
           |> elem(1)
       end
     end)
-  end
-
-  @doc """
-  Returns a map of the field definitions for a
-  Unihan codepoint.
-
-  """
-  def _unihan_fields do
-    data_dir()
-    |> Path.join(@unihan_fields_file)
-    |> File.read!()
-    |> Jason.decode!()
-    |> Map.get("records")
-    |> Enum.map(fn map ->
-      fields = Map.get(map, "fields")
-      {name, fields} = Map.pop(fields, "name")
-
-      fields =
-        Enum.map(fields, fn
-          {"Status", status} ->
-            {:status, normalize_atom(status)}
-
-          {"delimiter", "space"} ->
-            {:delimiter, "\s"}
-
-          {"delimiter", "N/A"} ->
-            {:delimiter, nil}
-
-          {"category", category} ->
-            {:category, normalize_atom(category)}
-
-          {"syntax", syntax} when is_binary(syntax) ->
-            {:syntax, Regex.compile!(syntax, [:unicode])}
-
-          {field, value} ->
-            {String.to_atom(field), value}
-        end)
-        |> Map.new()
-
-      {String.to_atom(name), fields}
-    end)
-    |> Map.new()
   end
 
   @doc """
@@ -937,6 +893,10 @@ defmodule Unicode.Unihan.Utils do
   # Convert captures to atom keys and
   # decoded value (by default try to convert
   # the value to an integer)
+
+  defp decode_captures(nil) do
+    nil
+  end
 
   defp decode_captures(map) do
     map
