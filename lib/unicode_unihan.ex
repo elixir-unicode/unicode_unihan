@@ -3,6 +3,8 @@ defmodule Unicode.Unihan do
   Functions to introspect the Unicode Unihan character database.
 
   """
+
+  require Logger
   alias Unicode.Unihan.Utils
 
   import Kernel, except: [to_string: 1]
@@ -31,7 +33,7 @@ defmodule Unicode.Unihan do
     unihan_path = Utils.unihan_path()
 
     if File.exists?(unihan_path) do
-      IO.puts "Loading the Unihan database."
+      Logger.info("Loading the Unihan database")
       unihan =
         unihan_path
         |> File.read!
@@ -42,7 +44,7 @@ defmodule Unicode.Unihan do
       unihan_codepoints = Map.keys(unihan)
       :persistent_term.put(:unihan_codepoints, unihan_codepoints)
     else
-      IO.puts "Parsing the Unihan database (this may take a few seconds)."
+      Logger.info("Parsing the Unihan database (this may take a few seconds)")
       Utils.save_unihan!
       load_unihan()
     end

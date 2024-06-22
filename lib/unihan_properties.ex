@@ -1,6 +1,7 @@
 defmodule Unicode.Unihan.Property do
   @moduledoc false
 
+  require Logger
   alias Unicode.Unihan.Utils
 
   @url "https://www.unicode.org/reports/tr38/#AlphabeticalListing"
@@ -10,12 +11,13 @@ defmodule Unicode.Unihan.Property do
       {:ok, content} ->
         {:ok, content}
 
-      other ->
-        other
+      {:error, reason} ->
+        Logger.info("Failed to download #{inspect(@url)}: #{reason}")
+        {:error, reason}
     end
   end
 
-  def update do
+  def update! do
     case download() do
       {:ok, content} ->
         path = Path.join(Utils.data_dir(), Utils.unihan_properties_file())
@@ -63,14 +65,22 @@ defmodule Unicode.Unihan.Property do
   defp parse_row({"tr", [], columns}) when is_list(columns) do
     {key, value} =
       case columns do
-        [{"td", _, ["Property"]}, {"td", _, [{"a", [_, {_, value}], _}]}] -> {"name", value}
-        [{"td", _, ["Delimiter"]}, {"td", _, [value]}] -> {"delimiter", parse_delimiter(value)}
-        [{"td", _, ["Description"]}, {"td", _, description}] -> {"description", parse_description(description)}
-        [{"td", _, ["Category"]}, {"td", _, [value]}] -> {"category", Unicode.Unihan.Utils.normalize_atom(value)}
-        [{"td", _, ["Status"]}, {"td", _, [value]}] -> {"status", Unicode.Unihan.Utils.normalize_atom(value)}
-        [{"td", _, ["Syntax"]}, {"td", _, syntax}] -> {"syntax", parse_syntax(syntax)}
-        [{"td", _, [key]}, {"td", _, [value]}] -> {key, value}
-        [{"td", _, ["Syntax"]}, {"td", _, syntax}] -> {"syntax", parse_syntax(syntax)}
+        [{"td", _, ["Property"]}, {"td", _, [{"a", [_, {_, value}], _}]}] ->
+          {"name", value}
+        [{"td", _, ["Delimiter"]}, {"td", _, [value]}] ->
+          {"delimiter", parse_delimiter(value)}
+        [{"td", _, ["Description"]}, {"td", _, description}] ->
+          {"description", parse_description(description)}
+        [{"td", _, ["Category"]}, {"td", _, [value]}] ->
+          {"category", Unicode.Unihan.Utils.normalize_atom(value)}
+        [{"td", _, ["Status"]}, {"td", _, [value]}] ->
+          {"status", Unicode.Unihan.Utils.normalize_atom(value)}
+        [{"td", _, ["Syntax"]}, {"td", _, syntax}] ->
+          {"syntax", parse_syntax(syntax)}
+        [{"td", _, [key]}, {"td", _, [value]}] ->
+          {key, value}
+        [{"td", _, ["Syntax"]}, {"td", _, syntax}] ->
+          {"syntax", parse_syntax(syntax)}
       end
 
     key =

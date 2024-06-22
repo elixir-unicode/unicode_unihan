@@ -61,11 +61,10 @@ defmodule Unicode.Unihan.MixProject do
   defp deps do
     [
       {:csv, "~> 3.0"},
-      {:jason, "~> 1.0"},
+      {:floki, "~> 0.36", only: [:dev, :test]},
       {:benchee, "~> 1.0", only: :dev, optional: true},
       {:ex_doc, "~> 0.24", only: [:dev, :release], runtime: false, optional: true},
-      {:dialyxir, "~> 1.1", only: [:dev], runtime: false, optional: true},
-      {:floki, "~> 0.36", only: [:dev], optional: true}
+      {:dialyxir, "~> 1.1", only: [:dev], runtime: false, optional: true}
     ]
   end
 

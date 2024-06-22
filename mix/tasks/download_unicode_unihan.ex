@@ -21,9 +21,18 @@ defmodule Mix.Tasks.Unicode.Unihan.Download do
     Application.ensure_all_started(:inets)
     Application.ensure_all_started(:ssl)
 
+    Logger.info("Downloading the Unihan database")
     Enum.each(required_files(), &download_file/1)
+
+    Logger.info("Extracting and saving the Unihan database")
     extract_unihan_database!()
     Utils.save_unihan!()
+
+    Logger.info("Extracting Unihan properties")
+    Unicode.Unihan.Property.update!()
+
+    Logger.info("Completed updating the Unihan dataase")
+    :ok
   end
 
   defp required_files do
@@ -47,12 +56,11 @@ defmodule Mix.Tasks.Unicode.Unihan.Download do
     case Unicode.Unihan.Http.get(url) do
       {:ok, content} ->
         File.write!(destination, :erlang.list_to_binary(content))
-
-        Logger.info("Downloaded #{inspect(url)} to #{inspect(destination)}")
         {:ok, destination}
 
-      other ->
-        other
+      {:error, reason} ->
+        Logger.info("Failed to download #{inspect(url)}: #{reason}")
+        {:error, reason}
     end
   end
 
