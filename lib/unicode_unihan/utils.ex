@@ -14,10 +14,10 @@ defmodule Unicode.Unihan.Utils do
   @jyutping_index_file "cantonese/jyutping_index.csv"
   @codepoints_file "unihan_codepoints.etf"
   @unihan_etf_file "unihan.etf"
-  @unihan_fields_etf "unihan_fields.etf"
+  @unihan_properties_file "unihan_properties.etf"
 
   def unihan_properties_file do
-    @unihan_fields_etf
+    @unihan_properties_file
   end
 
   for file <- Path.wildcard(Path.join(:code.priv_dir(@app_name), "/**/*.{json,txt,csv,etf}")) do
@@ -69,7 +69,7 @@ defmodule Unicode.Unihan.Utils do
   """
   def parse_file(file, map \\ %{}) do
     path = Path.join(data_dir(), [@unihan_subdir, "/", file])
-    fields = unihan_fields()
+    fields = unihan_properties()
 
     Enum.reduce(File.stream!(path), map, fn line, map ->
       case line do
@@ -106,9 +106,9 @@ defmodule Unicode.Unihan.Utils do
   Unihan codepoint.
 
   """
-  def unihan_fields do
+  def unihan_properties do
     data_dir()
-    |> Path.join(@unihan_fields_etf)
+    |> Path.join(@unihan_properties_file)
     |> File.read!()
     |> :erlang.binary_to_term()
   end

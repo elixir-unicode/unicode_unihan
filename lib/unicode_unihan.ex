@@ -285,12 +285,12 @@ defmodule Unicode.Unihan do
   end
 
   @doc """
-  Returns the field information for the data in the
+  Returns the property information for the data in the
   Unihan database.
 
   """
-  @unihan_fields Utils.unihan_fields()
-  def unihan_fields do
-    @unihan_fields
+  @unihan_properties Utils.unihan_properties()
+  def unihan_properties do
+    @unihan_properties
   end
 end
