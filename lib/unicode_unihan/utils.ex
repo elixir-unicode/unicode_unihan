@@ -189,7 +189,10 @@ defmodule Unicode.Unihan.Utils do
             |> Enum.map(&String.trim/1)
 
           {radical_number, simplified?} = split_radical_number(radical_number)
-          radical_character = String.to_integer(radical_character, 16)
+
+          radical_character =
+            if radical_character == "", do: nil, else: String.to_integer(radical_character, 16)
+
           unified_ideograph = String.to_integer(unified_ideograph, 16)
 
           radical = radical(radical_number, simplified?, radical_character, unified_ideograph)
@@ -234,6 +237,7 @@ defmodule Unicode.Unihan.Utils do
     case String.split(number, "'") do
       [number] -> {String.to_integer(number), false}
       [number, _prime] -> {String.to_integer(number), true}
+      [number, _, _] -> {String.to_integer(number), true}
     end
   end
 
@@ -252,11 +256,15 @@ defmodule Unicode.Unihan.Utils do
   defp maybe_unwrap(value), do: value
 
   defp maybe_split_value(key, value, fields) do
-    field = Map.fetch!(fields, key)
+    case Map.fetch(fields, key) do
+      {:ok, field} ->
+        case field.delimiter do
+          nil -> value
+          delimiter -> String.split(value, delimiter)
+        end
 
-    case field.delimiter do
-      nil -> value
-      delimiter -> String.split(value, delimiter)
+      :error ->
+        raise RuntimeError, "Unknown field #{inspect key} found for #{inspect value}"
     end
   end
 
@@ -292,7 +300,7 @@ defmodule Unicode.Unihan.Utils do
   end
 
   defp decode_value(value, :kBigFive, _fields) do
-    String.to_integer(value, 16)
+    Integer.parse(value, 16)
   end
 
   defp decode_value(value, :kCangjie, _fields) do
