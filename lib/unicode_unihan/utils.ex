@@ -10,13 +10,19 @@ defmodule Unicode.Unihan.Utils do
   @app_name :unicode_unihan
 
   @unihan_subdir "unihan"
-  @unihan_fields_file "unihan_fields.json"
   @cjk_radicals_file "cjk_radicals.txt"
   @jyutping_index_file "cantonese/jyutping_index.csv"
   @codepoints_file "unihan_codepoints.etf"
   @unihan_etf_file "unihan.etf"
 
-  for file <- Path.wildcard(Path.join(:code.priv_dir(@app_name), "/**/*.{json,txt,csv}")) do
+  @unihan_fields_file "unihan_fields.json"
+  @unihan_fields_etf "unihan_fields.etf"
+
+  def unihan_properties_file do
+    @unihan_fields_etf
+  end
+
+  for file <- Path.wildcard(Path.join(:code.priv_dir(@app_name), "/**/*.{json,txt,csv,etf}")) do
     @external_resource file
   end
 
@@ -102,7 +108,7 @@ defmodule Unicode.Unihan.Utils do
   Unihan codepoint.
 
   """
-  def unihan_fields do
+  def _unihan_fields do
     data_dir()
     |> Path.join(@unihan_fields_file)
     |> File.read!()
@@ -137,6 +143,18 @@ defmodule Unicode.Unihan.Utils do
       {String.to_atom(name), fields}
     end)
     |> Map.new()
+  end
+
+  @doc """
+  Returns a map of the field definitions for a
+  Unihan codepoint.
+
+  """
+  def unihan_fields do
+    data_dir()
+    |> Path.join(@unihan_fields_etf)
+    |> File.read!()
+    |> :erlang.binary_to_term()
   end
 
   @doc """
@@ -908,7 +926,8 @@ defmodule Unicode.Unihan.Utils do
     String.to_integer(codepoint, 16)
   end
 
-  defp normalize_atom(category) do
+  @doc false
+  def normalize_atom(category) do
     category
     |> String.downcase()
     |> String.replace(" ", "_")

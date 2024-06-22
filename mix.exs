@@ -1,13 +1,13 @@
 defmodule Unicode.Unihan.MixProject do
   use Mix.Project
 
-  @version "0.3.0"
+  @version "0.4.0"
 
   def project do
     [
       app: :unicode_unihan,
       version: @version,
-      elixir: "~> 1.11",
+      elixir: "~> 1.12",
       start_permanent: Mix.env() == :prod,
       build_embedded: Mix.env() == :prod,
       deps: deps(),
@@ -42,7 +42,7 @@ defmodule Unicode.Unihan.MixProject do
         "priv/cantonese/",
         "priv/unihan/",
         "priv/*.txt",
-        "priv/*.json",
+        "priv/unihan_field.etf",
         "logo.png",
         "mix.exs",
         "README*",
@@ -64,7 +64,8 @@ defmodule Unicode.Unihan.MixProject do
       {:jason, "~> 1.0"},
       {:benchee, "~> 1.0", only: :dev, optional: true},
       {:ex_doc, "~> 0.24", only: [:dev, :release], runtime: false, optional: true},
-      {:dialyxir, "~> 1.1", only: [:dev], runtime: false, optional: true}
+      {:dialyxir, "~> 1.1", only: [:dev], runtime: false, optional: true},
+      {:floki, "~> 0.36", only: [:dev], optional: true}
     ]
   end
 
@@ -105,6 +106,6 @@ defmodule Unicode.Unihan.MixProject do
   end
 
   defp elixirc_paths(:test), do: ["lib", "mix", "src", "test"]
-  defp elixirc_paths(:dev), do: ["lib", "mix", "src", "bench"]
+  defp elixirc_paths(:dev), do: ["lib", "mix", "src", "dev", "bench"]
   defp elixirc_paths(_), do: ["lib", "src"]
 end
