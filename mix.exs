@@ -98,7 +98,7 @@ defmodule Unicode.Unihan.MixProject do
       ],
       formatters: ["html"],
       groups_for_extras: [
-        "Fields": Path.wildcard("docs/fields/*.md")
+        "Properties": Path.wildcard("docs/properties/*.md")
       ],
       skip_undefined_reference_warnings_on: ["changelog", "CHANGELOG.md"]
     ]
