@@ -42,7 +42,7 @@ defmodule Unicode.Unihan.MixProject do
         "priv/cantonese/",
         "priv/unihan/",
         "priv/*.txt",
-        "priv/unihan_field.etf",
+        "priv/unihan_fields.etf",
         "logo.png",
         "mix.exs",
         "README*",
