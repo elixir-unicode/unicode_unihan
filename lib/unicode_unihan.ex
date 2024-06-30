@@ -55,7 +55,7 @@ defmodule Unicode.Unihan do
   end
 
   defp unihan_codepoints do
-    :persistent_term.get(:unihan_codepoints, nil) || (load_unihan() && unihan_codepoints())
+    :persistent_term.get(:unihan_codepoints, nil) || (load_unihan(); unihan_codepoints())
   end
 
   defp maybe_load_unihan(codepoint) do

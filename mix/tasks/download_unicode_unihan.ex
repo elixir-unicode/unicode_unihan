@@ -55,7 +55,7 @@ defmodule Mix.Tasks.Unicode.Unihan.Download do
   defp download_file({url, destination}) do
     case Unicode.Unihan.Http.get(url) do
       {:ok, content} ->
-        File.write!(destination, :erlang.list_to_binary(content))
+        File.write!(destination, content)
         {:ok, destination}
 
       {:error, reason} ->
