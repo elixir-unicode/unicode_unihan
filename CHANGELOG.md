@@ -2,7 +2,7 @@
 
 ## Unicode Unihan v0.4.0
 
-This is the changelog for Unicode Unihan v0.4.0 released on ____. 2024.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-unicode/unicode_unihan/tags)
+This is the changelog for Unicode Unihan v0.4.0 released on July 1st. 2024.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-unicode/unicode_unihan/tags)
 
 ### Enhancements
 
