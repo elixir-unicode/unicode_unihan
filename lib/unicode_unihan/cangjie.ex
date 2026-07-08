@@ -1,6 +1,11 @@
 defmodule Unicode.Unihan.Cangjie do
   @moduledoc """
-  Allow easy interconversion of keyboard input and character.
+  Maps Cangjie keyboard input codes to their Chinese character parts.
+
+  The Cangjie input method assigns each key on a Latin keyboard (A-Z) to a
+  Chinese character component. This module converts those single-letter codes,
+  or lists of codes, into the corresponding character parts.
+
   """
   @cangjie %{
     A: "日",
@@ -31,20 +36,49 @@ defmodule Unicode.Unihan.Cangjie do
     Z: ""
   }
 
+  @doc """
+  Returns the full map of Cangjie input codes to character parts.
+
+  ### Returns
+
+  * a map of uppercase code atoms (`:A`..`:Z`) to their character part strings.
+
+  ### Examples
+
+      iex> Unicode.Unihan.Cangjie.cangjies()[:A]
+      "日"
+
+  """
   def cangjies do
     @cangjie
   end
-  @doc """
-  Converts an alphabet keyboard input to the Chinese Cangjie part.  Returns an OK tuple.
 
-      ## Example
+  @doc """
+  Converts a single Cangjie keyboard code into its Chinese character part.
+
+  ### Arguments
+
+  * `value` is a single-letter binary (`"A"`..`"Z"`, case-insensitive).
+
+  ### Returns
+
+  * `{:ok, part}` where `part` is the character part string for a valid code.
+
+  * `{:error, message}` if the input is not a single A-Z letter, or is not a binary.
+
+  ### Examples
 
       iex> Unicode.Unihan.Cangjie.cangjie("U")
       {:ok, "山"}
+
+      iex> Unicode.Unihan.Cangjie.cangjie("1")
+      {:error, "Cangjie inputs must be alphabets A-Z"}
+
   """
   def cangjie(value) when is_binary(value) do
-    case value |> String.graphemes |> length() == 1 and Regex.match?(~r/[A-Z]/, String.upcase(value)) do
-      true  -> {:ok, Map.get(cangjies(), value |> String.upcase |> String.to_atom)}
+    case value |> String.graphemes() |> length() == 1 and
+           Regex.match?(~r/[A-Z]/, String.upcase(value)) do
+      true -> {:ok, Map.get(cangjies(), value |> String.upcase() |> String.to_atom())}
       false -> {:error, "Cangjie inputs must be alphabets A-Z"}
     end
   end
@@ -54,15 +88,26 @@ defmodule Unicode.Unihan.Cangjie do
   end
 
   @doc """
-  Converts an alphabet keyboard input, or a list of alphabet keyboard inputs, to the Chinese Cangjie part. Throws exception if invalid input is supplied.
+  Converts a Cangjie code, or a list of codes, into its character part.
 
-      ## Example
+  Raises if any input is not a valid code.
+
+  ### Arguments
+
+  * `value` is a single-letter binary (`"A"`..`"Z"`), or a list of such binaries.
+
+  ### Returns
+
+  * the character part string, or a list of character part strings.
+
+  ### Examples
 
       iex> Unicode.Unihan.Cangjie.cangjie!("U")
       "山"
 
       iex> Unicode.Unihan.Cangjie.cangjie!(["U", "J"])
       ["山", "十"]
+
   """
   def cangjie!(list) when is_list(list) do
     Enum.map(list, &cangjie!/1)

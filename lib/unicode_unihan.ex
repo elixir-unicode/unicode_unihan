@@ -34,18 +34,21 @@ defmodule Unicode.Unihan do
 
     if File.exists?(unihan_path) do
       Logger.info("Loading the Unihan database")
+
       unihan =
         unihan_path
-        |> File.read!
+        |> File.read!()
         |> :erlang.binary_to_term()
 
-      Enum.each(unihan, fn {codepoint, data} -> :persistent_term.put({:unihan, codepoint}, data) end)
+      Enum.each(unihan, fn {codepoint, data} ->
+        :persistent_term.put({:unihan, codepoint}, data)
+      end)
 
       unihan_codepoints = Map.keys(unihan)
       :persistent_term.put(:unihan_codepoints, unihan_codepoints)
     else
       Logger.info("Parsing the Unihan database (this may take a few seconds)")
-      Utils.save_unihan!
+      Utils.save_unihan!()
       load_unihan()
     end
   end
@@ -55,7 +58,14 @@ defmodule Unicode.Unihan do
   end
 
   defp unihan_codepoints do
-    :persistent_term.get(:unihan_codepoints, nil) || (load_unihan(); unihan_codepoints())
+    case :persistent_term.get(:unihan_codepoints, nil) do
+      nil ->
+        load_unihan()
+        unihan_codepoints()
+
+      codepoints ->
+        codepoints
+    end
   end
 
   defp maybe_load_unihan(codepoint) do
@@ -158,16 +168,22 @@ defmodule Unicode.Unihan do
         kMojiJoho: "MJ000772"
       }
 
+      iex> Unicode.Unihan.unihan("U+9B5A").codepoint
+      39770
+
+      iex> Unicode.Unihan.unihan("U+29D4B").codepoint
+      171339
+
   """
   def unihan(codepoint) when is_integer(codepoint) do
     unihan_get(codepoint)
   end
 
   def unihan(<<codepoint::utf8>>) do
-   unihan_get(codepoint)
+    unihan_get(codepoint)
   end
 
-  # U\\+[23]?[0-9A-F]{4}
+  # U\\+[0-9A-F]{4} — a four hex-digit codepoint in the Basic Multilingual Plane.
   def unihan("U+" <> <<c1::utf8, c2::utf8, c3::utf8, c4::utf8>>)
       when is_hex(c1, c2, c3, c4) do
     hex = <<c1::utf8, c2::utf8, c3::utf8, c4::utf8>>
@@ -177,9 +193,12 @@ defmodule Unicode.Unihan do
     |> unihan_get()
   end
 
-  def unihan("U+" <> <<c1::utf8, c2::utf8, c3::utf8, c4::utf8, c5::utf8, c6::utf8>>)
-      when c1 in [?2, ?3] and c2 in [?2, ?3] and is_hex(c3, c4, c5, c6) do
-    hex = <<c1::utf8, c2::utf8, c3::utf8, c4::utf8, c5::utf8, c6::utf8>>
+  # U\\+[23][0-9A-F]{4} — a five hex-digit codepoint in the Supplementary
+  # Ideographic Plane (plane 2) or Tertiary Ideographic Plane (plane 3),
+  # covering the CJK Unified Ideographs Extension B and later blocks.
+  def unihan("U+" <> <<plane::utf8, c1::utf8, c2::utf8, c3::utf8, c4::utf8>>)
+      when plane in [?2, ?3] and is_hex(c1, c2, c3, c4) do
+    hex = <<plane::utf8, c1::utf8, c2::utf8, c3::utf8, c4::utf8>>
 
     hex
     |> String.to_integer(16)
@@ -231,7 +250,7 @@ defmodule Unicode.Unihan do
   * a map of the filtered codepoints mapped to their
     attributes.
 
-  ### Example
+  ### Examples
 
       iex> Unicode.Unihan.filter(&(&1.kTotalStrokes[:"Hans"] > 30))
       ...> |> Enum.count()
@@ -272,7 +291,7 @@ defmodule Unicode.Unihan do
   * a map of the codepoints that are not rejected
     mapped to their attributes.
 
-  ### Example
+  ### Examples
 
       iex> Unicode.Unihan.reject(&(&1.kTotalStrokes[:"Hans"] > 30))
       ...> |> Enum.count()

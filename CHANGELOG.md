@@ -1,5 +1,21 @@
 # Changelog
 
+## Unicode Unihan v0.4.1
+
+This is the changelog for Unicode Unihan v0.4.1.
+
+### Bug Fixes
+
+* Fixed `Unicode.Unihan.unihan/1` to resolve five hex-digit `U+XXXXX` codepoints (CJK Extension B and later); previously the string form raised `FunctionClauseError`.
+
+* Removed a redundant `Unicode.Unihan.Cantonese.is_valid?/1` clause and a duplicate `Unicode.Unihan.Property` parse clause reported as warnings under Elixir 1.20.
+
+### Enhancements
+
+* Cleared all Elixir 1.20 compiler warnings so the library builds cleanly with `--warnings-as-errors`.
+
+* Added Credo strict compliance, a 90% coverage gate, a GitHub Actions CI matrix (OTP 27-29 / Elixir 1.17-1.20), and a formatting pre-commit hook.
+
 ## Unicode Unihan v0.4.0
 
 This is the changelog for Unicode Unihan v0.4.0 released on July 1st. 2024.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-unicode/unicode_unihan/tags)

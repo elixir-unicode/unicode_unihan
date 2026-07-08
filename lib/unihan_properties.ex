@@ -53,7 +53,7 @@ defmodule Unicode.Unihan.Property do
     attributes =
       rows
       |> Enum.map(&parse_row/1)
-      |> Map.new
+      |> Map.new()
 
     {String.to_atom("k" <> property), attributes}
   end
@@ -67,20 +67,24 @@ defmodule Unicode.Unihan.Property do
       case columns do
         [{"td", _, ["Property"]}, {"td", _, [{"a", [_, {_, value}], _}]}] ->
           {"name", value}
+
         [{"td", _, ["Delimiter"]}, {"td", _, [value]}] ->
           {"delimiter", parse_delimiter(value)}
+
         [{"td", _, ["Description"]}, {"td", _, description}] ->
           {"description", parse_description(description)}
+
         [{"td", _, ["Category"]}, {"td", _, [value]}] ->
           {"category", Unicode.Unihan.Utils.normalize_atom(value)}
+
         [{"td", _, ["Status"]}, {"td", _, [value]}] ->
           {"status", Unicode.Unihan.Utils.normalize_atom(value)}
+
         [{"td", _, ["Syntax"]}, {"td", _, syntax}] ->
           {"syntax", parse_syntax(syntax)}
+
         [{"td", _, [key]}, {"td", _, [value]}] ->
           {key, value}
-        [{"td", _, ["Syntax"]}, {"td", _, syntax}] ->
-          {"syntax", parse_syntax(syntax)}
       end
 
     key =
@@ -100,7 +104,8 @@ defmodule Unicode.Unihan.Property do
   end
 
   defp parse_description(description) when is_list(description) do
-    Enum.map(description, fn
+    description
+    |> Enum.map_join("", fn
       string when is_binary(string) -> string
       {"br", [], []} -> ""
       {"a", _, [{"tt", [], [string]}]} when is_binary(string) -> string
@@ -109,7 +114,6 @@ defmodule Unicode.Unihan.Property do
       {_tag, _, [string]} when is_binary(string) -> string
       {:comment, _} -> ""
     end)
-    |> Enum.join()
     |> String.replace(~r/[\n\t] */, " ")
   end
 
@@ -118,11 +122,11 @@ defmodule Unicode.Unihan.Property do
   end
 
   defp parse_syntax(syntax) when is_list(syntax) do
-    Enum.map(syntax, fn
+    syntax
+    |> Enum.map_join("", fn
       string when is_binary(string) -> string
       {"br", [], []} -> " "
     end)
-    |> Enum.join()
     |> String.replace("\n", "")
     |> Regex.compile!([:unicode])
   end

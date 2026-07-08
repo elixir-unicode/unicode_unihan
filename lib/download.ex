@@ -36,12 +36,12 @@ defmodule Unicode.Unihan.Http do
 
   * `:timeout` is the number of milliseconds available
     for the request to complete. The default is
-    #{inspect @unicode_unihan_default_timeout}. This option may also be
+    #{inspect(@unicode_unihan_default_timeout)}. This option may also be
     set with the `CLDR_HTTP_TIMEOUT` environment variable.
 
   * `:connection_timeout` is the number of milliseconds
     available for the a connection to be estabklished to
-    the remote host. The default is #{inspect @unicode_unihan_default_connection_timeout}.
+    the remote host. The default is #{inspect(@unicode_unihan_default_connection_timeout)}.
     This option may also be set with the
     `CLDR_HTTP_CONNECTION_TIMEOUT` environment variable.
 
@@ -110,8 +110,8 @@ defmodule Unicode.Unihan.Http do
   ```
 
   """
-  @spec get(String.t | {String.t, list()}, options :: Keyword.t) ::
-    {:ok, binary} | {:not_modified, any()} | {:error, any}
+  @spec get(String.t() | {String.t(), list()}, options :: Keyword.t()) ::
+          {:ok, binary} | {:not_modified, any()} | {:error, any}
 
   def get(url, options \\ [])
 
@@ -122,7 +122,8 @@ defmodule Unicode.Unihan.Http do
     end
   end
 
-  def get({url, headers}, options) when is_binary(url) and is_list(headers) and is_list(options) do
+  def get({url, headers}, options)
+      when is_binary(url) and is_list(headers) and is_list(options) do
     case get_with_headers({url, headers}, options) do
       {:ok, _headers, body} -> {:ok, body}
       other -> other
@@ -158,12 +159,12 @@ defmodule Unicode.Unihan.Http do
 
   * `:timeout` is the number of milliseconds available
     for the request to complete. The default is
-    #{inspect @unicode_unihan_default_timeout}. This option may also be
+    #{inspect(@unicode_unihan_default_timeout)}. This option may also be
     set with the `CLDR_HTTP_TIMEOUT` environment variable.
 
   * `:connection_timeout` is the number of milliseconds
     available for the a connection to be estabklished to
-    the remote host. The default is #{inspect @unicode_unihan_default_connection_timeout}.
+    the remote host. The default is #{inspect(@unicode_unihan_default_connection_timeout)}.
     This option may also be set with the
     `CLDR_HTTP_CONNECTION_TIMEOUT` environment variable.
 
@@ -248,8 +249,8 @@ defmodule Unicode.Unihan.Http do
   """
   @doc since: "2.21.0"
 
-  @spec get_with_headers(String.t | {String.t, list()}, options :: Keyword.t) ::
-    {:ok, list(), binary} | {:not_modified, any()} | {:error, any}
+  @spec get_with_headers(String.t() | {String.t(), list()}, options :: Keyword.t()) ::
+          {:ok, list(), binary} | {:not_modified, any()} | {:error, any}
 
   def get_with_headers(request, options \\ [])
 
@@ -257,9 +258,13 @@ defmodule Unicode.Unihan.Http do
     get_with_headers({url, []}, options)
   end
 
-  def get_with_headers({url, headers}, options) when is_binary(url) and is_list(headers) and is_list(options) do
-    require Logger
-
+  # The case statement dispatches over the full set of `:httpc` result shapes
+  # (success, not-modified, HTTP error, connection failures, timeouts). Splitting
+  # it would scatter tightly-coupled error handling, so the complexity is kept
+  # inline deliberately.
+  # credo:disable-for-next-line Credo.Check.Refactor.CyclomaticComplexity
+  def get_with_headers({url, headers}, options)
+      when is_binary(url) and is_list(headers) and is_list(options) do
     hostname = String.to_charlist(URI.parse(url).host)
     url = String.to_charlist(url)
     http_options = http_opts(hostname, options)
@@ -269,8 +274,12 @@ defmodule Unicode.Unihan.Http do
       case URI.parse(https_proxy) do
         %{host: host, port: port} when is_binary(host) and is_integer(port) ->
           :httpc.set_options([{:https_proxy, {{String.to_charlist(host), port}, []}}])
+
         _other ->
-          Logger.bare_log(:warning, "https_proxy was set to an invalid value. Found #{inspect https_proxy}.")
+          Logger.bare_log(
+            :warning,
+            "https_proxy was set to an invalid value. Found #{inspect(https_proxy)}."
+          )
       end
     end
 
@@ -294,15 +303,15 @@ defmodule Unicode.Unihan.Http do
         if sys_message == :timeout do
           Logger.bare_log(
             :error,
-            "Timeout connecting to #{inspect(host)} to download #{inspect url}. " <>
-            "Connection time exceeded #{http_options[:connect_timeout]}ms."
+            "Timeout connecting to #{inspect(host)} to download #{inspect(url)}. " <>
+              "Connection time exceeded #{http_options[:connect_timeout]}ms."
           )
 
           {:error, :connection_timeout}
         else
           Logger.bare_log(
             :error,
-            "Failed to connect to #{inspect(host)} to download #{inspect url}"
+            "Failed to connect to #{inspect(host)} to download #{inspect(url)}"
           )
 
           {:error, sys_message}
@@ -311,7 +320,7 @@ defmodule Unicode.Unihan.Http do
       {:error, {other}} ->
         Logger.bare_log(
           :error,
-          "Failed to download #{inspect url}. Error #{inspect other}"
+          "Failed to download #{inspect(url)}. Error #{inspect(other)}"
         )
 
         {:error, other}
@@ -319,9 +328,10 @@ defmodule Unicode.Unihan.Http do
       {:error, :timeout} ->
         Logger.bare_log(
           :error,
-          "Timeout downloading from #{inspect url}. " <>
-          "Request exceeded #{http_options[:timeout]}ms."
+          "Timeout downloading from #{inspect(url)}. " <>
+            "Request exceeded #{http_options[:timeout]}ms."
         )
+
         {:error, :timeout}
     end
   end
@@ -354,16 +364,19 @@ defmodule Unicode.Unihan.Http do
       # Configured cacertfile
       Application.get_env(:ex_cldr, :cacertfile),
 
-      # Populated if hex package CAStore is configured
+      # `apply/3` is required here: `CAStore` and `:certifi` are optional
+      # packages that may not be compiled into the project, so a direct call
+      # would raise an undefined-module compiler warning.
+      # credo:disable-for-next-line Credo.Check.Refactor.Apply
       if(Code.ensure_loaded?(CAStore), do: apply(CAStore, :file_path, [])),
 
-      # Populated if hex package certfi is configured
+      # credo:disable-for-next-line Credo.Check.Refactor.Apply
       if(Code.ensure_loaded?(:certifi), do: apply(:certifi, :cacertfile, []) |> List.to_string())
     ]
     |> Enum.reject(&is_nil/1)
   end
 
-  def certificate_locations() do
+  def certificate_locations do
     dynamic_certificate_locations() ++ @static_certificate_locations
   end
 
@@ -450,7 +463,7 @@ defmodule Unicode.Unihan.Http do
         reuse_sessions: true,
         versions: protocol_versions(),
         ciphers: preferred_ciphers(),
-        versions: protocol_versions(),
+        versions: protocol_versions()
       ]
     end
   end
@@ -505,12 +518,12 @@ defmodule Unicode.Unihan.Http do
 
   defp https_proxy(options) do
     options[:https_proxy] ||
-    Application.get_env(:ex_cldr, :https_proxy) ||
-    System.get_env("HTTPS_PROXY") ||
-    System.get_env("https_proxy")
+      Application.get_env(:ex_cldr, :https_proxy) ||
+      System.get_env("HTTPS_PROXY") ||
+      System.get_env("https_proxy")
   end
 
   def otp_version do
-    :erlang.system_info(:otp_release) |> List.to_integer
+    :erlang.system_info(:otp_release) |> List.to_integer()
   end
 end

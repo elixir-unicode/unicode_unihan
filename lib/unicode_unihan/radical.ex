@@ -130,7 +130,7 @@ defmodule Unicode.Unihan.Radical do
   * a map of the filtered codepoints mapped to their
     attributes.
 
-  ### Example
+  ### Examples
 
       iex> Unicode.Unihan.Radical.filter(&(&1[:Hant][:radical_number] < 5))
       ...> |> Enum.count()
@@ -163,7 +163,7 @@ defmodule Unicode.Unihan.Radical do
   * a map of the codepoints that are not rejected
     mapped to their attributes.
 
-  ### Example
+  ### Examples
 
       iex> Unicode.Unihan.Radical.reject(&(&1[:Hant][:radical_number] < 5))
       ...> |> Enum.count()

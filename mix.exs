@@ -1,7 +1,7 @@
 defmodule Unicode.Unihan.MixProject do
   use Mix.Project
 
-  @version "0.4.0"
+  @version "0.4.1"
 
   def project do
     [
@@ -17,10 +17,28 @@ defmodule Unicode.Unihan.MixProject do
       description: description(),
       package: package(),
       elixirc_paths: elixirc_paths(Mix.env()),
+      test_coverage: [
+        summary: [threshold: 90],
+        ignore_modules: coverage_ignore_modules()
+      ],
       dialyzer: [
         plt_add_apps: ~w(mix inets public_key)a,
         ignore_warnings: ".dialyzer_ignore_warnings"
       ]
+    ]
+  end
+
+  # Modules excluded from `mix test --cover` so coverage reflects the runtime
+  # library, not build tooling or network I/O.
+  #
+  # * `Mix.Tasks.*` — the Unihan database download task, run at build time.
+  #
+  # * `Unicode.Unihan.Http` — network I/O against the Unicode servers; not
+  #   exercised at runtime and impractical to cover without a mock server.
+  defp coverage_ignore_modules do
+    [
+      ~r/^Mix\.Tasks\./,
+      Unicode.Unihan.Http
     ]
   end
 
@@ -61,9 +79,10 @@ defmodule Unicode.Unihan.MixProject do
   defp deps do
     [
       {:csv, "~> 3.0"},
-      {:floki, "~> 0.36", only: [:dev, :test]},
+      {:floki, "~> 0.36", only: [:dev, :test, :release]},
       {:benchee, "~> 1.0", only: :dev, optional: true},
       {:ex_doc, "~> 0.24", only: [:dev, :release], runtime: false, optional: true},
+      {:credo, "~> 1.7", only: [:dev, :test], runtime: false, optional: true},
       {:dialyxir, "~> 1.1", only: [:dev], runtime: false, optional: true}
     ]
   end
@@ -94,11 +113,11 @@ defmodule Unicode.Unihan.MixProject do
         "docs/properties/readings.md",
         "docs/properties/variants.md",
         "LICENSE.md",
-        "CHANGELOG.md",
+        "CHANGELOG.md"
       ],
       formatters: ["html"],
       groups_for_extras: [
-        "Properties": Path.wildcard("docs/properties/*.md")
+        Properties: Path.wildcard("docs/properties/*.md")
       ],
       skip_undefined_reference_warnings_on: ["changelog", "CHANGELOG.md"]
     ]

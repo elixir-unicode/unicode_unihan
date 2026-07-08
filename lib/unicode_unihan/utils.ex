@@ -86,19 +86,23 @@ defmodule Unicode.Unihan.Utils do
             |> Enum.map(&String.trim/1)
 
           codepoint = decode_codepoint(codepoint)
-
-          Map.get_and_update(map, codepoint, fn
-            nil ->
-              {key, value} = decode_metadata(key, value, fields)
-              {nil, %{key => value, :codepoint => codepoint}}
-
-            current_value when is_map(current_value) ->
-              {key, value} = decode_metadata(key, value, fields)
-              {current_value, Map.put(current_value, key, value)}
-          end)
-          |> elem(1)
+          put_codepoint_metadata(map, codepoint, key, value, fields)
       end
     end)
+  end
+
+  defp put_codepoint_metadata(map, codepoint, key, value, fields) do
+    map
+    |> Map.get_and_update(codepoint, fn
+      nil ->
+        {key, value} = decode_metadata(key, value, fields)
+        {nil, %{key => value, :codepoint => codepoint}}
+
+      current_value when is_map(current_value) ->
+        {key, value} = decode_metadata(key, value, fields)
+        {current_value, Map.put(current_value, key, value)}
+    end)
+    |> elem(1)
   end
 
   @doc """
@@ -148,44 +152,45 @@ defmodule Unicode.Unihan.Utils do
   def parse_radicals do
     path = Path.join(data_dir(), @cjk_radicals_file)
 
-    Enum.reduce(File.stream!(path), %{}, fn line, map ->
-      case line do
-        <<"#", _rest::bitstring>> ->
-          map
+    Enum.reduce(File.stream!(path), %{}, &parse_radical_line/2)
+  end
 
-        <<"\n", _rest::bitstring>> ->
-          map
+  defp parse_radical_line(<<"#", _rest::bitstring>>, map), do: map
+  defp parse_radical_line(<<"\n", _rest::bitstring>>, map), do: map
 
-        data ->
-          [radical_number, radical_character, unified_ideograph] =
-            data
-            |> String.split(";", trim: true)
-            |> Enum.map(&String.trim/1)
+  defp parse_radical_line(data, map) do
+    [radical_number, radical_character, unified_ideograph] =
+      data
+      |> String.split(";", trim: true)
+      |> Enum.map(&String.trim/1)
 
-          {radical_number, variant} = split_radical_number(radical_number)
+    {radical_number, variant} = split_radical_number(radical_number)
 
-          radical_character =
-            if radical_character == "", do: nil, else: String.to_integer(radical_character, 16)
+    radical_character =
+      if radical_character == "", do: nil, else: String.to_integer(radical_character, 16)
 
-          unified_ideograph = String.to_integer(unified_ideograph, 16)
+    unified_ideograph = String.to_integer(unified_ideograph, 16)
 
-          radical = radical(radical_number, variant, radical_character, unified_ideograph)
+    radical = radical(radical_number, variant, radical_character, unified_ideograph)
 
-          other_radical =
-            radical(radical_number, variant, radical_character, unified_ideograph)
+    other_radical =
+      radical(radical_number, variant, radical_character, unified_ideograph)
 
-          # When no value, assume the current value is for both traditional
-          # and simplified. A later entry may overwrite one of them.
-          Map.get_and_update(map, radical_number, fn
-            nil ->
-              {nil, Map.merge(radical, other_radical)}
+    put_radical(map, radical_number, radical, other_radical)
+  end
 
-            current_value when is_map(current_value) ->
-              {current_value, Map.merge(current_value, radical)}
-          end)
-          |> elem(1)
-      end
+  # When no value, assume the current value is for both traditional
+  # and simplified. A later entry may overwrite one of them.
+  defp put_radical(map, radical_number, radical, other_radical) do
+    map
+    |> Map.get_and_update(radical_number, fn
+      nil ->
+        {nil, Map.merge(radical, other_radical)}
+
+      current_value when is_map(current_value) ->
+        {current_value, Map.merge(current_value, radical)}
     end)
+    |> elem(1)
   end
 
   defp radical(radical_number, :simplified = _variant, radical_character, unified_ideograph) do
@@ -243,7 +248,7 @@ defmodule Unicode.Unihan.Utils do
         end
 
       :error ->
-        raise RuntimeError, "Unknown field #{inspect key} found for #{inspect value}"
+        raise RuntimeError, "Unknown field #{inspect(key)} found for #{inspect(value)}"
     end
   end
 
@@ -273,7 +278,7 @@ defmodule Unicode.Unihan.Utils do
     String.to_integer(value)
   end
 
-  # TODO: this is a bit messy
+  # Note: kAlternateTotalStrokes is passed through unparsed for now.
   defp decode_value(value, :kAlternateTotalStrokes, _fields) do
     value
   end
@@ -863,7 +868,7 @@ defmodule Unicode.Unihan.Utils do
   end
 
   defp decode_value(value, :kZVariant, _fields) do
-    # TODO: properly capture source (section after <)
+    # Note: the source (the section after `<`) is not yet captured separately.
     ~r|(?<hex_codepoint>U\+[23]?[0-9A-F]{4})(<[ks][A-Za-z0-9_]+(:[TBZ]+)?(,[ks][A-Za-z0-9_]+(:[TBZ]+)?)*)?|
     |> Regex.named_captures(value)
     |> decode_captures()
