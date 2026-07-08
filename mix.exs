@@ -83,7 +83,7 @@ defmodule Unicode.Unihan.MixProject do
       {:benchee, "~> 1.0", only: :dev, optional: true},
       {:ex_doc, "~> 0.24", only: [:dev, :release], runtime: false, optional: true},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false, optional: true},
-      {:dialyxir, "~> 1.1", only: [:dev], runtime: false, optional: true}
+      {:dialyxir, "~> 1.1", only: [:dev, :test], runtime: false, optional: true}
     ]
   end
 
