@@ -2,7 +2,7 @@
 
 ```elixir
 Mix.install([
-  {:unicode_unihan, "~> 0.1.0"}
+  {:unicode_unihan, "~> 0.5"}
 ])
 ```
 

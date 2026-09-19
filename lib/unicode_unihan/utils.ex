@@ -48,9 +48,24 @@ defmodule Unicode.Unihan.Utils do
   end
 
   @doc """
-  Parse all Unicode Unihan files and return
-  a mapping from codepoint to a map of metadata
-  for that codepoint.
+  Parses every Unihan data file in `priv/unihan` and returns
+  a mapping from code point to its decoded property map.
+
+  This is the function behind `mix unicode.unihan.download`;
+  it takes several seconds for the full database.
+
+  ### Arguments
+
+  * none.
+
+  ### Returns
+
+  * a map of integer code points to property maps.
+
+  ### Examples
+
+      Unicode.Unihan.Utils.parse_files()
+      #=> %{19968 => %{codepoint: 19968, kDefinition: ["one", ...], ...}, ...}
 
   """
 
@@ -62,9 +77,27 @@ defmodule Unicode.Unihan.Utils do
   end
 
   @doc """
-  Parse one Unicode Unihan file and return
-  a mapping from codepoint to a map of metadata
-  for that codepoint.
+  Parses one Unihan data file and merges its decoded
+  properties into a code point map.
+
+  ### Arguments
+
+  * `file` is the name of a file in `priv/unihan`, for
+    example `"Unihan_NumericValues.txt"`.
+
+  * `map` is a map of code points to property maps into
+    which the file's properties are merged. The default is
+    an empty map.
+
+  ### Returns
+
+  * the updated map of integer code points to property maps.
+
+  ### Examples
+
+      iex> map = Unicode.Unihan.Utils.parse_file("Unihan_NumericValues.txt")
+      iex> map[0x842C].kPrimaryNumeric
+      10000
 
   """
   def parse_file(file, map \\ %{}) do
@@ -106,8 +139,25 @@ defmodule Unicode.Unihan.Utils do
   end
 
   @doc """
-  Returns a map of the field definitions for a
-  Unihan codepoint.
+  Reads the Unihan property definitions from the
+  `priv/unihan_properties.etf` file.
+
+  `Unicode.Unihan.unihan_properties/0` returns the same data
+  compiled into the module and should be preferred at runtime.
+
+  ### Arguments
+
+  * none.
+
+  ### Returns
+
+  * a map keyed by property name atom; see
+    `Unicode.Unihan.unihan_properties/0` for the value shape.
+
+  ### Examples
+
+      iex> Unicode.Unihan.Utils.unihan_properties()[:kCantonese].delimiter
+      " "
 
   """
   def unihan_properties do
@@ -118,7 +168,23 @@ defmodule Unicode.Unihan.Utils do
   end
 
   @doc """
-  Parse the jyutping_index.csv file.
+  Parses the `priv/cantonese/jyutping_index.csv` file of
+  valid jyutping readings.
+
+  ### Arguments
+
+  * none.
+
+  ### Returns
+
+  * a map keyed by jyutping string. Each value is a map with
+    the keys `:jyutping`, `:onset`, `:nucleus`, `:coda`,
+    `:final` and `:tone`.
+
+  ### Examples
+
+      iex> Unicode.Unihan.Utils.parse_cantonese()["faan1"]
+      %{jyutping: "faan1", onset: "f", nucleus: "aa", coda: "n", final: "aan", tone: "1"}
 
   """
   def parse_cantonese do
@@ -138,7 +204,7 @@ defmodule Unicode.Unihan.Utils do
   end
 
   @doc """
-  Parse the cjk_radicals.txt file.
+  Parses the `priv/cjk_radicals.txt` file of CJK radicals.
 
   There is one line per CJK radical number. Each line contains three
   fields, separated by a semicolon (';'). The first field is the
@@ -158,6 +224,26 @@ defmodule Unicode.Unihan.Utils do
 
   * three trailing apostrophes `'''`: the second non-Chinese simplified
     radical (a Vietnamese form, added in Unicode 18.0), stored under `:Hanv`.
+
+  ### Arguments
+
+  * none.
+
+  ### Returns
+
+  * a map keyed by radical number (1..214). Each value is a map
+    of the variants present for that radical, keyed by `:Hant`,
+    `:Hans`, `:Hanj` or `:Hanv`, whose values are maps with the
+    keys `:radical_number`, `:radical_character` (which may be
+    `nil`) and `:unified_ideograph`.
+
+  ### Examples
+
+      iex> Unicode.Unihan.Utils.parse_radicals()[187]
+      %{
+        Hans: %{radical_number: 187, radical_character: 12002, unified_ideograph: 39532},
+        Hant: %{radical_number: 187, radical_character: 12218, unified_ideograph: 39340}
+      }
 
   """
   def parse_radicals do

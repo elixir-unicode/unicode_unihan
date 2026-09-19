@@ -15,7 +15,7 @@ The package can be installed by adding `:unicode_unihan` to your list of depende
 ```elixir
 def deps do
   [
-    {:unicode_unihan, "~> 0.4"}
+    {:unicode_unihan, "~> 0.5"}
   ]
 end
 ```
@@ -109,7 +109,7 @@ For more details, see the [guide to Unihan and Unihan introspection](https://raw
 
 ## Copyright and License
 
-Copyright (c) 2023-2024 Kip Cole ([@kipcole9](https://github.com/kipcole9)) & Jon Chui ([@jkwchui](https://github.com/jkwchui))
+Copyright (c) 2023-2026 Kip Cole ([@kipcole9](https://github.com/kipcole9)) & Jon Chui ([@jkwchui](https://github.com/jkwchui))
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in
 compliance with the License. You may obtain a copy of the License at

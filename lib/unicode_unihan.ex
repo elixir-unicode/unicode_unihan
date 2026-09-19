@@ -2,6 +2,35 @@ defmodule Unicode.Unihan do
   @moduledoc """
   Functions to introspect the Unicode Unihan character database.
 
+  The [Unihan database](https://www.unicode.org/reports/tr38/) is the
+  Unicode Consortium's repository of information about CJK ideographs:
+  readings, meanings, dictionary indices, radical-stroke counts, variants
+  and mappings to other character sets. This library ships the database
+  for Unicode 18.0 with each property value decoded into an Elixir term,
+  so that `kTotalStrokes` is an integer, `kKangXi` is a map of page and
+  position, `kCantonese` is a decomposed jyutping reading and so on. The
+  decoded shape of every property is documented in the Properties guides.
+
+  The primary API is:
+
+  * `unihan/1` returns the decoded property map for one code point, given
+    as an integer, a grapheme or a `U+XXXX` string.
+
+  * `filter/1` and `reject/1` select code points across the whole
+    database with an arbitrary predicate over their property maps.
+
+  * `to_string/1` converts a code point, a property map or a list of
+    property maps back to graphemes.
+
+  * `unihan_properties/0` returns the property definitions (category,
+    status, delimiter, syntax and description) scraped from UAX #38.
+
+  The database is parsed once and held in `:persistent_term`; the first
+  lookup in a VM loads it, or `load_unihan/0` can be called at startup.
+  Radicals, Cangjie codes and jyutping readings have their own modules:
+  `Unicode.Unihan.Radical`, `Unicode.Unihan.Cangjie` and
+  `Unicode.Unihan.Cantonese`.
+
   """
 
   require Logger
@@ -17,16 +46,30 @@ defmodule Unicode.Unihan do
                   (c3 in ?0..?9 or c4 in ?A..?Z)
 
   @doc """
-  Load the unihan data into :persistent_term.
+  Loads the Unihan database into `:persistent_term`.
 
-  This function will be called on the first access
-  by `Unicode.Unihan.unihan/1` but can be called
-  on application load if required.
+  This function is called on the first access by
+  `unihan/1`, `filter/1` or `reject/1` but can be called
+  at application start to move the load time out of the
+  first lookup.
 
-  First the existence of an erlang term format
-  file of the unihan database is found. If so,
-  it is loaded. If not (the first time the function
-  is called), the file is generated and then loaded.
+  If an Erlang term format file of the parsed database
+  exists it is loaded. If not (the first time the function
+  is called after installation), the database is parsed from
+  the Unihan text files, saved and then loaded.
+
+  ### Arguments
+
+  * none.
+
+  ### Returns
+
+  * `:ok`.
+
+  ### Examples
+
+      iex> Unicode.Unihan.load_unihan()
+      :ok
 
   """
   def load_unihan do
@@ -84,8 +127,18 @@ defmodule Unicode.Unihan do
   Returns the Unihan database metadata for
   a given codepoint.
 
-  The codepoint can be expressed as an integer
-  or a grapheme.
+  ### Arguments
+
+  * `codepoint` is an integer code point, a single-grapheme
+    string, or a string in the form `U+XXXX` or `U+XXXXX`.
+
+  ### Returns
+
+  * a map of decoded properties keyed by the Unihan property
+    name as an atom (for example `:kDefinition`), plus a
+    `:codepoint` key holding the integer code point.
+
+  * `nil` if the code point is not in the Unihan database.
 
   ### Examples
 
@@ -208,9 +261,19 @@ defmodule Unicode.Unihan do
   end
 
   @doc """
-  Takes an integer codepoint, a Unihan codepoint map, or list of maps
-  and returns the grapheme (or list of graphemes)
-  of the codepoint.
+  Returns the grapheme for a code point, a Unihan
+  property map, or a list of property maps.
+
+  ### Arguments
+
+  * `codepoint` is an integer code point, a map with a
+    `:codepoint` key as returned by `unihan/1`, or a list
+    of such maps.
+
+  ### Returns
+
+  * a single-grapheme string, or a list of them when a list
+    of maps is given.
 
   ### Examples
 
@@ -310,8 +373,26 @@ defmodule Unicode.Unihan do
   end
 
   @doc """
-  Returns the property information for the data in the
-  Unihan database.
+  Returns the property definitions of the Unihan
+  database as scraped from [UAX #38](https://www.unicode.org/reports/tr38/).
+
+  ### Arguments
+
+  * none.
+
+  ### Returns
+
+  * a map keyed by property name atom. Each value is a map with
+    the keys `:name`, `:category`, `:status`, `:delimiter`,
+    `:syntax` (a compiled regex), `:description` and `:introduced`.
+
+  ### Examples
+
+      iex> Unicode.Unihan.unihan_properties()[:kTotalStrokes].category
+      :irg_sources
+
+      iex> Unicode.Unihan.unihan_properties()[:kFanqie].introduced
+      "16.0"
 
   """
   @unihan_properties Utils.unihan_properties()
