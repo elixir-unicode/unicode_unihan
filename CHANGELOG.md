@@ -2,7 +2,7 @@
 
 ## Unicode Unihan v0.5.0
 
-This is the changelog for Unicode Unihan v0.5.0.
+This is the changelog for Unicode Unihan v0.5.0 released on September 20th, 2026.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-unicode/unicode_unihan/tags)
 
 ### Breaking Changes
 
@@ -23,10 +23,6 @@ This is the changelog for Unicode Unihan v0.5.0.
 * Structured decoding for kMojiJoho, kSMSZD2003Index, kSMSZD2003Readings, kZhuang and the new numeric properties.
 
 * Documentation is generated with the markdown formatter as well as HTML.
-
-* Cleared all Elixir 1.20 compiler warnings so the library builds cleanly with `--warnings-as-errors`.
-
-* Added Credo strict compliance, a 90% coverage gate, a GitHub Actions CI matrix (OTP 27-29 / Elixir 1.17-1.20), and a formatting pre-commit hook.
 
 ### Bug Fixes
 
