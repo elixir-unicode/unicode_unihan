@@ -384,7 +384,8 @@ defmodule Unicode.Unihan do
 
   * a map keyed by property name atom. Each value is a map with
     the keys `:name`, `:category`, `:status`, `:delimiter`,
-    `:syntax` (a compiled regex), `:description` and `:introduced`.
+    `:syntax` (the source of a regex matching one value, to be
+    compiled with the `:unicode` option), `:description` and `:introduced`.
 
   ### Examples
 
@@ -393,6 +394,9 @@ defmodule Unicode.Unihan do
 
       iex> Unicode.Unihan.unihan_properties()[:kFanqie].introduced
       "16.0"
+
+      iex> Unicode.Unihan.unihan_properties()[:kCantonese].syntax
+      "[a-z]{1,6}[1-6]"
 
   """
   @unihan_properties Utils.unihan_properties()

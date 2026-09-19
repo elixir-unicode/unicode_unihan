@@ -122,8 +122,19 @@ defmodule Unicode.Unihan.Property do
   defp node_text({"br", _, _}), do: "\n"
   defp node_text({_tag, _attributes, children}), do: Enum.map_join(children, "", &node_text/1)
 
+  # The syntax is stored as the regex source rather than a compiled
+  # `Regex`: a compiled pattern is specific to the OTP release that
+  # produced it and, from OTP 28, is a reference that cannot be injected
+  # into a module attribute. It is compiled here only to validate it.
   defp parse_syntax(syntax) when is_binary(syntax) do
-    Regex.compile!(syntax, [:unicode])
+    case Regex.compile(syntax, [:unicode]) do
+      {:ok, _regex} ->
+        syntax
+
+      {:error, {message, position}} ->
+        raise ArgumentError,
+              "invalid property syntax #{inspect(syntax)}: #{message} at position #{position}"
+    end
   end
 
   defp parse_syntax(syntax) when is_list(syntax) do
@@ -133,6 +144,6 @@ defmodule Unicode.Unihan.Property do
       {"br", [], []} -> " "
     end)
     |> String.replace("\n", "")
-    |> Regex.compile!([:unicode])
+    |> parse_syntax()
   end
 end

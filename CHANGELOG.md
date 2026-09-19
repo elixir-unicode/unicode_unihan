@@ -10,6 +10,8 @@ This is the changelog for Unicode Unihan v0.5.0.
 
 * Decoders for the properties Unicode has withdrawn (kFrequency, kGB7, kHKSCS, kIRGDaeJaweon, kIRGDaiKanwaZiten, kIRGKangXi, kJa, kKPS0, kKPS1, kKSC0, kKSC1, kRSKangXi) are removed along with their data.
 
+* The `:syntax` of each property definition is the regex source string rather than a compiled `Regex`, since a compiled pattern is tied to the OTP release that built it.
+
 ### Enhancements
 
 * Updated to [Unicode 18.0](https://www.unicode.org/versions/Unicode18.0.0/) data (103,000 code points), adding kFanqie, kZhuang, kTayNumeric, kJapaneseNewVariant and kJapaneseOldVariant.

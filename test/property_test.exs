@@ -62,12 +62,22 @@ defmodule Unicode.Unihan.PropertyTest do
       assert description == "For example, tək is used.\nSecond paragraph\nThird"
     end
 
-    test "compiles the syntax cell into a regex" do
+    test "keeps the syntax cell as a valid regex source string" do
       %{kExample: attributes} = Property.parse(@html)
 
       # The <br> in the syntax cell becomes a space, yielding "[A-Z] [0-9]+".
-      assert %Regex{} = attributes.syntax
-      assert Regex.match?(attributes.syntax, "A 5")
+      assert attributes.syntax == "[A-Z] [0-9]+"
+      assert Regex.match?(Regex.compile!(attributes.syntax, [:unicode]), "A 5")
+    end
+
+    test "raises on an invalid syntax cell" do
+      html =
+        ~s(<html><body><div class="body"><table summary="kBad">) <>
+          ~s(<tr><td>Property</td><td><a name="kBad" href="kBad">kBad</a></td></tr>) <>
+          ~s(<tr><td>Syntax</td><td>[unclosed</td></tr>) <>
+          ~s(</table></div></body></html>)
+
+      assert_raise ArgumentError, ~r/invalid property syntax/, fn -> Property.parse(html) end
     end
 
     test "parses an N/A delimiter as nil" do
