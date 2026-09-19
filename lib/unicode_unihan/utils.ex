@@ -144,9 +144,20 @@ defmodule Unicode.Unihan.Utils do
   fields, separated by a semicolon (';'). The first field is the
   CJK radical number. The second field is the CJK radical character, which may be absent. The third field is the CJK unified ideograph.
 
-  A given radical may have three variants, sharing the same radical number but described in separate lines.  These variants are noted with one or two trailing apostrophes `'`:
-  * one trailing apostrophe `'`: simplified radicals
-  * two trailing apostrophe `''`: japanese radicals (added in 2023 version 15.1)
+  A given radical may have up to four variants, sharing the same radical
+  number but described in separate lines. These variants are noted with
+  one to three trailing apostrophes `'`:
+
+  * no apostrophe: the traditional radical, stored under `:Hant`.
+
+  * one trailing apostrophe `'`: the Chinese simplified radical, stored
+    under `:Hans`.
+
+  * two trailing apostrophes `''`: the first non-Chinese simplified radical
+    (Japanese forms, added in Unicode 15.1), stored under `:Hanj`.
+
+  * three trailing apostrophes `'''`: the second non-Chinese simplified
+    radical (a Vietnamese form, added in Unicode 18.0), stored under `:Hanv`.
 
   """
   def parse_radicals do
@@ -193,16 +204,9 @@ defmodule Unicode.Unihan.Utils do
     |> elem(1)
   end
 
-  defp radical(radical_number, :simplified = _variant, radical_character, unified_ideograph) do
-    %{Hans: radical(radical_number, radical_character, unified_ideograph)}
-  end
-
-  defp radical(radical_number, :traditional = _variant, radical_character, unified_ideograph) do
-    %{Hant: radical(radical_number, radical_character, unified_ideograph)}
-  end
-
-  defp radical(radical_number, :japanese = _variant, radical_character, unified_ideograph) do
-    %{Hanj: radical(radical_number, radical_character, unified_ideograph)}
+  defp radical(radical_number, variant, radical_character, unified_ideograph)
+       when variant in [:Hant, :Hans, :Hanj, :Hanv] do
+    %{variant => radical(radical_number, radical_character, unified_ideograph)}
   end
 
   defp radical(radical_number, radical_character, unified_ideograph) do
@@ -213,17 +217,20 @@ defmodule Unicode.Unihan.Utils do
     }
   end
 
-  # Simplified radicals are represented by radical numbers with a
-  # trailing apostrophe `'`; Japanese radicals are represented by radical numbers with two trailing apostrophes `''`.
+  # Radical variants are represented by radical numbers with up to
+  # three trailing apostrophes. See `parse_radicals/0`.
 
   defp split_radical_number(number) do
-    case String.split(number, "'") do
-      [number] -> {String.to_integer(number), :traditional}
-      [number, _prime] -> {String.to_integer(number), :simplified}
-      # quick fix
-      [number, _prime, _double_prime] -> {String.to_integer(number), :japanese}
-    end
+    digits = String.trim_trailing(number, "'")
+    {_, apostrophes} = String.split_at(number, String.length(digits))
+    {String.to_integer(digits), radical_variant(apostrophes)}
   end
+
+  @doc false
+  def radical_variant(""), do: :Hant
+  def radical_variant("'"), do: :Hans
+  def radical_variant("''"), do: :Hanj
+  def radical_variant("'''"), do: :Hanv
 
   defp decode_metadata(key, value, fields) do
     key = String.to_atom(key)
@@ -256,11 +263,10 @@ defmodule Unicode.Unihan.Utils do
   # in the value list go here - before the clause
   # that maps over a list of values individually.
 
-  defp decode_value(value, :kTotalStrokes, _fields) do
-    case Enum.map(value, &String.to_integer/1) do
-      [zh] -> %{Hans: zh, Hant: zh}
-      [hans, hant] -> %{Hans: hans, Hant: hant}
-    end
+  # Since Unicode 16.0 kTotalStrokes carries a single IRG stroke count;
+  # the earlier "zh hant" pair form no longer appears in the data.
+  defp decode_value(value, :kTotalStrokes, _fields) when is_binary(value) do
+    String.to_integer(value)
   end
 
   # When its a list, map each value to decode it.
@@ -349,6 +355,11 @@ defmodule Unicode.Unihan.Utils do
     String.to_integer(value, 16)
   end
 
+  # A pair of ideographs giving the initial and final of a reading.
+  defp decode_value(value, :kFanqie, _fields) do
+    value
+  end
+
   defp decode_value(value, :kFenn, _fields) do
     ~r|(?<fenn_phonetic>[0-9]+)a?(?<importance>[A-KP*])|
     |> Regex.named_captures(value)
@@ -374,10 +385,6 @@ defmodule Unicode.Unihan.Utils do
     |> Map.new()
   end
 
-  defp decode_value(value, :kFrequency, _fields) do
-    String.to_integer(value)
-  end
-
   defp decode_value(value, :kGB0, _fields) do
     String.to_integer(value)
   end
@@ -391,10 +398,6 @@ defmodule Unicode.Unihan.Utils do
   end
 
   defp decode_value(value, :kGB5, _fields) do
-    String.to_integer(value)
-  end
-
-  defp decode_value(value, :kGB7, _fields) do
     String.to_integer(value)
   end
 
@@ -462,10 +465,6 @@ defmodule Unicode.Unihan.Utils do
 
   defp decode_value(value, :kHKGlyph, _fields) do
     String.to_integer(value)
-  end
-
-  defp decode_value(value, :kHKSCS, _fields) do
-    String.to_integer(value, 16)
   end
 
   defp decode_value(value, :kIBMJapan, _fields) do
@@ -536,31 +535,14 @@ defmodule Unicode.Unihan.Utils do
     %{source: source, mapping: mapping}
   end
 
-  defp decode_value(value, :kIRGDaeJaweon, _fields) do
-    ~r|(?<page>[0-9]{4})\.(?<position>[0-9]{2})(?<virtual>[01])|
-    |> Regex.named_captures(value)
-    |> decode_captures()
-  end
-
-  defp decode_value(value, :kIRGDaiKanwaZiten, _fields) do
-    ~r|(?<index>[0-9]{5})(?<prime>\'?)|
-    |> Regex.named_captures(value)
-    |> decode_captures()
-  end
-
   defp decode_value(value, :kIRGHanyuDaZidian, _fields) do
     ~r|(?<volume>[1-8])(?<page>[0-9]{4})\.(?<position>[0-3][0-9])(?<virtual>[01])|
     |> Regex.named_captures(value)
     |> decode_captures()
   end
 
-  defp decode_value(value, :kIRGKangXi, _fields) do
-    ~r|(?<page>[0-9]{4})\.(?<position>[0-9]{2})(?<virtual>[01])|
-    |> Regex.named_captures(value)
-    |> decode_captures()
-  end
-
-  defp decode_value(value, :kJa, _fields) do
+  # Kana readings: hiragana for kun-yomi, katakana for on-yomi.
+  defp decode_value(value, :kJapanese, _fields) do
     value
   end
 
@@ -570,6 +552,14 @@ defmodule Unicode.Unihan.Utils do
 
   defp decode_value(value, :kJapaneseOn, _fields) do
     value
+  end
+
+  defp decode_value(value, :kJapaneseNewVariant, _fields) do
+    decode_codepoint(value)
+  end
+
+  defp decode_value(value, :kJapaneseOldVariant, _fields) do
+    decode_codepoint(value)
   end
 
   defp decode_value(value, :kJinmeiyoKanji, _fields) do
@@ -630,22 +620,6 @@ defmodule Unicode.Unihan.Utils do
     String.to_integer(value)
   end
 
-  defp decode_value(value, :kKPS0, _fields) do
-    value
-  end
-
-  defp decode_value(value, :kKPS1, _fields) do
-    value
-  end
-
-  defp decode_value(value, :kKSC0, _fields) do
-    String.to_integer(value)
-  end
-
-  defp decode_value(value, :kKSC1, _fields) do
-    String.to_integer(value)
-  end
-
   defp decode_value(value, :kLau, _fields) do
     String.to_integer(value)
   end
@@ -675,8 +649,19 @@ defmodule Unicode.Unihan.Utils do
     |> decode_captures()
   end
 
+  # A five-digit index with up to two primes, or an "H"-prefixed three-digit
+  # index into the supplemental volume, optionally followed by a variation
+  # selector that identifies a specific glyph.
+  # A Moji Jōhō Kiban database serial number, optionally followed by a
+  # variation selector identifying a specific glyph.
+  defp decode_value(value, :kMojiJoho, _fields) do
+    ~r|^(?<id>MJ[0-9]{6})(:(?<variation_selector>FE0[01]\|E01[01][0-9A-F]))?$|
+    |> Regex.named_captures(value)
+    |> decode_captures()
+  end
+
   defp decode_value(value, :kMorohashi, _fields) do
-    ~r|(?<index>[0-9]{5})(?<prime>\'?)|
+    ~r|^(?<supplement>H?)(?<index>[0-9]{3,5})(?<prime>\'{0,2})(:(?<variation_selector>FE0[01]\|E010[0-9A-F]))?$|
     |> Regex.named_captures(value)
     |> decode_captures()
   end
@@ -714,16 +699,24 @@ defmodule Unicode.Unihan.Utils do
     |> decode_captures()
   end
 
-  defp decode_value(value, :kRSKangXi, _fields) do
-    ~r|(?<radical>[1-9][0-9]{0,2})\.(?<strokes>-?[0-9]{1,2})|
-    |> Regex.named_captures(value)
-    |> decode_captures()
-  end
-
+  # The apostrophes after the radical select a variant of the radical, using
+  # the same script keys as `Unicode.Unihan.Radical`: none is the traditional
+  # radical, one is the Chinese simplified radical, two and three are the
+  # first and second non-Chinese simplified radicals.
   defp decode_value(value, :kRSUnicode, _fields) do
-    ~r|(?<radical>[1-9][0-9]{0,2})(?<simplified_radical>\'?)\.(?<strokes>-?[0-9]{1,2})|
+    ~r|^(?<radical>[1-9][0-9]{0,2})(?<variant>\'{0,3})\.(?<strokes>-?[0-9]{1,2})$|
     |> Regex.named_captures(value)
     |> decode_captures()
+    |> case do
+      %{variant: variant} = captures ->
+        captures
+        |> Map.delete(:variant)
+        |> Map.put(:simplified_radical, variant == :Hans)
+        |> Map.put(:script, variant)
+
+      nil ->
+        nil
+    end
   end
 
   defp decode_value(value, :kSBGY, _fields) do
@@ -754,6 +747,25 @@ defmodule Unicode.Unihan.Utils do
 
   defp decode_value(value, :kSimplifiedVariant, _fields) do
     decode_codepoint(value)
+  end
+
+  defp decode_value(value, :kSMSZD2003Index, _fields) do
+    ~r|^(?<page>[0-9]{1,3})\.(?<position>[0-9]{2})$|
+    |> Regex.named_captures(value)
+    |> decode_captures()
+  end
+
+  # Mandarin readings in pinyin, then U+7CB5 粵, then Cantonese readings in
+  # jyutping. Readings this dictionary considers polysyllabic are kept as
+  # strings since they are not valid jyutping.
+  defp decode_value(value, :kSMSZD2003Readings, _fields) do
+    case String.split(value, "粵") do
+      [mandarin, cantonese] ->
+        %{mandarin: String.split(mandarin, ","), cantonese: jyutpings(cantonese)}
+
+      _other ->
+        value
+    end
   end
 
   defp decode_value(value, :kSpecializedSemanticVariant, _fields) do
@@ -795,27 +807,13 @@ defmodule Unicode.Unihan.Utils do
     %{category: :bopomofo, codepoint: decode_codepoint(value)}
   end
 
-  defp decode_value("H:" <> value, :kStrange, _fields) do
-    %{category: :hangul, codepoint: decode_codepoint(value)}
-  end
-
   defp decode_value("S:" <> value, :kStrange, _fields) do
     %{category: :stroke_heavy, strokes: String.to_integer(value)}
   end
 
   defp decode_value(value, :kStrange, _fields) do
     [category | unicode] = String.split(value, ":")
-
-    category =
-      case category do
-        "F" -> :fully_reflective
-        "M" -> :mirrored
-        "O" -> :odd
-        "R" -> :rotated
-        "I" -> :incomplete
-        "K" -> :katakana
-      end
-
+    category = strange_category(category)
     codepoints = Enum.map(unicode, &decode_codepoint/1)
 
     if codepoints == [] do
@@ -833,6 +831,10 @@ defmodule Unicode.Unihan.Utils do
     ~r|(?<frequent>\*?)(?<reading>\S+)|
     |> Regex.named_captures(value)
     |> decode_captures()
+  end
+
+  defp decode_value(value, :kTayNumeric, _fields) do
+    String.to_integer(value)
   end
 
   defp decode_value(value, :kTGH, _fields) do
@@ -857,6 +859,10 @@ defmodule Unicode.Unihan.Utils do
     value
   end
 
+  defp decode_value(value, :kVietnameseNumeric, _fields) do
+    String.to_integer(value)
+  end
+
   defp decode_value(value, :kXerox, _fields) do
     value
   end
@@ -865,6 +871,19 @@ defmodule Unicode.Unihan.Utils do
     ~r|(?<page>[0-9]{4})\.(?<position>[0-9]{2})(?<entry>[0-9])\*?(,[0-9]{4}\.[0-9]{3}\*?)*:(?<reading>\S+)|
     |> Regex.named_captures(value)
     |> decode_captures()
+  end
+
+  # A trailing asterisk marks a reading that is not part of the
+  # Standard Zhuang lexicon.
+  defp decode_value(value, :kZhuang, _fields) do
+    case String.split_at(value, -1) do
+      {reading, "*"} -> %{reading: reading, standard: false}
+      _other -> %{reading: value, standard: true}
+    end
+  end
+
+  defp decode_value(value, :kZhuangNumeric, _fields) do
+    String.to_integer(value)
   end
 
   defp decode_value(value, :kZVariant, _fields) do
@@ -879,6 +898,19 @@ defmodule Unicode.Unihan.Utils do
   defp decode_value(value, _key, _fields) do
     value
   end
+
+  # Categories that may carry a list of related code points. The single
+  # letter categories (A, C, U) and those with a non-codepoint payload
+  # (B, S) are handled by the clauses above.
+  defp strange_category("F"), do: :fully_reflective
+  defp strange_category("H"), do: :hangul
+  defp strange_category("I"), do: :incomplete
+  defp strange_category("K"), do: :katakana
+  defp strange_category("M"), do: :mirrored
+  defp strange_category("O"), do: :odd
+  defp strange_category("R"), do: :rotated
+  defp strange_category("Y"), do: :symmetric
+  defp strange_category(other), do: {:unknown, other}
 
   # Decodes a standard `U+xxxx` codepoint into
   # its integer form.
@@ -906,6 +938,7 @@ defmodule Unicode.Unihan.Utils do
   defp decode_captures(map) do
     map
     |> Enum.map(&decode_capture/1)
+    |> Enum.reject(&is_nil/1)
     |> Map.new()
   end
 
@@ -925,12 +958,24 @@ defmodule Unicode.Unihan.Utils do
     {:frequent, true}
   end
 
-  defp decode_capture({"simplified_radical", "'"}) do
-    {:simplified_radical, true}
+  defp decode_capture({"variant", apostrophes}) do
+    {:variant, radical_variant(apostrophes)}
   end
 
-  defp decode_capture({"simplified_radical", ""}) do
-    {:simplified_radical, false}
+  defp decode_capture({"supplement", "H"}) do
+    {:supplement, true}
+  end
+
+  defp decode_capture({"supplement", ""}) do
+    {:supplement, false}
+  end
+
+  defp decode_capture({"variation_selector", ""}) do
+    nil
+  end
+
+  defp decode_capture({"variation_selector", hex}) do
+    {:variation_selector, String.to_integer(hex, 16)}
   end
 
   defp decode_capture({"hex_codepoint", value}) do
@@ -938,17 +983,7 @@ defmodule Unicode.Unihan.Utils do
   end
 
   defp decode_capture({"jyutpings", value}) do
-    jyutpings =
-      value
-      |> String.split(",")
-      |> Enum.map(fn jyutping ->
-        case Cantonese.to_jyutping(jyutping) do
-          {:ok, jyutping_map} -> jyutping_map
-          _other -> jyutping
-        end
-      end)
-
-    {:jyutpings, jyutpings}
+    {:jyutpings, jyutpings(value)}
   end
 
   defp decode_capture({key, value}) do
@@ -961,6 +996,19 @@ defmodule Unicode.Unihan.Utils do
       end
 
     {key, value}
+  end
+
+  # Decodes a comma-separated list of jyutping readings, keeping any
+  # reading that is not valid jyutping as a string.
+  defp jyutpings(value) do
+    value
+    |> String.split(",")
+    |> Enum.map(fn jyutping ->
+      case Cantonese.to_jyutping(jyutping) do
+        {:ok, jyutping_map} -> jyutping_map
+        _other -> jyutping
+      end
+    end)
   end
 
   defp atomize_keys(map) do

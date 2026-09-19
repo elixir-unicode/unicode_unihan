@@ -48,6 +48,13 @@ defmodule Unicode.Unihan.UtilsTest do
       # Radical 187 (馬 / 马) has both traditional and simplified variants
       assert %{Hant: %{unified_ideograph: 39_340}, Hans: %{unified_ideograph: 39_532}} =
                radicals[187]
+
+      # Radical 212 (龍) has all four variants since Unicode 18.0; the
+      # Vietnamese form has no character in the radical blocks.
+      assert %{Hanj: %{unified_ideograph: 0x7ADC}, Hanv: %{unified_ideograph: 0x31DE5}} =
+               radicals[212]
+
+      assert radicals[212][:Hanv][:radical_character] == nil
     end
   end
 
@@ -87,7 +94,7 @@ defmodule Unicode.Unihan.UtilsTest do
       fish = unihan[0x9B5A]
       assert is_map(fish)
       assert fish.codepoint == 0x9B5A
-      assert is_map(fish.kTotalStrokes)
+      assert is_integer(fish.kTotalStrokes)
     end
   end
 end

@@ -92,7 +92,7 @@ defmodule Unicode.Unihan do
       iex> Unicode.Unihan.unihan(171339)
       %{
         codepoint: 171339,
-        kTotalStrokes: %{Hant: 11, Hans: 11},
+        kTotalStrokes: 10,
         kCantonese: %{
           final: "u",
           jyutping: "ju4",
@@ -101,17 +101,17 @@ defmodule Unicode.Unihan do
           onset: "j",
           tone: "4"
         },
-        kDefinition: ["(J) nonstandard variant of 魚 U+9B5A, fish"],
+        kDefinition: ["(non-standard Japanese variant of 魚) fish"],
         kHanYu: %{position: 9, virtual: false, page: 4674, volume: 7},
         kIRG_GSource: %{source: "GHZ", mapping: ["74674.09"]},
+        kIRG_JSource: %{source: "JMJ", mapping: "055080"},
         kIRG_TSource: %{source: "T4", mapping: "3043"},
         kIRG_VSource: %{source: "VN", mapping: "29D4B"},
         kIRGHanyuDaZidian: %{position: 9, virtual: false, page: 4674, volume: 7},
-        kIRGKangXi: %{position: 1, virtual: true, page: 1465},
         kJapaneseKun: ["UO", "SAKANA", "SUNADORU"],
         kJapaneseOn: "GYO",
         kKangXi: %{position: 1, virtual: true, page: 1465},
-        kMorohashi: %{index: 45958, prime: ""},
+        kMorohashi: %{index: 45958, supplement: false, prime: ""},
         kNelson: 692,
         kPhonetic: %{class: 1605},
         kRSAdobe_Japan1_6: [
@@ -130,15 +130,15 @@ defmodule Unicode.Unihan do
             strokes_residue: 0
           }
         ],
-        kRSUnicode: %{radical: 195, strokes: 0, simplified_radical: false},
+        kRSUnicode: %{radical: 195, strokes: 0, simplified_radical: false, script: :Hant},
         kJapanese: ["ギョ", "うお"],
-        kMojiJoho: "MJ055080"
+        kMojiJoho: %{id: "MJ055080"}
       }
 
       iex> Unicode.Unihan.unihan("㝰")
       %{
         codepoint: 14192,
-        kTotalStrokes: %{Hant: 18, Hans: 18},
+        kTotalStrokes: 18,
         kCangjie: ["J", "H", "U", "S"],
         kCantonese: %{
           final: "in",
@@ -149,23 +149,25 @@ defmodule Unicode.Unihan do
           tone: "4"
         },
         kDefinition: ["unable to meet, empty room"],
+        kFanqie: "莫賢",
+        kGB5: 3028,
         kHanYu: %{position: 3, virtual: false, page: 957, volume: 2},
         kHanyuPinyin: %{
           location: [%{position: 3, virtual: false, page: 20957}],
           readings: ["mián"]
         },
         kIRG_GSource: %{source: "G5", mapping: ["3E3C"]},
+        kIRG_JSource: %{source: "JMJ", mapping: "000772"},
         kIRG_KSource: %{source: "K3", mapping: "236A"},
         kIRG_TSource: %{source: "T4", mapping: "5A7D"},
         kIRGHanyuDaZidian: %{position: 3, virtual: false, page: 957, volume: 2},
-        kIRGKangXi: %{position: 1, virtual: false, page: 293},
         kKangXi: %{position: 1, virtual: false, page: 293},
         kMandarin: "mián",
-        kMorohashi: %{index: 7359, prime: ""},
-        kRSUnicode: %{radical: 40, strokes: 15, simplified_radical: false},
+        kMorohashi: %{index: 7359, supplement: false, prime: ""},
+        kRSUnicode: %{radical: 40, strokes: 15, simplified_radical: false, script: :Hant},
         kSBGY: %{position: 35, page: 135},
         kJapanese: ["ベン", "メン"],
-        kMojiJoho: "MJ000772"
+        kMojiJoho: %{id: "MJ000772"}
       }
 
       iex> Unicode.Unihan.unihan("U+9B5A").codepoint
@@ -252,13 +254,15 @@ defmodule Unicode.Unihan do
 
   ### Examples
 
-      iex> Unicode.Unihan.filter(&(&1.kTotalStrokes[:"Hans"] > 30))
+      iex> Unicode.Unihan.filter(&(&1.kTotalStrokes > 30))
       ...> |> Enum.count()
-      238
+      258
 
-      iex> Unicode.Unihan.filter(&(&1.kTotalStrokes[:"Hans"] != &1.kTotalStrokes[:"Hant"]))
-      ...> |> Enum.count
-      3
+      iex> Unicode.Unihan.filter(fn unihan ->
+      ...>   unihan[:kRSUnicode] |> List.wrap() |> Enum.any?(&(&1.script == :Hanv))
+      ...> end)
+      ...> |> Enum.count()
+      6
 
       iex> Unicode.Unihan.filter(&(&1[:kGradeLevel] <= 6))
       ...> |> Enum.count
@@ -293,9 +297,9 @@ defmodule Unicode.Unihan do
 
   ### Examples
 
-      iex> Unicode.Unihan.reject(&(&1.kTotalStrokes[:"Hans"] > 30))
+      iex> Unicode.Unihan.reject(&(&1.kTotalStrokes > 30))
       ...> |> Enum.count()
-      98444
+      102741
 
   """
   def reject(fun) when is_function(fun, 1) do

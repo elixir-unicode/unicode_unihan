@@ -103,19 +103,24 @@ defmodule Unicode.Unihan.Property do
     nil
   end
 
+  # Descriptions are free-form HTML: text nodes, line breaks, links,
+  # emphasis and code markup nested to arbitrary depth (Unicode 18's
+  # kFanqie description wraps `<strong>` inside `<i>`). Flatten the whole
+  # tree to its text rather than pattern-matching on specific shapes.
+  # Line breaks in the source become newlines in the description so
+  # that paragraph structure survives for documentation; whitespace
+  # inside the HTML source is collapsed.
   defp parse_description(description) when is_list(description) do
     description
-    |> Enum.map_join("", fn
-      string when is_binary(string) -> string
-      {"br", [], []} -> ""
-      {"a", _, [{"tt", [], [string]}]} when is_binary(string) -> string
-      {"a", _, [{"code", [], [string]}]} when is_binary(string) -> string
-      {"tt", _, [{"a", _, [string]}]} when is_binary(string) -> string
-      {_tag, _, [string]} when is_binary(string) -> string
-      {:comment, _} -> ""
-    end)
-    |> String.replace(~r/[\n\t] */, " ")
+    |> Enum.map_join("", &node_text/1)
+    |> String.replace(~r/\n\n+/, "\n")
+    |> String.trim()
   end
+
+  defp node_text(string) when is_binary(string), do: String.replace(string, ~r/[\n\t] */, " ")
+  defp node_text({:comment, _}), do: ""
+  defp node_text({"br", _, _}), do: "\n"
+  defp node_text({_tag, _attributes, children}), do: Enum.map_join(children, "", &node_text/1)
 
   defp parse_syntax(syntax) when is_binary(syntax) do
     Regex.compile!(syntax, [:unicode])

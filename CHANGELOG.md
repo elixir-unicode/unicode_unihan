@@ -1,20 +1,40 @@
 # Changelog
 
-## Unicode Unihan v0.4.1
+## Unicode Unihan v0.5.0
 
-This is the changelog for Unicode Unihan v0.4.1.
+This is the changelog for Unicode Unihan v0.5.0.
 
-### Bug Fixes
+### Breaking Changes
 
-* Fixed `Unicode.Unihan.unihan/1` to resolve five hex-digit `U+XXXXX` codepoints (CJK Extension B and later); previously the string form raised `FunctionClauseError`.
+* `kTotalStrokes` is now a single integer rather than a `%{Hans: n, Hant: n}` map, matching the single-valued property in Unicode 16.0 and later.
 
-* Removed a redundant `Unicode.Unihan.Cantonese.is_valid?/1` clause and a duplicate `Unicode.Unihan.Property` parse clause reported as warnings under Elixir 1.20.
+* Decoders for the properties Unicode has withdrawn (kFrequency, kGB7, kHKSCS, kIRGDaeJaweon, kIRGDaiKanwaZiten, kIRGKangXi, kJa, kKPS0, kKPS1, kKSC0, kKSC1, kRSKangXi) are removed along with their data.
 
 ### Enhancements
+
+* Updated to [Unicode 18.0](https://www.unicode.org/versions/Unicode18.0.0/) data (103,000 code points), adding kFanqie, kZhuang, kTayNumeric, kJapaneseNewVariant and kJapaneseOldVariant.
+
+* `kRSUnicode` entries carry a `:script` key (`:Hant`, `:Hans`, `:Hanj` or `:Hanv`) identifying the radical variant, and `Unicode.Unihan.Radical` gains the `:Hanv` variant introduced in Unicode 18.
+
+* `kMorohashi` decodes supplemental-volume (`Hnnn`) indices and variation selectors, and `kStrange` gains the `:symmetric` category.
+
+* Structured decoding for kMojiJoho, kSMSZD2003Index, kSMSZD2003Readings, kZhuang and the new numeric properties.
+
+* Documentation is generated with the markdown formatter as well as HTML.
 
 * Cleared all Elixir 1.20 compiler warnings so the library builds cleanly with `--warnings-as-errors`.
 
 * Added Credo strict compliance, a 90% coverage gate, a GitHub Actions CI matrix (OTP 27-29 / Elixir 1.17-1.20), and a formatting pre-commit hook.
+
+### Bug Fixes
+
+* `kRSUnicode` values with a double-apostrophe radical (for example U+4E80 亀) no longer decode to `nil`.
+
+* `mix unicode.unihan.download` refreshes the property definitions before parsing the database, so TR38 delimiter changes no longer break the parse, and the TR38 scraper tolerates nested markup in property descriptions.
+
+* Fixed `Unicode.Unihan.unihan/1` to resolve five hex-digit `U+XXXXX` codepoints (CJK Extension B and later); previously the string form raised `FunctionClauseError`.
+
+* Removed a redundant `Unicode.Unihan.Cantonese.is_valid?/1` clause and a duplicate `Unicode.Unihan.Property` parse clause reported as warnings under Elixir 1.20.
 
 ## Unicode Unihan v0.4.0
 

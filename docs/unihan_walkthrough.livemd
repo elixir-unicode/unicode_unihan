@@ -52,7 +52,7 @@ Note that these maps can be accessed using `Access` (square brackets `[]`), or t
 IO.inspect(unihan("萬")[:kGradeLevel])
 # parses to a list
 IO.inspect(unihan("萬")[:kCantonese])
-# parses to a map
+# parses to an integer
 IO.inspect(unihan("萬")[:kTotalStrokes])
 ```
 
@@ -88,7 +88,7 @@ filter(
       &1[:kCantonese][:tone] == "1")
 )
 |> Enum.sort_by(fn {_codepoint, map} ->
-  map[:kTotalStrokes][:Hant]
+  map[:kTotalStrokes]
 end)
 |> Enum.map(fn {_codepoint, map} ->
   Unicode.Unihan.to_string(map)
@@ -100,7 +100,7 @@ Here we also see the usage of `to_string/1` acting on a list of maps to return t
 `reject/1` works similarly:
 
 ```elixir
-reject(&(&1[:kTotalStrokes][:"zh-Hant"] < 60))
+reject(&(&1[:kTotalStrokes] < 60))
 |> Enum.map(fn {_codepoint, map} ->
   Unicode.Unihan.to_string(map)
 end)

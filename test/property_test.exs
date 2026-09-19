@@ -50,6 +50,18 @@ defmodule Unicode.Unihan.PropertyTest do
       assert description =~ "bold"
     end
 
+    test "flattens arbitrarily nested markup and keeps line breaks as newlines" do
+      html =
+        ~s(<html><body><div class="body"><table summary="kNested">) <>
+          ~s(<tr><td>Property</td><td><a name="kNested" href="kNested">kNested</a></td></tr>) <>
+          ~s(<tr><td>Description</td><td>For example, <i><strong>t</strong>ək</i> is used.<br>) <>
+          ~s(Second paragraph<br><br>Third</td></tr>) <>
+          ~s(</table></div></body></html>)
+
+      assert %{kNested: %{description: description}} = Property.parse(html)
+      assert description == "For example, tək is used.\nSecond paragraph\nThird"
+    end
+
     test "compiles the syntax cell into a regex" do
       %{kExample: attributes} = Property.parse(@html)
 

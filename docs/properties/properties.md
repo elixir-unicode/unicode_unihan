@@ -18,18 +18,18 @@ The contents of entries are cast into appropriate types (for example, integer fo
 
 In the accompanying pages, we describe in some detail what the properties are and how entries were parsed.  These are grouped thematically as follows:
 
-* [Dictionary Indices](properties/dictionary_indices.md): kCheungBauerIndex, kCihaiT, kCowles, kDaeJaweon, kFennIndex, kGSR, kHanYu, kIRGDaeJaweon, kIRGDaiKanwaZiten, kIRGHanyuDaZidian, kIRGKangXi, kKangXi, kKarlgren, kLau, kMatthews, kMeyerWempe, kMorohashi, kNelson, kSBGY
+* [Dictionary Indices](properties/dictionary_indices.md): kCheungBauerIndex, kCihaiT, kCowles, kDaeJaweon, kFennIndex, kGSR, kHanYu, kIRGHanyuDaZidian, kKangXi, kKarlgren, kLau, kMatthews, kMeyerWempe, kMorohashi, kNelson, kSBGY, kSMSZD2003Index
 
-* [Dictionary-like data](properties/dictionary_like_data.md): kAlternateTotalStrokes, kCangjie, kCheungBauer, kFenn, kFourCornerCode, kFrequency, kGradeLevel, kHDZRadBreak, kHKGlyph, kPhonetic, kStrange, kUnihanCore2020
+* [Dictionary-like data](properties/dictionary_like_data.md): kAlternateTotalStrokes, kCangjie, kCheungBauer, kFenn, kFourCornerCode, kGradeLevel, kHDZRadBreak, kHKGlyph, kMojiJoho, kPhonetic, kStrange, kUnihanCore2020
 
 * [IRG sources](properties/irg_sources.md): kCompatibilityVariant, kIICore, kIRG_GSource, kIRG_HSource, kIRG_JSource, kIRG_KPSource, kIRG_KSource, kIRG_MSource, kIRG_SSource, kIRG_TSource, kIRG_UKSource, kIRG_USource, kIRG_VSource, kRSUnicode, kTotalStrokes
 
-* [Numeric values](properties/numeric_values.md): kAccountingNumeric, kOtherNumeric, kPrimaryNumeric
+* [Numeric values](properties/numeric_values.md): kAccountingNumeric, kOtherNumeric, kPrimaryNumeric, kTayNumeric, kVietnameseNumeric, kZhuangNumeric
 
-* [Other mappings](properties/other_mappings.md): kBigFive, kCCCII, kCNS1986, kCNS1992, kEACC, kGB0, kGB1, kGB3, kGB5, kGB7, kGB8, kHKSCS, kIBMJapan, kJa, kJinmeiyoKanji, kJis0, kJis1, kJIS0213, kJoyoKanji, kKoreanEducationHanja, kKoreanName, kKPS0, kKPS1, kKSC0, kKSC1, kMainlandTelegraph, kPseudoGB1, kTaiwanTelegraph, kTGH, kXerox
+* [Other mappings](properties/other_mappings.md): kBigFive, kCCCII, kCNS1986, kCNS1992, kEACC, kGB0, kGB1, kGB3, kGB5, kGB8, kIBMJapan, kJinmeiyoKanji, kJis0, kJIS0213, kJis1, kJoyoKanji, kKoreanEducationHanja, kKoreanName, kMainlandTelegraph, kPseudoGB1, kTaiwanTelegraph, kTGH, kXerox
 
-* [Radical Stroke Counts](properties/radical_stroke_counts.md): kRSAdobe_Japan1_6, kRSKangXi
+* [Radical Stroke Counts](properties/radical_stroke_counts.md): kRSAdobe_Japan1_6
 
-* [Readings](properties/readings.md): kCantonese, kDefinition, kHangul, kHanyuPinlu, kHanyuPinyin, kJapaneseKun, kJapaneseOn, kKorean, kMandarin, kTang, kTGHZ2013, kVietnamese, kXHC1983
+* [Readings](properties/readings.md): kCantonese, kDefinition, kFanqie, kHangul, kHanyuPinlu, kHanyuPinyin, kJapanese, kJapaneseKun, kJapaneseOn, kKorean, kMandarin, kSMSZD2003Readings, kTang, kTGHZ2013, kVietnamese, kXHC1983, kZhuang
 
-* [Variants](properties/variants.md): kSemanticVariant, kSimplifiedVariant, kSpecializedSemanticVariant, kSpoofingVariant, kTraditionalVariant, kZVariant
+* [Variants](properties/variants.md): kJapaneseNewVariant, kJapaneseOldVariant, kSemanticVariant, kSimplifiedVariant, kSpecializedSemanticVariant, kSpoofingVariant, kTraditionalVariant, kZVariant

@@ -24,12 +24,28 @@ defmodule Unicode.Unihan.Radical do
   * `index` is the Unicode radical number (1..214), reported from various
     radical stroke properties such as `kRSUnicode`.
 
-  * an optional argument, which can be one of:
-    * `:unified_ideograph` (default) shows the grapheme in the (normal) CJK
-       unified ideograph Unicode block (hexadecimal 4000--6000)
-    * `:radical_character` shows the grapheme in the special, contiguous
-       KangXi Radical block (2F00--2FD5)
-    * `:all` returns the full map for the radical
+  * `options` is either the atom `:all`, which returns the full map of
+    variants for the radical, or a keyword list.
+
+  ### Options
+
+  * `:script` selects the radical variant: `:Hant` (the default, the
+    traditional radical), `:Hans` (the Chinese simplified radical), `:Hanj`
+    (the first non-Chinese simplified radical, added in Unicode 15.1) or
+    `:Hanv` (the second non-Chinese simplified radical, added in Unicode
+    18.0). Not every radical has every variant.
+
+  * `:glyph` selects which grapheme is returned: `:unified_ideograph` (the
+    default) is the CJK unified ideograph formed from the radical alone, and
+    `:radical_character` is the character in the Kangxi Radicals or CJK
+    Radicals Supplement block, which may be absent for some variants.
+
+  ### Returns
+
+  * the grapheme as a string, or the full map when `:all` is given.
+
+  * `{:error, reason}` when the radical number, script or glyph is
+    invalid or the requested variant does not exist for the radical.
 
   ### Examples
 
@@ -94,11 +110,16 @@ defmodule Unicode.Unihan.Radical do
   def radical(index, opts) when index in 1..@max_radical do
     opts = Keyword.merge(@default_opts, opts)
 
-    radicals()
-    |> Map.get(index)
-    |> Map.get(opts[:script])
-    |> Map.get(opts[:glyph])
-    |> Unicode.Unihan.to_string()
+    with %{} = variants <- Map.get(radicals(), index),
+         %{} = radical <- Map.get(variants, opts[:script]),
+         codepoint when is_integer(codepoint) <- Map.get(radical, opts[:glyph]) do
+      Unicode.Unihan.to_string(codepoint)
+    else
+      _ ->
+        {:error,
+         "No #{inspect(opts[:glyph])} glyph for radical #{index} " <>
+           "in script #{inspect(opts[:script])}"}
+    end
   end
 
   def radical(index, _) when not is_integer(index) or index > @max_radical do
@@ -108,7 +129,7 @@ defmodule Unicode.Unihan.Radical do
 
   def radical(_index, attr) do
     {:error,
-     "Invalid attribute. The keyword list accepts :Hans or :Hant for the :script keyword, and either :unified_ideograph or :radical_character for the :glyph keyword." <>
+     "Invalid attribute. The keyword list accepts :Hant, :Hans, :Hanj or :Hanv for the :script keyword, and either :unified_ideograph or :radical_character for the :glyph keyword." <>
        "Found #{inspect(attr)}"}
   end
 

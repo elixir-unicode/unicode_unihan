@@ -24,14 +24,18 @@ defmodule Mix.Tasks.Unicode.Unihan.Download do
     Logger.info("Downloading the Unihan database")
     Enum.each(required_files(), &download_file/1)
 
-    Logger.info("Extracting and saving the Unihan database")
+    Logger.info("Extracting the Unihan database")
     extract_unihan_database!()
-    Utils.save_unihan!()
 
+    # The property definitions (delimiters in particular) drive the
+    # parse, so they must be refreshed before the database is parsed.
     Logger.info("Extracting Unihan properties")
     Unicode.Unihan.Property.update!()
 
-    Logger.info("Completed updating the Unihan dataase")
+    Logger.info("Parsing and saving the Unihan database")
+    Utils.save_unihan!()
+
+    Logger.info("Completed updating the Unihan database")
     :ok
   end
 

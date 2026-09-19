@@ -28,6 +28,18 @@ defmodule Unicode.Unihan.RadicalTest do
       assert Radical.radical(213, script: :Hanj) == "亀"
     end
 
+    test "returns the second non-Chinese variant glyph when script: :Hanv" do
+      assert Radical.radical(212, script: :Hanv) == "𱷥"
+    end
+
+    test "returns an error tuple when the radical has no such variant" do
+      assert {:error, message} = Radical.radical(1, script: :Hanv)
+      assert message =~ "radical 1"
+
+      assert {:error, _} = Radical.radical(212, script: :Hanv, glyph: :radical_character)
+      assert {:error, _} = Radical.radical(1, script: :Hanx)
+    end
+
     test "returns the full map with :all" do
       assert %{Hant: %{radical_number: 187}, Hans: %{radical_number: 187}} =
                Radical.radical(187, :all)

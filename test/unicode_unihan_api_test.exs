@@ -49,15 +49,15 @@ defmodule Unicode.Unihan.ApiTest do
   describe "filter/1 and reject/1" do
     test "filter/1 selects codepoints matching the predicate" do
       count =
-        Unicode.Unihan.filter(&(&1.kTotalStrokes[:Hans] > 30))
+        Unicode.Unihan.filter(&(&1.kTotalStrokes > 30))
         |> Enum.count()
 
-      assert count == 238
+      assert count == 258
     end
 
     test "reject/1 excludes codepoints matching the predicate" do
-      filtered = Unicode.Unihan.filter(&(&1.kTotalStrokes[:Hans] > 30)) |> Enum.count()
-      rejected = Unicode.Unihan.reject(&(&1.kTotalStrokes[:Hans] > 30)) |> Enum.count()
+      filtered = Unicode.Unihan.filter(&(&1.kTotalStrokes > 30)) |> Enum.count()
+      rejected = Unicode.Unihan.reject(&(&1.kTotalStrokes > 30)) |> Enum.count()
 
       # filter and reject partition the codepoints that carry kTotalStrokes.
       assert rejected > filtered
@@ -85,8 +85,8 @@ defmodule Unicode.Unihan.ApiTest do
     test "filter/1 reloads the codepoint index when it has been cleared" do
       :persistent_term.erase(:unihan_codepoints)
 
-      count = Unicode.Unihan.filter(&(&1.kTotalStrokes[:Hans] > 30)) |> Enum.count()
-      assert count == 238
+      count = Unicode.Unihan.filter(&(&1.kTotalStrokes > 30)) |> Enum.count()
+      assert count == 258
     end
   end
 end

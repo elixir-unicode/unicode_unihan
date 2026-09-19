@@ -6,7 +6,7 @@
 [![License](https://img.shields.io/hexpm/l/unicode_unihan.svg)](https://hex.pm/packages/unicode_unihan)
 [![Last Updated](https://img.shields.io/github/last-commit/elixir-unicode/unicode_unihan.svg)](https://github.com/elixir-unicode/unicode_unihan/commits/master)
 
-Functions to return information about Unicode Unihan codepoints.
+Functions to return information about Unicode Unihan codepoints. This release ships the data of [Unicode 18.0](https://www.unicode.org/versions/Unicode18.0.0/), covering 103,000 CJK code points and 99 properties, and follows the property definitions of [UAX #38](https://www.unicode.org/reports/tr38/) revision 41.
 
 ## Installation
 
@@ -35,8 +35,12 @@ Lookup a character by codespoint in IEx:
 ```elixir
 iex> Unicode.Unihan.unihan(33836)
 %{
-  kTang: %{frequent: true, reading: "miæ̀n"},
-  kSBGY: %{position: 37, page: 397},
+  codepoint: 33836,
+  kTotalStrokes: 13,
+  kRSUnicode: [
+    %{radical: 114, strokes: 8, script: :Hant, simplified_radical: false},
+    %{radical: 140, strokes: 9, script: :Hant, simplified_radical: false}
+  ],
   kCantonese: %{
     final: "aan",
     jyutping: "maan6",
@@ -45,30 +49,25 @@ iex> Unicode.Unihan.unihan(33836)
     onset: "m",
     tone: "6"
   },
-  kCihaiT: %{position: 2, page: 1149, row: 4},
-  kTotalStrokes: %{Hans: 12, Hant: 12},
-  kXerox: "242:161",
-  kSimplifiedVariant: 19975,
+  kMandarin: "wàn",
   kJapanese: ["バン", "マン", "よろず"],
-  kIICore: %{priority: "A", irg: ["T", "J", "H", "K", "M", "P"]},
-  kIRG_JSource: %{source: "J0", mapping: "685F"},
-  kCNS1992: "1-655C",
-  kCNS1986: "1-655C",
-  kIRG_VSource: %{source: "V1", mapping: "6538"},
+  kJapaneseOn: "MAN",
+  kJapaneseKun: ["YOROZU", "OOKII"],
   kKorean: "MAN",
-  kCowles: 2576,
   kHangul: %{source: "0E", grapheme: "만"},
-  kFenn: %{fenn_phonetic: 576, importance: "C"},
-  kNelson: 3984,
-  kRSAdobe_Japan1_6: %{
-    code: "C",
-    cid: 6408,
-    kangxi: 140,
-    strokes_radical: 3,
-    strokes_residue: 9
-  },
-  kCangjie: ["T", "W", "L", "B"],
   kVietnamese: "vạn",
+  kFanqie: "無販",
+  kTang: %{frequent: true, reading: "miæ̀n"},
+  kDefinition: ["ten thousand", " innumerable"],
+  kPrimaryNumeric: 10000,
+  kGradeLevel: 4,
+  kSimplifiedVariant: 19975,
+  kJapaneseNewVariant: 19975,
+  kSemanticVariant: [
+    %{sources: ["kLau", "kMatthews", "kMeyerWempe"], codepoint: 19975},
+    %{sources: ["kFenn"], codepoint: 21325}
+  ],
+  kCangjie: ["T", "W", "L", "B"],
   kFourCornerCode: %{
     upper_left: 4,
     upper_right: 4,
@@ -76,37 +75,30 @@ iex> Unicode.Unihan.unihan(33836)
     lower_right: 2,
     center: 7
   },
-  kSMSZD2003Readings: "wàn粵maan6",
   kKangXi: %{position: 33, virtual: false, page: 1042},
-  kIRG_KSource: %{source: "K0", mapping: "583F"},
-  kGSR: %{index: 267, letter: "a", prime: ""},
-  kMandarin: "wàn",
-  kCCCII: "214F22",
-  kXHC1983: %{position: 4, entry: 1, page: 1185, reading: "wàn"},
-  kJinmeiyoKanji: %{year: 2010, codepoint: 19975},
-  kFennIndex: %{position: 3, page: 593},
+  kHanYu: %{position: 8, virtual: false, page: 3247, volume: 5},
   kHanyuPinyin: %{
     location: [%{position: 8, virtual: false, page: 53247}],
     readings: ["wàn"]
   },
-  kHanYu: %{position: 8, virtual: false, page: 3247, volume: 5},
-  kHanyuPinlu: %{reading: "wàn", frequency: 1335},
-  kDefinition: ["ten thousand", " innumerable"],
-  kIRGDaeJaweon: %{position: 6, virtual: false, page: 1501},
-  kIRG_HSource: %{source: "HB1", mapping: "B855"},
-  kBigFive: {47189, ""},
-  kPrimaryNumeric: 10000,
-  kMatthews: %{index: 7030, trailing: ""},
-  kMorohashi: %{index: 31339, prime: ""},
-  codepoint: 33836,
+  kMorohashi: %{index: 31339, prime: "", supplement: false, variation_selector: 917763},
+  kMojiJoho: [
+    %{id: "MJ022254"},
+    %{id: "MJ022254", variation_selector: 917761},
+    ...
+  ],
+  kSMSZD2003Index: %{page: 589, position: 5},
+  kSMSZD2003Readings: %{mandarin: ["wàn"], cantonese: [%{jyutping: "maan6", ...}]},
   kIRG_GSource: %{source: "G1", mapping: ["4D72"]},
-  kIRG_KPSource: %{source: "KP0", mapping: "DAC6"},
-  kDaeJaweon: %{position: 6, virtual: false, page: 1501},
-  kGradeLevel: 4,
-  kTaiwanTelegraph: 5502,
+  kIRG_JSource: %{source: "J0", mapping: "685F"},
+  kIRG_KSource: %{source: "K0", mapping: "583F"},
+  kIRG_TSource: %{source: "T1", mapping: "655C"},
+  kIICore: %{priority: "A", irg: ["T", "J", "H", "K", "M", "P"]},
+  kUnihanCore2020: ["H", "J", "K", "M", "P", "T"],
+  kBigFive: {47189, ""},
+  kCNS1986: "1-655C",
   kEACC: 2182946,
-  kMojiJoho: ["MJ022254", ...],
-  kSemanticVariant: [...],
+  kTaiwanTelegraph: 5502,
   ...
 }
 ```

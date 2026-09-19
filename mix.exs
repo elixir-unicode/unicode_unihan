@@ -1,7 +1,7 @@
 defmodule Unicode.Unihan.MixProject do
   use Mix.Project
 
-  @version "0.4.1"
+  @version "0.5.0"
 
   def project do
     [
@@ -81,7 +81,7 @@ defmodule Unicode.Unihan.MixProject do
       {:csv, "~> 3.0"},
       {:floki, "~> 0.36", only: [:dev, :test, :release]},
       {:benchee, "~> 1.0", only: :dev, optional: true},
-      {:ex_doc, "~> 0.24", only: [:dev, :release], runtime: false, optional: true},
+      {:ex_doc, "~> 0.38", only: [:dev, :release], runtime: false, optional: true},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false, optional: true},
       {:dialyxir, "~> 1.1", only: [:dev, :test], runtime: false, optional: true}
     ]
@@ -115,9 +115,13 @@ defmodule Unicode.Unihan.MixProject do
         "LICENSE.md",
         "CHANGELOG.md"
       ],
-      formatters: ["html"],
+      formatters: ["html", "markdown"],
       groups_for_extras: [
         Properties: Path.wildcard("docs/properties/*.md")
+      ],
+      groups_for_modules: [
+        Lookups: [Unicode.Unihan.Radical, Unicode.Unihan.Cangjie, Unicode.Unihan.Cantonese],
+        Internals: [Unicode.Unihan.Utils]
       ],
       skip_undefined_reference_warnings_on: ["changelog", "CHANGELOG.md"]
     ]

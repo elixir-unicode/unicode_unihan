@@ -1,4 +1,4 @@
-# Radical stroke-counts
+# Radical Stroke Counts
 
 ## kRSAdobe_Japan1_6
 ### Description
@@ -8,15 +8,7 @@
 
 > 2) The Adobe-Japan1-6 CID.
 
-> 3) Radical-stroke data for the indicated Adobe-Japan1-6 CID. The radical-stroke data consists of three pieces separated by periods: the Kangxi radical (1-214), the number of strokes in the form the radical takes in the glyph, and the number of strokes in the residue. The standard Unicode radical-stroke form can be obtained by omitting the second value, and the total strokes in the glyph from adding the second and third values.
-
-### Shape of return
-
-### Notes
-
-## kRSKangXi
-### Description
-> The Kangxi radical-stroke count for this character consistent with the value of the kKangXi field in the form “radical.additional strokes”.
+> 3) Radical-stroke data for the indicated Adobe-Japan1-6 CID. The radical-stroke data consists of three pieces separated by periods: the Kangxi radical (1–214), the number of strokes in the form the radical takes in the glyph, and the number of strokes in the residue. The standard Unicode radical-stroke form can be obtained by omitting the second value, and the total strokes in the glyph from adding the second and third values.
 
 ### Shape of return
 
